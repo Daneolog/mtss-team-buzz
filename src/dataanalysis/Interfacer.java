@@ -1,9 +1,11 @@
 package dataanalysis;
 
 // Imports
-import src.corelogic.Bus;
-import src.corelogic.Route;
-import src.corelogic.Stop;
+import corelogic.Bus;
+import corelogic.Route;
+import corelogic.SimulationManager;
+import corelogic.Stop;
+import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -11,28 +13,28 @@ import java.util.ArrayList;
  */
 public class Interfacer {
 
-    static FileWriter simulationFile = null;
-    static List<Bus> buses = null;
-    static List<Route> routes = null;
+    private FileWriter simulationFile;
+    private List<Bus> buses;
+    private List<Stop> stops;
 
-    public static simulationInit() {
-        simulationFile = new FileWriter();
-
+    public Interfacer(SimulationManager s) {
+        buses = s.getBuses();
+        stops = s.getStops();
     }
 
-    public static addBus(Bus bus) {
+    public static void addBus(Bus bus) {
     
     }
 
-    public static addRoute(Route route) {
+    public static void addRoute(Route route) {
     
     }
 
-    public static addStop(Stop stop) {
+    public static void addStop(Stop stop) {
 
     }
 
-    public static extendRoute(Route route, Stop stop) {
+    public static void extendRoute(Route route, Stop stop) {
 
     }
     
