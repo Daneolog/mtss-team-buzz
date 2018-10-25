@@ -5,15 +5,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class FileWriter {
+public class Writer {
 
     FileWriter writer = null;
     FileReader reader = null;
 
-    public FileWriter() {
+    public FileWriter(String fileName) {
         try {
-            writer = new FileWriter("simulation.DOT");
-            reader = new FileReader("simulation.DOT");
+            writer = new FileWriter(fileName);
+            reader = new FileReader(fileName);
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
         }
