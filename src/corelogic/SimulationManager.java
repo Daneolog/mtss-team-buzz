@@ -5,10 +5,10 @@ import java.util.List;
 
 public class SimulationManager {
 
-    static private List<Bus> buses;
-    static private List<Stop> stops;
+    private static List<Bus> buses;
+    private static List<Stop> stops;
 
-    static private int simTime;
+    private static int simTime;
 
     public static void main(String[] args) {
         InitSim();
@@ -47,5 +47,13 @@ public class SimulationManager {
         List<Stop> routeStops = new ArrayList<>(stops);
         Route route = new Route(routeStops, false);
         buses.add(new Bus(route, 0, 5, simTime));
+    }
+
+    public List<Bus> getBuses() {
+        return buses;
+    }
+
+    public List<Stop> getStops() {
+        return stops;
     }
 }

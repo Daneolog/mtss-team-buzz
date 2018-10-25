@@ -1,10 +1,10 @@
 package dataanalysis;
 
 // Imports
-import src.corelogic.Bus;
-import src.corelogic.Route;
-import src.corelogic.SimulationManager;
-import src.corelogic.Stop;
+import corelogic.Bus;
+import corelogic.Route;
+import corelogic.SimulationManager;
+import corelogic.Stop;
 import java.util.List;
 import java.util.ArrayList;
 
