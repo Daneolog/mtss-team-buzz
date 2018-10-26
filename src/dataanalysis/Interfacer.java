@@ -31,6 +31,18 @@ public class Interfacer {
         simulationAnalyzer = new Analyzer();
         stops = s.getBuses();
         routes = s.getRoutes();
+        for (int i = 0; i < stops.length(); i++) {
+            addStop(stops[i]);
+        }
+        for (int i = 0; i < routes.length(); i++) {
+            addRoute(routes[i]);
+        }
+    }
+
+    public static void addStop(Stop stop) {
+
+        // Poll Analyzer
+        // Update FileWriter
     }
 
     public static void addBus(Bus bus) {
@@ -39,11 +51,6 @@ public class Interfacer {
     }
 
     public static void addRoute(Route route) {
-        // Poll Analyzer
-        // Update FileWriter
-    }
-
-    public static void addStop(Stop stop) {
         // Poll Analyzer
         // Update FileWriter
     }
