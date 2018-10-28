@@ -14,5 +14,6 @@ repositories {
 }
 
 dependencies {
+  compile 'org.postgresql:postgresql:42.2.5'
   testCompile 'junit:junit:4.12'
 }
