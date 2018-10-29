@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-public class DBClass {
+class DBClass {
     String url;
     String user;
     String password;
