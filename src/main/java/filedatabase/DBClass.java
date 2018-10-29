@@ -1,9 +1,11 @@
 package filedatabase;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 class DBClass {
@@ -61,6 +63,19 @@ class DBClass {
         }
     }
 
+    boolean addNewBus(int bus_id) {
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(
+                "INSERT INTO Bus VALUES(?);");
+            pstmt.setInt(1, bus_id);
+            pstmt.executeUpdate();
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
     boolean createRouteTable() {
         try {
             Statement stmt = connection.createStatement();
@@ -69,6 +84,20 @@ class DBClass {
                 "id INTEGER PRIMARY KEY," +
                 "name VARCHAR(255)" +
                 ");");
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean addNewRoute(int route_id, String route_name) {
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(
+                "INSERT INTO Route VALUES(?,?);");
+            pstmt.setInt(1, route_id);
+            pstmt.setString(2, route_name);
+            pstmt.executeUpdate();
             return true;
         } catch(SQLException e) {
             System.err.println(e.getMessage());
@@ -86,6 +115,23 @@ class DBClass {
                 "latitude DECIMAL(18,15)," +
                 "longitude DECIMAL(18,15)" +
                 ");");
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean addNewStop(int stop_id, String stop_name, String latitude,
+                       String longitude) {
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(
+                "INSERT INTO Stop VALUES(?,?,?,?);");
+            pstmt.setInt(1, stop_id);
+            pstmt.setString(2, stop_name);
+            pstmt.setBigDecimal(3, new BigDecimal(latitude));
+            pstmt.setBigDecimal(4, new BigDecimal(longitude));
+            pstmt.executeUpdate();
             return true;
         } catch(SQLException e) {
             System.err.println(e.getMessage());
