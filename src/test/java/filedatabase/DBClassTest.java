@@ -24,8 +24,13 @@ public class DBClassTest {
     }
 
     @After
-    public void cleanUp() {
-        dbclass.closeConnection();
+    public void cleanUp() throws SQLException {
+        if (dbclass.connection != null) {
+            dbclass.dropTableIfExists("Bus");
+            dbclass.dropTableIfExists("Route");
+            dbclass.dropTableIfExists("Stop");
+            dbclass.closeConnection();
+        }
     }
 
     @Test
@@ -71,6 +76,60 @@ public class DBClassTest {
     @Test(expected = SQLException.class)
     public void unSuccessfulQueryTest() throws SQLException {
         Assert.assertEquals(dbclass.connect(), true);
-        ResultSet rs = dbclass.query("SELECT * from abcdefg;");
+        dbclass.query("SELECT * from abcdefg;");
+    }
+
+    @Test()
+    public void createBusTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createBusTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from Bus;");
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test(expected = SQLException.class)
+    public void dropBusTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createBusTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from Bus;");
+        Assert.assertEquals(rs.next(), false);
+        Assert.assertEquals(dbclass.dropTableIfExists("Bus"), true);
+        dbclass.query("SELECT * from Bus;");
+    }
+
+    @Test()
+    public void createRouteTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from Route;");
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test(expected = SQLException.class)
+    public void dropRouteTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from Route;");
+        Assert.assertEquals(rs.next(), false);
+        Assert.assertEquals(dbclass.dropTableIfExists("Route"), true);
+        dbclass.query("SELECT * from Route;");
+    }
+
+    @Test()
+    public void createStopTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from Stop;");
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test(expected = SQLException.class)
+    public void dropStopTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from Stop;");
+        Assert.assertEquals(rs.next(), false);
+        Assert.assertEquals(dbclass.dropTableIfExists("Stop"), true);
+        dbclass.query("SELECT * from Stop;");
     }
 }

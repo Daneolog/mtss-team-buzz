@@ -46,4 +46,61 @@ class DBClass {
         Statement stmt = connection.createStatement();
         return stmt.executeQuery(query);
     }
+
+    boolean createBusTable() {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS Bus (" +
+                "id INTEGER PRIMARY KEY" +
+                ");");
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean createRouteTable() {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS Route (" +
+                "id INTEGER PRIMARY KEY," +
+                "name VARCHAR(255)" +
+                ");");
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean createStopTable() {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS Stop (" +
+                "id INTEGER PRIMARY KEY," +
+                "name VARCHAR(255)," +
+                "latitude DECIMAL(18,15)," +
+                "longitude DECIMAL(18,15)" +
+                ");");
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean dropTableIfExists(String table) {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate(String.format("DROP TABLE IF EXISTS %s;", table));
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
 }
