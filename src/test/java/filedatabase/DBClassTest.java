@@ -24,7 +24,7 @@ public class DBClassTest {
     }
 
     @After
-    public void cleanUp() throws SQLException {
+    public void cleanUp() {
         if (dbclass.connection != null) {
             dbclass.dropTableIfExists("Bus");
             dbclass.dropTableIfExists("Route");
