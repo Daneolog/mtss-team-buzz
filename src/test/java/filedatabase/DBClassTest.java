@@ -98,6 +98,17 @@ public class DBClassTest {
     }
 
     @Test()
+    public void addBusTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createBusTable(), true);
+        Assert.assertEquals(dbclass.addNewBus(55), true);
+        ResultSet rs = dbclass.query("SELECT * from Bus;");
+        Assert.assertEquals(rs.next(), true);
+        Assert.assertEquals(rs.getInt("id"), 55);
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test()
     public void createRouteTest() throws SQLException {
         Assert.assertEquals(dbclass.connect(), true);
         Assert.assertEquals(dbclass.createRouteTable(), true);
@@ -113,6 +124,18 @@ public class DBClassTest {
         Assert.assertEquals(rs.next(), false);
         Assert.assertEquals(dbclass.dropTableIfExists("Route"), true);
         dbclass.query("SELECT * from Route;");
+    }
+
+    @Test()
+    public void addRouteTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        Assert.assertEquals(dbclass.addNewRoute(56, "test-route"), true);
+        ResultSet rs = dbclass.query("SELECT * from Route;");
+        Assert.assertEquals(rs.next(), true);
+        Assert.assertEquals(rs.getInt("id"), 56);
+        Assert.assertEquals(rs.getString("name"), "test-route");
+        Assert.assertEquals(rs.next(), false);
     }
 
     @Test()
@@ -132,4 +155,22 @@ public class DBClassTest {
         Assert.assertEquals(dbclass.dropTableIfExists("Stop"), true);
         dbclass.query("SELECT * from Stop;");
     }
+
+    @Test()
+    public void addStopTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        Assert.assertEquals(dbclass.addNewStop(57, "test-stop",
+            "33.777094012345678", "-84.396694012345678"), true);
+        ResultSet rs = dbclass.query("SELECT * from Stop;");
+        Assert.assertEquals(rs.next(), true);
+        Assert.assertEquals(rs.getInt("id"), 57);
+        Assert.assertEquals(rs.getString("name"), "test-stop");
+        Assert.assertEquals(rs.getBigDecimal("latitude").toString(),
+            "33.777094012345678");
+        Assert.assertEquals(rs.getBigDecimal("longitude").toString(),
+            "-84.396694012345678");
+        Assert.assertEquals(rs.next(), false);
+    }
+
 }
