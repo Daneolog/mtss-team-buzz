@@ -35,6 +35,7 @@ class APCParser {
         int passenger_offs = Integer.parseInt(record.get("offs"));
         int route_id = Integer.parseInt(record.get("route"));
         int stop_id = Integer.parseInt(record.get("stop_id"));
+        // TODO: Add entry to BusLocation database
         if(!uniqueBusIds.contains(bus_id)) {
             if(dbclass.addNewBus(bus_id) == false) {
                 System.err.println(String.format(

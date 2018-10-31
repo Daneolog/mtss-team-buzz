@@ -2,6 +2,9 @@ package filedatabase;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -49,6 +52,7 @@ public class DBClassTest {
             dbclass.connect();
         }
         dbclass.queryUpdate("DROP TABLE InUse;");
+        dbclass.dropTableIfExists("BusLocation");
         dbclass.dropTableIfExists("Bus");
         dbclass.dropTableIfExists("Route");
         dbclass.dropTableIfExists("Stop");
@@ -127,6 +131,58 @@ public class DBClassTest {
         ResultSet rs = dbclass.query("SELECT * from Bus;");
         Assert.assertEquals(rs.next(), true);
         Assert.assertEquals(rs.getInt("id"), 55);
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test()
+    public void createBusLocationTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createBusTable(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        Assert.assertEquals(dbclass.createBusLocationTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from BusLocation;");
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test(expected = SQLException.class)
+    public void dropBusLocationTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createBusTable(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        Assert.assertEquals(dbclass.createBusLocationTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from BusLocation;");
+        Assert.assertEquals(rs.next(), false);
+        Assert.assertEquals(dbclass.dropTableIfExists("BusLocation"), true);
+        dbclass.query("SELECT * from BusLocation;");
+    }
+
+    @Test()
+    public void addBusLocationTest() throws ParseException, SQLException {
+        Timestamp datetime = new Timestamp(
+            new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                .parse("2018/10/31 11:38:21").getTime());
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createBusTable(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        Assert.assertEquals(dbclass.createBusLocationTable(), true);
+        Assert.assertEquals(dbclass.addNewBus(11), true);
+        Assert.assertEquals(dbclass.addNewRoute(33, "test-route"), true);
+        Assert.assertEquals(dbclass.addNewStop(22, "test-stop",
+            "33.777094012345678", "-84.396694012345678"), true);
+        Assert.assertEquals(dbclass.addNewBusLocation(
+            datetime, 11, 22, 33, 5, 6), true);
+        ResultSet rs = dbclass.query("SELECT * from BusLocation;");
+        Assert.assertEquals(rs.next(), true);
+        Assert.assertEquals(
+            rs.getTimestamp("datetime").getTime(), datetime.getTime());
+        Assert.assertEquals(rs.getInt("bus_id"), 11);
+        Assert.assertEquals(rs.getInt("stop_id"), 22);
+        Assert.assertEquals(rs.getInt("route_id"), 33);
+        Assert.assertEquals(rs.getInt("passenger_ons"), 5);
+        Assert.assertEquals(rs.getInt("passenger_offs"), 6);
         Assert.assertEquals(rs.next(), false);
     }
 

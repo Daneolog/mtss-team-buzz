@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -73,6 +74,51 @@ class DBClass {
             PreparedStatement pstmt = connection.prepareStatement(
                 "INSERT INTO Bus VALUES(?);");
             pstmt.setInt(1, bus_id);
+            pstmt.executeUpdate();
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean createBusLocationTable() {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS BusLocation (" +
+                "id SERIAL PRIMARY KEY," +
+                "datetime TIMESTAMP," +
+                "bus_id INTEGER," +
+                "stop_id INTEGER," +
+                "route_id INTEGER," +
+                "passenger_ons INTEGER," +
+                "passenger_offs INTEGER," +
+                "FOREIGN KEY (bus_id) REFERENCES Bus(id)," +
+                "FOREIGN KEY (stop_id) REFERENCES Stop(id)," +
+                "FOREIGN KEY (route_id) REFERENCES Route(id)" +
+                ");");
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean addNewBusLocation(Timestamp datetime, int bus_id, int stop_id,
+                              int route_id, int passenger_ons,
+                              int passenger_offs) {
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(
+                "INSERT INTO BusLocation (datetime, bus_id, stop_id, " +
+                "route_id, passenger_ons, passenger_offs) " +
+                "VALUES(?,?,?,?,?,?);");
+            pstmt.setTimestamp(1, datetime);
+            pstmt.setInt(2, bus_id);
+            pstmt.setInt(3, stop_id);
+            pstmt.setInt(4, route_id);
+            pstmt.setInt(5, passenger_ons);
+            pstmt.setInt(6, passenger_offs);
             pstmt.executeUpdate();
             return true;
         } catch(SQLException e) {

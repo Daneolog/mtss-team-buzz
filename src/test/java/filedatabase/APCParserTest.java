@@ -51,6 +51,7 @@ public class APCParserTest {
             dbclass.connect();
         }
         dbclass.queryUpdate("DROP TABLE InUse;");
+        dbclass.dropTableIfExists("BusLocation");
         dbclass.dropTableIfExists("Bus");
         dbclass.dropTableIfExists("Route");
         dbclass.dropTableIfExists("Stop");
