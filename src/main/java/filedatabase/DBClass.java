@@ -49,6 +49,11 @@ class DBClass {
         return stmt.executeQuery(query);
     }
 
+    void queryUpdate(String query) throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate(query);
+    }
+
     boolean createBusTable() {
         try {
             Statement stmt = connection.createStatement();

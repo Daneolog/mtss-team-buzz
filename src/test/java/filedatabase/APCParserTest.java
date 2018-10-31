@@ -13,26 +13,48 @@ import filedatabase.APCParser;
 import filedatabase.DBClass;
 
 public class APCParserTest {
+    private final int NUM_TEST_DBS = 5;
+
     private final String ip = "68.183.20.174";
     private final int port = 5432;
-    private final String db = "cs3300_test";
+    private final String db_prefix = "cs3300_test_";
     private final String user = "cs3300_readonly";
     private final String password = "cs3300_b80ed2986e";
     private DBClass dbclass;
 
     @Before
-    public void setUp() {
-        dbclass = new DBClass(ip, port, db, user, password);
+    public void setUp() throws SQLException {
+        DBClass tempDBClass;
+        for(int i = 1; i <= NUM_TEST_DBS; i++) {
+            tempDBClass = new DBClass(ip, port,
+                String.format("%s%d", db_prefix, i), user, password);
+            if(!tempDBClass.connect()) {
+                throw new RuntimeException(
+                    String.format("Could not connect to test database %d", i));
+            }
+            try {
+                tempDBClass.query("SELECT * FROM InUse;");
+                tempDBClass.closeConnection();
+            } catch(SQLException e) {
+                tempDBClass.queryUpdate("CREATE TABLE InUse (id INTEGER);");
+                tempDBClass.closeConnection();
+                dbclass = tempDBClass;
+                return;
+            }
+        }
+        throw new RuntimeException("Could not find an unused test database.");
     }
 
     @After
-    public void cleanUp() {
-        if (dbclass.connection != null) {
-            dbclass.dropTableIfExists("Bus");
-            dbclass.dropTableIfExists("Route");
-            dbclass.dropTableIfExists("Stop");
-            dbclass.closeConnection();
+    public void cleanUp() throws SQLException {
+        if (dbclass.connection == null) {
+            dbclass.connect();
         }
+        dbclass.queryUpdate("DROP TABLE InUse;");
+        dbclass.dropTableIfExists("Bus");
+        dbclass.dropTableIfExists("Route");
+        dbclass.dropTableIfExists("Stop");
+        dbclass.closeConnection();
     }
 
     @Test
@@ -44,12 +66,11 @@ public class APCParserTest {
             "07/01/2016,55,55: Cleveland Ave/Lakewood Heights,Southbound," +
             "139050,JONESBORO RD SE/WHATLEY ST SE,12:30:00,12:30:00,2,3," +
             "33.706679000000001,-84.379644999999996,2409\n";
-        Assert.assertEquals(dbclass.connect(), true);
-        APCParser apcParser = new APCParser(
-            new StringReader(testCsvString), ip, port, db, user, password);
+        APCParser apcParser = new APCParser(new StringReader(testCsvString), dbclass);
         apcParser.parse();
         ResultSet rs;
 
+        Assert.assertEquals(dbclass.connect(), true);
         rs = dbclass.query("SELECT * from Bus;");
         Assert.assertEquals(rs.next(), true);
         Assert.assertEquals(rs.getInt("id"), 2409);

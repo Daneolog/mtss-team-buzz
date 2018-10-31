@@ -17,9 +17,8 @@ class APCParser {
     HashSet<Integer> uniqueRouteIds;
     HashMap<Integer, HashMap<Integer, Boolean>> stopAdjacencyMatrix;
 
-    APCParser(Reader reader, String ip, int port, String db, String user,
-              String password) {
-        dbclass = new DBClass(ip, port, db, user, password);
+    APCParser(Reader reader, DBClass dbclass) {
+        this.dbclass = dbclass;
         csvReader = reader;
         uniqueBusIds = new HashSet<>();
         uniqueStopIds = new HashSet<>();
