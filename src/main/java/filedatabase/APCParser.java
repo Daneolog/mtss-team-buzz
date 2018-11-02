@@ -2,6 +2,7 @@ package filedatabase;
 
 import java.io.Reader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.apache.commons.csv.CSVFormat;
@@ -35,7 +36,8 @@ class APCParser {
         int passenger_offs = Integer.parseInt(record.get("offs"));
         int route_id = Integer.parseInt(record.get("route"));
         int stop_id = Integer.parseInt(record.get("stop_id"));
-        // TODO: Add entry to BusLocation database
+        String datetime = null;
+
         if(!uniqueBusIds.contains(bus_id)) {
             if(dbclass.addNewBus(bus_id) == false) {
                 System.err.println(String.format(
@@ -64,6 +66,21 @@ class APCParser {
             }
             uniqueStopIds.add(stop_id);
         }
+
+        if(!arrival_time.equals("")) {
+            datetime = String.format("%s %s", calendar_date, arrival_time);
+        } else if(!departure_time.equals("")) {
+            datetime = String.format("%s %s", calendar_date, departure_time);
+        }
+        if(datetime != null) {
+            if(dbclass.addNewBusLocation(datetime, bus_id, stop_id, route_id,
+                   passenger_ons, passenger_offs) == false) {
+                System.err.println(String.format(
+                    "Could not add new bus with ID %d.", bus_id));
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -82,6 +99,10 @@ class APCParser {
         }
         if(dbclass.createStopTable() == false) {
             System.err.println("Could not create the Stop table.");
+            return;
+        }
+        if(dbclass.createBusLocationTable() == false) {
+            System.err.println("Could not create the BusLocation table.");
             return;
         }
         // TODO:

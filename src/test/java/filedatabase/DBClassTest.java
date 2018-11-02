@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -160,9 +161,6 @@ public class DBClassTest {
 
     @Test()
     public void addBusLocationTest() throws ParseException, SQLException {
-        Timestamp datetime = new Timestamp(
-            new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-                .parse("2018/10/31 11:38:21").getTime());
         Assert.assertEquals(dbclass.connect(), true);
         Assert.assertEquals(dbclass.createBusTable(), true);
         Assert.assertEquals(dbclass.createRouteTable(), true);
@@ -173,11 +171,14 @@ public class DBClassTest {
         Assert.assertEquals(dbclass.addNewStop(22, "test-stop",
             "33.777094012345678", "-84.396694012345678"), true);
         Assert.assertEquals(dbclass.addNewBusLocation(
-            datetime, 11, 22, 33, 5, 6), true);
+            "10/31/2018 11:38:21", 11, 22, 33, 5, 6), true);
         ResultSet rs = dbclass.query("SELECT * from BusLocation;");
         Assert.assertEquals(rs.next(), true);
         Assert.assertEquals(
-            rs.getTimestamp("datetime").getTime(), datetime.getTime());
+            new SimpleDateFormat(
+                "MM/dd/yyyy HH:mm:ss").format(new Date(
+                    rs.getTimestamp("datetime").getTime())),
+            "10/31/2018 11:38:21");
         Assert.assertEquals(rs.getInt("bus_id"), 11);
         Assert.assertEquals(rs.getInt("stop_id"), 22);
         Assert.assertEquals(rs.getInt("route_id"), 33);

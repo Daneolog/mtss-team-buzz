@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 class DBClass {
     String url;
@@ -105,7 +107,7 @@ class DBClass {
         }
     }
 
-    boolean addNewBusLocation(Timestamp datetime, int bus_id, int stop_id,
+    boolean addNewBusLocation(String datetime, int bus_id, int stop_id,
                               int route_id, int passenger_ons,
                               int passenger_offs) {
         try {
@@ -113,7 +115,9 @@ class DBClass {
                 "INSERT INTO BusLocation (datetime, bus_id, stop_id, " +
                 "route_id, passenger_ons, passenger_offs) " +
                 "VALUES(?,?,?,?,?,?);");
-            pstmt.setTimestamp(1, datetime);
+            pstmt.setTimestamp(1,
+                new Timestamp(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
+                    .parse(datetime).getTime()));
             pstmt.setInt(2, bus_id);
             pstmt.setInt(3, stop_id);
             pstmt.setInt(4, route_id);
@@ -123,6 +127,9 @@ class DBClass {
             return true;
         } catch(SQLException e) {
             System.err.println(e.getMessage());
+            return false;
+        } catch(ParseException f) {
+            System.err.println(f.getMessage());
             return false;
         }
     }
