@@ -32,8 +32,14 @@ class APCParser {
         String calendar_date = record.get("calendar_day");
         String departure_time = record.get("departure_time");
         String direction = record.get("direction");
-        int passenger_ons = Integer.parseInt(record.get("ons"));
-        int passenger_offs = Integer.parseInt(record.get("offs"));
+        int passenger_ons = 0;
+        if(!record.get("ons").equals("")) {
+            passenger_ons = Integer.parseInt(record.get("ons"));
+        }
+        int passenger_offs = 0;
+        if(!record.get("offs").equals("")) {
+            passenger_offs = Integer.parseInt(record.get("offs"));
+        }
         int route_id = Integer.parseInt(record.get("route"));
         int stop_id = Integer.parseInt(record.get("stop_id"));
         String datetime = null;
