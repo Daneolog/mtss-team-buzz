@@ -12,7 +12,7 @@ public class Writer {
     FileReader reader = null;
     int offset = 0;
 
-    public FileWriter(String fileName) {
+    public Writer(String fileName) {
         try {
             writer = new FileWriter(fileName);
             reader = new FileReader(fileName);
@@ -24,7 +24,7 @@ public class Writer {
         }
     }
 
-    public addNode(Stop stop) {
-        writer.write( + " -> " + + "\n");
-    }
+    /*public addNode(Stop stop) {
+        writer.write(" -> " + "\n");
+    }*/
 }
