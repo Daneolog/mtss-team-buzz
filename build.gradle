@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'corelogic.SimulationManager'
+  }
+  from {
+    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testCompile 'junit:junit:4.12'
+}
