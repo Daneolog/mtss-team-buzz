@@ -3,7 +3,6 @@ package dataanalysis;
 // Imports
 import corelogic.Bus;
 import corelogic.Route;
-import corelogic.SimulationManager;
 import corelogic.Stop;
 import java.util.List;
 import java.util.ArrayList;
@@ -14,33 +13,27 @@ import java.util.ArrayList;
  */
 public class Interfacer {
 
-    private Writer simulationFile = null;
-    private Analyzer simulationAnalyzer = null;
-    private List<Stop> stops = null;
-    private List<Route> routes = null;
+    private Writer simulationFile;
+    private Analyzer simulationAnalyzer;
+    private List<Stop> stops;
+    private List<Route> routes;
 
     /***
      * Initiates FileWriter and Analyzer objects.
      * Initiates new references to Core Logic's stop/route ArrayLists.
      *
-     * @param s Core Logic's hub class. Used to access Lists of stops and
-     *          routes.
      */
-    public Interfacer(SimulationManager s) {
+    public Interfacer() {
         simulationFile = new Writer("simulation.DOT");
         simulationAnalyzer = new Analyzer();
-        stops = s.getBuses();
-        routes = s.getRoutes();
-        for (int i = 0; i < stops.length(); i++) {
-            addStop(stops[i]);
-        }
-        for (int i = 0; i < routes.length(); i++) {
-            addRoute(routes[i]);
-        }
+        stops = new ArrayList();
+        routes = new ArrayList();
     }
 
-    public static void addStop(Stop stop) {
-
+    public static void addStop(Stop stop) throws IllegalArgumentException {
+        if (stop == null) {
+            throw new IllegalArgumentException("Stop may not be null.");
+        }
         // Poll Analyzer
         // Update FileWriter
     }
