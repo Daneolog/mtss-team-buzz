@@ -28,8 +28,21 @@ public class Stop {
         return name;
     }
 
-    boolean Tick() {
-        //TODO: Spawn passengers in a Poisson random distribution based on an average arrival rate
-        return false;
+    boolean Tick(double avgArrivalRate) {
+        //Poisson random variable generation, found on wikipedia
+        double l = Math.exp(-avgArrivalRate);
+        int k = 0;
+        double p = 1;
+        do {
+            k += 1;
+            p *= Math.random();
+        } while(p > l);
+
+
+        for (int i = 0; i < k - 1; ++i) {
+            //TODO: Assign destination stop randomly
+            passengerQueue.add(new Passenger(null));
+        }
+        return k - 1 > 0;
     }
 }
