@@ -30,6 +30,22 @@ public class Interfacer {
         routes = new ArrayList();
     }
 
+    public Writer getSimulationFile() {
+        return simulationFile;
+    }
+
+    public Analyzer getSimulationAnalyzer() {
+        return simulationAnalyzer;
+    }
+
+    public List<Stop> getStops() {
+        return stops;
+    }
+
+    public List<Route> getRoutes() {
+        return routes;
+    }
+
     public static void addStop(Stop stop) throws IllegalArgumentException {
         if (stop == null) {
             throw new IllegalArgumentException("Stop may not be null.");
