@@ -46,25 +46,30 @@ public class Interfacer {
         return routes;
     }
 
-    public static void addStop(Stop stop) throws IllegalArgumentException {
+    public void addStop(Stop stop) throws IllegalArgumentException {
         if (stop == null) {
             throw new IllegalArgumentException("Stop may not be null.");
+        }
+        stops.add(stop);
+        // Poll Analyzer
+        int score = simulationAnalyzer.addStop(stop);
+        // Update FileWriter
+    }
+
+    public void addBus(Bus bus) throws IllegalArgumentException {
+        if (bus == null) {
+            throw new IllegalArgumentException("Buss may not be null.");
         }
         // Poll Analyzer
         // Update FileWriter
     }
 
-    public static void addBus(Bus bus) {
+    public void addRoute(Route route) {
         // Poll Analyzer
         // Update FileWriter
     }
 
-    public static void addRoute(Route route) {
-        // Poll Analyzer
-        // Update FileWriter
-    }
-
-    public static void extendRoute(Route route, Stop stop) {
+    public void extendRoute(Route route, Stop stop) {
 
     }
     
