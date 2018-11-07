@@ -12,7 +12,7 @@ public class SimulationManager {
     static private int simTime;
 
     public static void main(String[] args) {
-        InitSim();
+        initSim();
         System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
         MoveNextBus();
         System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
@@ -24,20 +24,20 @@ public class SimulationManager {
      * Simulate one tick on every simulation entity until a bus arrives at a stop
      */
     private static void MoveNextBus() {
-        while (!Tick()) {}
+        while (!tick()) {}
     }
 
-    private static boolean Tick() {
+    private static boolean tick() {
         boolean busArrived = false;
         ++simTime;
         for (Stop stop : stops)
-            stop.Tick();
+            stop.tick();
         for (Bus bus : buses)
-            busArrived = bus.Tick(simTime) || busArrived;
+            busArrived = bus.tick(simTime) || busArrived;
         return busArrived;
     }
 
-    private static void InitSim() {
+    private static void initSim() {
         buses = new ArrayList<>();
         stops = new ArrayList<>();
         routes = new ArrayList<>();
