@@ -13,7 +13,7 @@ class FileManager {
         HashMap<Integer, Route> routes = new HashMap<>();
 
         try {
-            File file = new File("scenarios/" + filename);
+            File file = new File(filename);
             BufferedReader f = new BufferedReader(new FileReader(file));
             String line;
 

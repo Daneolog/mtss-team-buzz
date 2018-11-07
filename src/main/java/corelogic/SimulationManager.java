@@ -2,6 +2,7 @@ package corelogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class SimulationManager {
 
@@ -12,12 +13,16 @@ public class SimulationManager {
     static private int simTime;
 
     public static void main(String[] args) {
-        initSim();
+        Scanner scanner = new Scanner(System.in);
+        initSim(args[0]);
         System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
-        MoveNextBus();
-        System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
-        MoveNextBus();
-        System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
+        System.out.println("Bus 2 is at stop " + buses.get(1).getCurrentStop().getName());
+        while (scanner.hasNext()) {
+            scanner.next();
+            MoveNextBus();
+            System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
+            System.out.println("Bus 2 is at stop " + buses.get(1).getCurrentStop().getName());
+        }
     }
 
     /**
@@ -37,19 +42,12 @@ public class SimulationManager {
         return busArrived;
     }
 
-    private static void initSim() {
+    private static void initSim(String path) {
         buses = new ArrayList<>();
         stops = new ArrayList<>();
         routes = new ArrayList<>();
         simTime = 0;
 
-        //Sample init
-//        stops.add(new Stop(0, "Downtown", 0, -10));
-//        stops.add(new Stop(1, "Midtown", 0, 0));
-//        List<Stop> routeStops = new ArrayList<>(stops);
-//        Route route = new Route(0, routeStops, false);
-//        buses.add(new Bus(0, route, 0, 5, simTime));
-
-        FileManager.importScenario("test_scenario_fun.txt", buses, stops, routes, simTime);
+        FileManager.importScenario(path, buses, stops, routes, simTime);
     }
 }
