@@ -42,7 +42,7 @@ public class SimulationManager {
         return busArrived;
     }
 
-    private static void initSim(String path) {
+    public static void initSim(String path) {
         buses = new ArrayList<>();
         stops = new ArrayList<>();
         routes = new ArrayList<>();
