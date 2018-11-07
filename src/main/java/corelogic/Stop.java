@@ -1,15 +1,17 @@
-package corelogic;
+package main.java.corelogic;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Stop {
+    private int id;
     private double x;
     private double y;
     private String name;
-    public LinkedList<Passenger> passengerQueue;
+    LinkedList<Passenger> passengerQueue;
 
-    public Stop(String name, double x, double y) {
+    public Stop(int id, String name, double x, double y) {
+        this.id = id;
         this.name = name;
         this.x = x;
         this.y = y;
@@ -26,6 +28,10 @@ public class Stop {
 
     public String getName() {
         return name;
+    }
+
+    public LinkedList<Passenger> getPassengerQueue() {
+        return passengerQueue;
     }
 
     boolean Tick() {

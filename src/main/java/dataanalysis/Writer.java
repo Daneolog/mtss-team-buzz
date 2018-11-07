@@ -1,17 +1,21 @@
-package dataanalysis;
+package main.java.dataanalysis;
 
 // Imports
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import corelogic.Stop;
+import main.java.corelogic.Stop;
 
 public class Writer {
 
-    FileWriter writer = null;
-    FileReader reader = null;
-    int offset = 0;
+    private FileWriter writer = null;
+    private FileReader reader = null;
+    private int offset = 0;
 
+    /**
+     * Writes graph of stops to GraphViz format
+     * @param fileName Desired name for output DOT file
+     */
     public Writer(String fileName) {
         try {
             writer = new FileWriter(fileName);
