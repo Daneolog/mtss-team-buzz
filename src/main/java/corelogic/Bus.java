@@ -8,7 +8,9 @@ import java.util.List;
  */
 public class Bus {
 
-    double speed;
+    private int id;
+    private double speed;
+    private int capacity;
     private Route route;
     private List<Passenger> passengers;
     private int currentStop;
@@ -16,10 +18,15 @@ public class Bus {
 
     private int arrivalTime;
 
-    public Bus(Route route, int startStop, double speed, int simTime) {
+    public Bus(int id, Route route, int startStop, int initialPassengers, int capacity, double speed, int simTime) {
+        this.id = id;
         this.route = route;
-        passengers = new ArrayList<>();
         currentStop = startStop;
+        passengers = new ArrayList<>();
+        for (int i=0; i<initialPassengers; i++) {
+            passengers.add(new Passenger(null));
+        }
+        this.capacity = capacity;
         this.speed = speed;
         CalculateNextStop();
         CalculateArrival(simTime);
@@ -58,7 +65,7 @@ public class Bus {
         Stop current = route.stops.get(currentStop);
         Stop next = route.stops.get(nextStop);
         double dist = Math.sqrt(Math.pow(next.getX() - current.getX(), 2) + Math.pow(next.getY() - current.getY(), 2));
-        arrivalTime = (int)(dist / speed) + currTime;
+        arrivalTime = Math.max((int)(dist / speed), 1) + currTime;
     }
 
     private void ExchangePassengers() {

@@ -7,6 +7,7 @@ public class SimulationManager {
 
     static private List<Bus> buses;
     static private List<Stop> stops;
+    static private List<Route> routes;
 
     static private int simTime;
 
@@ -39,13 +40,16 @@ public class SimulationManager {
     private static void InitSim() {
         buses = new ArrayList<>();
         stops = new ArrayList<>();
+        routes = new ArrayList<>();
         simTime = 0;
 
         //Sample init
-        stops.add(new Stop("Downtown", 0, -10));
-        stops.add(new Stop("Midtown", 0, 0));
-        List<Stop> routeStops = new ArrayList<>(stops);
-        Route route = new Route(routeStops, false);
-        buses.add(new Bus(route, 0, 5, simTime));
+//        stops.add(new Stop(0, "Downtown", 0, -10));
+//        stops.add(new Stop(1, "Midtown", 0, 0));
+//        List<Stop> routeStops = new ArrayList<>(stops);
+//        Route route = new Route(0, routeStops, false);
+//        buses.add(new Bus(0, route, 0, 5, simTime));
+
+        FileManager.importScenario("test_scenario_fun.txt", buses, stops, routes, simTime);
     }
 }

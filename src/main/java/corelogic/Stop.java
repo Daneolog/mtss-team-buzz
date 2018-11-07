@@ -4,12 +4,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Stop {
+    private int id;
     private double x;
     private double y;
     private String name;
-    public LinkedList<Passenger> passengerQueue;
+    LinkedList<Passenger> passengerQueue;
 
-    public Stop(String name, double x, double y) {
+    public Stop(int id, String name, double x, double y) {
+        this.id = id;
         this.name = name;
         this.x = x;
         this.y = y;
@@ -28,21 +30,8 @@ public class Stop {
         return name;
     }
 
-    boolean Tick(double avgArrivalRate) {
-        //Poisson random variable generation, found on wikipedia
-        double l = Math.exp(-avgArrivalRate);
-        int k = 0;
-        double p = 1;
-        do {
-            k += 1;
-            p *= Math.random();
-        } while(p > l);
-
-
-        for (int i = 0; i < k - 1; ++i) {
-            //TODO: Assign destination stop randomly
-            passengerQueue.add(new Passenger(null));
-        }
-        return k - 1 > 0;
+    boolean Tick() {
+        //TODO: Spawn passengers in a Poisson random distribution based on an average arrival rate
+        return false;
     }
 }
