@@ -1,4 +1,4 @@
-package main.java.corelogic;
+package corelogic;
 
 import java.util.LinkedList;
 import java.util.Queue;

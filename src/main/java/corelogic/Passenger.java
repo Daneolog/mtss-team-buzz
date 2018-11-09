@@ -1,4 +1,4 @@
-package main.java.corelogic;
+package corelogic;
 
 public class Passenger {
     private Stop destination;

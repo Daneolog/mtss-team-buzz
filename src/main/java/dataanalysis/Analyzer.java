@@ -1,7 +1,7 @@
-package main.java.dataanalysis;
+package dataanalysis;
 
-import main.java.corelogic.Route;
-import main.java.corelogic.Stop;
+import corelogic.Route;
+import corelogic.Stop;
 
 public class Analyzer {
 

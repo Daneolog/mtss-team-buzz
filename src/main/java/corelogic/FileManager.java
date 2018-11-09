@@ -1,4 +1,4 @@
-package main.java.corelogic;
+package corelogic;
 
 import java.io.*;
 import java.net.URL;
