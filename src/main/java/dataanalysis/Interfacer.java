@@ -1,9 +1,9 @@
-package dataanalysis;
+package main.java.dataanalysis;
 
 // Imports
-import corelogic.Bus;
-import corelogic.Route;
-import corelogic.Stop;
+import main.java.corelogic.Bus;
+import main.java.corelogic.Route;
+import main.java.corelogic.Stop;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -14,9 +14,11 @@ import java.util.ArrayList;
 public class Interfacer {
 
     private Writer simulationFile;
-    private Analyzer simulationAnalyzer;
+    private List<Bus> buses;
     private List<Stop> stops;
     private List<Route> routes;
+
+    private double effectiveness;
 
     /***
      * Initiates FileWriter and Analyzer objects.
@@ -25,17 +27,12 @@ public class Interfacer {
      */
     public Interfacer() {
         simulationFile = new Writer("simulation.DOT");
-        simulationAnalyzer = new Analyzer();
-        stops = new ArrayList();
-        routes = new ArrayList();
+        stops = new ArrayList<Stop>();
+        routes = new ArrayList<Route>();
     }
 
     public Writer getSimulationFile() {
         return simulationFile;
-    }
-
-    public Analyzer getSimulationAnalyzer() {
-        return simulationAnalyzer;
     }
 
     public List<Stop> getStops() {
@@ -46,13 +43,17 @@ public class Interfacer {
         return routes;
     }
 
+    public double getEffectiveness() {
+        return effectiveness;
+    }
+
     public void addStop(Stop stop) throws IllegalArgumentException {
         if (stop == null) {
             throw new IllegalArgumentException("Stop may not be null.");
         }
         stops.add(stop);
         // Poll Analyzer
-        int score = simulationAnalyzer.addStop(stop);
+        int score = Analyzer.addStop(stop);
         // Update FileWriter
     }
 
@@ -72,5 +73,27 @@ public class Interfacer {
     public void extendRoute(Route route, Stop stop) {
 
     }
-    
+
+    public void dummySimulationInit(List<Bus> buses, List<Stop> stops, List<Route> routes) {
+        this.buses = buses;
+        this.stops = stops;
+        this.routes = routes;
+    }
+
+    /**
+     * Updates effectiveness of the route in a "snapshot" approach
+     */
+    public void updateEffectiveness() {
+        double totalCost = 0;
+        for (Bus bus: buses) {
+            totalCost = totalCost + bus.getSpeed() + bus.getPassengers().size();
+        }
+
+        double totalWaitTime = 0;
+        for (Stop stop: stops) {
+            totalWaitTime = totalWaitTime + stop.getPassengerQueue().size();
+        }
+
+        this.effectiveness = (totalCost / buses.size()) + (totalWaitTime / stops.size());
+    }
 }

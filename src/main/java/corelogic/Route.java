@@ -1,12 +1,14 @@
-package corelogic;
+package main.java.corelogic;
 
 import java.util.List;
 
 public class Route {
+    int id;
     public List<Stop> stops;
     private boolean isLinear;
 
-    public Route(List<Stop> stops, boolean isLinear) {
+    public Route(int id, List<Stop> stops, boolean isLinear) {
+        this.id = id;
         this.stops = stops;
         this.isLinear = isLinear;
     }
