@@ -8,14 +8,14 @@ public class Analyzer {
     public Analyzer() {
     }
 
-    public static int addStop(Stop stop) {
-        return stop.getPassengerQueue().size();
+    public static double addStop(Stop stop) {
+        return stop.getDisembarkRate();
     }
 
-    public static int addRoute(Route route) {
+    public static double addRoute(Route route) {
         int sum = 0;
         for (int i = 0; i < route.stops.size(); i++) {
-            sum += route.stops.get(i).getPassengerQueue().size();
+            sum += route.stops.get(i).getDisembarkRate();
         }
         return sum/route.stops.size();
     }

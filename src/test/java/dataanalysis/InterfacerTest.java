@@ -1,9 +1,11 @@
+package dataanalysis;
+
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import main.java.dataanalysis.Interfacer;
-import main.java.corelogic.Bus;
-import main.java.corelogic.Route;
-import main.java.corelogic.Stop;
+import dataanalysis.Interfacer;
+import corelogic.Bus;
+import corelogic.Route;
+import corelogic.Stop;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -19,7 +21,7 @@ public class InterfacerTest {
     @Test
     public void constructorTest() {
         Interfacer testInterfacer = new Interfacer();
-        testInterfacer.addStop(new Stop(1, "Harold Dr. and 5th", 0.4, 7.0));
+        testInterfacer.addStop(new Stop(1, "Harold Dr. and 5th", 0.4, 7.0, 1.0));
         assertEquals(testInterfacer.getStops().get(0).getName(), "Harold Dr. and 5th");
         assertEquals(testInterfacer.getStops().get(0).getX(), 0.4, 0.01);
         assertEquals(testInterfacer.getStops().get(0).getX(), 0.4, 0.01);
@@ -29,9 +31,9 @@ public class InterfacerTest {
     public void simulationTest() {
         Interfacer test = new Interfacer();
 
-        Stop stop1 = new Stop(0, "CULC", 0.4, 7.0);
-        Stop stop2 = new Stop(1, "CRC", 0.6, 1.5);
-        Stop stop3 = new Stop(2, "Student Center", 0.9, 4.3);
+        Stop stop1 = new Stop(0, "CULC", 0.4, 7.0, 1);
+        Stop stop2 = new Stop(1, "CRC", 0.6, 1.5, 2);
+        Stop stop3 = new Stop(2, "Student Center", 0.9, 4.3, 3);
         List<Stop> stops = new ArrayList<>();
         stops.add(stop1);
         stops.add(stop2);
@@ -52,13 +54,5 @@ public class InterfacerTest {
         // At this moment, route effectiveness should be 52.5
         test.updateEffectiveness();
         assertEquals(52.5, test.getEffectiveness(), 0.1);
-
-        // Update Dummy Simulation
-        // subtract 10 from all bus speeds
-        buses.get(0).setSpeed(40);
-        buses.get(1).setSpeed(30);
-        test.updateEffectiveness();
-        // At this moment, route effectiveness should be 42.5
-        assertEquals(42.5, test.getEffectiveness(), 0.1);
     }
 }

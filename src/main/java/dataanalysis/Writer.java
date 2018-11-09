@@ -1,10 +1,10 @@
-package main.java.dataanalysis;
+package dataanalysis;
 
 // Imports
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import main.java.corelogic.Stop;
+import corelogic.Stop;
 
 public class Writer {
 

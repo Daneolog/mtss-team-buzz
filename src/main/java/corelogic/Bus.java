@@ -21,19 +21,26 @@ public class Bus {
     public Bus(int id, Route route, int startStop, int initialPassengers, int capacity, double speed, int simTime) {
         this.id = id;
         this.route = route;
-        currentStop = startStop;
-        passengers = new ArrayList<>();
-        for (int i=0; i<initialPassengers; i++) {
-            passengers.add(new Passenger(null));
-        }
         this.capacity = capacity;
         this.speed = speed;
+        currentStop = startStop;
+        simInit(initialPassengers, simTime);
+    }
+
+    private Bus(Route route) {
+        this.route = route;
+    }
+
+    private void simInit(int initialPassengers, int simTime) {
+        passengers = new ArrayList<>();
+        for (int i = 0; i < initialPassengers; ++i) {
+            passengers.add(new Passenger(null));
+        }
         CalculateNextStop();
         CalculateArrival(simTime);
     }
 
-
-    boolean Tick(int simTime) {
+    boolean tick(int simTime) {
         if (simTime == arrivalTime) {
             currentStop = nextStop;
             CalculateNextStop();
@@ -84,15 +91,44 @@ public class Bus {
         }
     }
 
-    public double getSpeed() {
-        return speed;
-    }
+    public static class BusBuilder {
+        private Bus bus;
+        private int simTime;
+        private int initialPassengers;
 
-    public List<Passenger> getPassengers() {
-        return passengers;
-    }
+        BusBuilder(Route route, int simTime) {
+            bus = new Bus(route);
+            this.simTime = simTime;
+        }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
+        BusBuilder id(int id) {
+            bus.id = id;
+            return this;
+        }
+
+        BusBuilder speed(double speed) {
+            bus.speed = speed;
+            return this;
+        }
+
+        BusBuilder capacity(int capacity) {
+            bus.capacity = capacity;
+            return this;
+        }
+
+        BusBuilder startStop(int startStop) {
+            bus.currentStop = startStop;
+            return this;
+        }
+
+        BusBuilder initPassengers(int initialPassengers) {
+            this.initialPassengers = initialPassengers;
+            return this;
+        }
+
+        Bus build() {
+            bus.simInit(initialPassengers, simTime);
+            return bus;
+        }
     }
 }

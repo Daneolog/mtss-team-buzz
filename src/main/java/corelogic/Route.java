@@ -3,7 +3,7 @@ package corelogic;
 import java.util.List;
 
 public class Route {
-    int id;
+    private int id;
     public List<Stop> stops;
     private boolean isLinear;
 

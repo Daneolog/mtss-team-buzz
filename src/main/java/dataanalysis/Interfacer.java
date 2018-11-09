@@ -1,9 +1,9 @@
-package main.java.dataanalysis;
+package dataanalysis;
 
 // Imports
-import main.java.corelogic.Bus;
-import main.java.corelogic.Route;
-import main.java.corelogic.Stop;
+import corelogic.Bus;
+import corelogic.Route;
+import corelogic.Stop;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -53,7 +53,7 @@ public class Interfacer {
         }
         stops.add(stop);
         // Poll Analyzer
-        int score = Analyzer.addStop(stop);
+        double score = Analyzer.addStop(stop);
         // Update FileWriter
     }
 
@@ -86,12 +86,12 @@ public class Interfacer {
     public void updateEffectiveness() {
         double totalCost = 0;
         for (Bus bus: buses) {
-            totalCost = totalCost + bus.getSpeed() + bus.getPassengers().size();
+            totalCost = totalCost + 0; //bus.getSpeed() + bus.getPassengers().size();
         }
 
         double totalWaitTime = 0;
         for (Stop stop: stops) {
-            totalWaitTime = totalWaitTime + stop.getPassengerQueue().size();
+            totalWaitTime = totalWaitTime + stop.getDisembarkRate();
         }
 
         this.effectiveness = (totalCost / buses.size()) + (totalWaitTime / stops.size());
