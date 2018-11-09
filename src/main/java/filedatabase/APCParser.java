@@ -62,8 +62,14 @@ class APCParser {
             uniqueRouteIds.add(route_id);
         }
         if(!uniqueStopIds.contains(stop_id)) {
-            String latitude = record.get("latitude");
-            String longitude = record.get("longitude");
+            String latitude = "0.0";
+            if(!record.get("latitude").equals("")) {
+                latitude = record.get("latitude");
+            }
+            String longitude = "0.0";
+            if(!record.get("longitude").equals("")) {
+                longitude = record.get("longitude");
+            }
             String stop_name = record.get("stop_name");
             if(dbclass.addNewStop(stop_id, stop_name, latitude, longitude) == false) {
                 System.err.println(String.format(
@@ -78,13 +84,11 @@ class APCParser {
         } else if(!departure_time.equals("")) {
             datetime = String.format("%s %s", calendar_date, departure_time);
         }
-        if(datetime != null) {
-            if(dbclass.addNewBusLocation(datetime, bus_id, stop_id, route_id,
-                   passenger_ons, passenger_offs) == false) {
-                System.err.println(String.format(
-                    "Could not add new bus with ID %d.", bus_id));
-                return false;
-            }
+        if(dbclass.addNewBusLocation(datetime, bus_id, stop_id, route_id,
+               passenger_ons, passenger_offs) == false) {
+            System.err.println(String.format(
+                "Could not add new bus with ID %d.", bus_id));
+            return false;
         }
 
         return true;

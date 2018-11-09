@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -115,9 +116,13 @@ class DBClass {
                 "INSERT INTO BusLocation (datetime, bus_id, stop_id, " +
                 "route_id, passenger_ons, passenger_offs) " +
                 "VALUES(?,?,?,?,?,?);");
-            pstmt.setTimestamp(1,
-                new Timestamp(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
-                    .parse(datetime).getTime()));
+            if(datetime != null) {
+                pstmt.setTimestamp(1,
+                    new Timestamp(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
+                        .parse(datetime).getTime()));
+            } else {
+                pstmt.setNull(1, Types.TIMESTAMP);
+            }
             pstmt.setInt(2, bus_id);
             pstmt.setInt(3, stop_id);
             pstmt.setInt(4, route_id);
