@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class SimulationManager {
 
+    // TODO: Pass this stuff to data analysis
     static private List<Bus> buses;
     static private List<Stop> stops;
     static private List<Route> routes;
@@ -15,13 +16,10 @@ public class SimulationManager {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         initSim(args[0]);
-        System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
-        System.out.println("Bus 2 is at stop " + buses.get(1).getCurrentStop().getName());
+        System.out.println("Simulation initialized");
         while (scanner.hasNext()) {
             scanner.next();
-            MoveNextBus();
-            System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
-            System.out.println("Bus 2 is at stop " + buses.get(1).getCurrentStop().getName());
+            tick();
         }
     }
 
@@ -35,10 +33,16 @@ public class SimulationManager {
     private static boolean tick() {
         boolean busArrived = false;
         ++simTime;
-        for (Stop stop : stops)
-            stop.tick();
-        for (Bus bus : buses)
-            busArrived = bus.tick(simTime) || busArrived;
+        System.out.println("Simtime: " + simTime);
+        for (Stop stop : stops) {
+            int num = stop.tick();
+            System.out.println(stop.getName() + ": Spawned " + num + " passengers");
+        }
+        for (Bus bus : buses) {
+            boolean busArrivedNow = bus.tick(simTime);
+            System.out.println("Bus " + bus.getId() + " is at " + bus.getCurrentStop().getName());
+            busArrived = busArrivedNow || busArrived;
+        }
         return busArrived;
     }
 

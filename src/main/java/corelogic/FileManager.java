@@ -23,14 +23,14 @@ class FileManager {
                 switch (command[0]) {
                     case "add_stop":
                         Stop.StopBuilder stopBuilder = new Stop.StopBuilder();
-                        stopBuilder.id(Integer.parseInt(command[1])).name(command[2]).x(Double.parseDouble(command[4])).y(Double.parseDouble(command[5]));
+                        stopBuilder.id(Integer.parseInt(command[1])).name(command[2]).x(Double.parseDouble(command[4])).y(Double.parseDouble(command[5])).arrivalRate(1);
                         stops.put(Integer.parseInt(command[1]), stopBuilder.build());
                         break;
                     case "add_route":
                         routes.put(Integer.parseInt(command[1]), new Route(Integer.parseInt(command[1]), new ArrayList<>(), false));
                         break;
                     case "extend_route":
-                        routes.get(Integer.parseInt(command[1])).stops.add(stops.get(Integer.parseInt(command[2])));
+                        routes.get(Integer.parseInt(command[1])).addStop(stops.get(Integer.parseInt(command[2])));
                         break;
                     case "add_bus":
                         Bus.BusBuilder busBuilder = new Bus.BusBuilder(routes.get(Integer.parseInt(command[2])), simTime);
