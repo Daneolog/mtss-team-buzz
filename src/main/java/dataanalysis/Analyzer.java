@@ -14,10 +14,10 @@ public class Analyzer {
 
     public static double addRoute(Route route) {
         int sum = 0;
-        for (int i = 0; i < route.stops.size(); i++) {
-            sum += route.stops.get(i).getDisembarkRate();
+        for (int i = 0; i < route.getStops().size(); i++) {
+            sum += route.getStops().get(i).getDisembarkRate();
         }
-        return sum/route.stops.size();
+        return sum/route.getStops().size();
     }
 
 }
