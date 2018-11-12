@@ -2,50 +2,56 @@ package corelogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class SimulationManager {
 
+    // TODO: Pass this stuff to data analysis
     static private List<Bus> buses;
     static private List<Stop> stops;
+    static private List<Route> routes;
 
     static private int simTime;
 
     public static void main(String[] args) {
-        InitSim();
-        System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
-        MoveNextBus();
-        System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
-        MoveNextBus();
-        System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
+        Scanner scanner = new Scanner(System.in);
+        initSim(args[0]);
+        System.out.println("Simulation initialized");
+        while (scanner.hasNext()) {
+            scanner.next();
+            tick();
+        }
     }
 
     /**
      * Simulate one tick on every simulation entity until a bus arrives at a stop
      */
     private static void MoveNextBus() {
-        while (!Tick()) {}
+        while (!tick()) {}
     }
 
-    private static boolean Tick() {
+    private static boolean tick() {
         boolean busArrived = false;
         ++simTime;
-        for (Stop stop : stops)
-            stop.Tick();
-        for (Bus bus : buses)
-            busArrived = bus.Tick(simTime) || busArrived;
+        System.out.println("Simtime: " + simTime);
+        for (Stop stop : stops) {
+            int num = stop.tick();
+            System.out.println(stop.getName() + ": Spawned " + num + " passengers");
+        }
+        for (Bus bus : buses) {
+            boolean busArrivedNow = bus.tick(simTime);
+            System.out.println("Bus " + bus.getId() + " is at " + bus.getCurrentStop().getName());
+            busArrived = busArrivedNow || busArrived;
+        }
         return busArrived;
     }
 
-    private static void InitSim() {
+    public static void initSim(String path) {
         buses = new ArrayList<>();
         stops = new ArrayList<>();
+        routes = new ArrayList<>();
         simTime = 0;
 
-        //Sample init
-        stops.add(new Stop("Downtown", 0, -10));
-        stops.add(new Stop("Midtown", 0, 0));
-        List<Stop> routeStops = new ArrayList<>(stops);
-        Route route = new Route(routeStops, false);
-        buses.add(new Bus(route, 0, 5, simTime));
+        FileManager.importScenario(path, buses, stops, routes, simTime);
     }
 }
