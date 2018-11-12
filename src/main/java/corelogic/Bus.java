@@ -52,40 +52,46 @@ public class Bus {
     }
 
     public Stop getCurrentStop() {
-        return route.stops.get(currentStop);
+        return route.getStops().get(currentStop);
+    }
+
+    public int getId() {
+        return id;
     }
 
 
     private void CalculateNextStop() {
         if (route.isLinear()) {
-            if (currentStop + 1 == route.stops.size()) {
+            if (currentStop + 1 == route.getStops().size()) {
                 nextStop = currentStop - 1;
             } else {
                 nextStop = currentStop + 1;
             }
         } else {
-            nextStop = (currentStop + 1) % route.stops.size();
+            nextStop = (currentStop + 1) % route.getStops().size();
         }
     }
 
     private void CalculateArrival(int currTime) {
-        Stop current = route.stops.get(currentStop);
-        Stop next = route.stops.get(nextStop);
+        Stop current = route.getStops().get(currentStop);
+        Stop next = route.getStops().get(nextStop);
         double dist = Math.sqrt(Math.pow(next.getX() - current.getX(), 2) + Math.pow(next.getY() - current.getY(), 2));
         arrivalTime = Math.max((int)(dist / speed), 1) + currTime;
     }
 
     private void ExchangePassengers() {
-        Stop current = route.stops.get(currentStop);
+        Stop current = route.getStops().get(currentStop);
         //Unload
         for (int i = passengers.size() - 1; i >= 0; --i) {
             if (passengers.get(i).getDestination() == current) {
+                System.out.println("Bus " + id + " dropped off a passenger");
                 passengers.remove(i);
             }
         }
         //Board
         for (int i = current.passengerQueue.size() - 1; i >=0; --i) {
-            if (route.stops.contains(passengers.get(i).getDestination())) {
+            if (route.getStops().contains(current.passengerQueue.get(i).getDestination())) {
+                System.out.println("Bus " + id + " picked up a passenger");
                 passengers.add(current.passengerQueue.remove(i));
             }
         }

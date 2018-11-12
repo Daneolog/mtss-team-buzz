@@ -40,6 +40,7 @@ public class Stop {
         this.name = "";
         passengerQueue = new LinkedList<>();
         destinations = new ArrayList<>();
+        disembarkRate = 1;
     }
 
     public double getX() {
@@ -56,7 +57,11 @@ public class Stop {
 
     public double getDisembarkRate() { return disembarkRate; }
 
-    void UpdateDesinations(List<Stop> destinations) {
+    /**
+     * Updates the reachable stops from this stop
+     * @param destinations New reachable stops
+     */
+    void updateDesinations(List<Stop> destinations) {
         this.destinations = destinations;
         totalDisembark = 0;
         for (Stop s : destinations) {
@@ -71,10 +76,35 @@ public class Stop {
     }
 
     /**
-     * Simulates one tick of time at the stop. Potentially spawns new passengers.
-     * @return true if a passenger was spawned this tick, else false
+     * Adds a new stop to the reachable stops from this stop if it doesn't already exist
+     * Does not recompute probabilities for each destination
+     * @param destination Reachable stop
      */
-    boolean tick() {
+    void addDestinationNoCalc(Stop destination) {
+        if (!destinations.contains(destination)) {
+            destinations.add(destination);
+            totalDisembark += destination.getDisembarkRate();
+        }
+    }
+
+    /**
+     * Recomputes the destination probabilities
+     * To be called after adding all the destinations to a stop
+     */
+    void recomputeDestinationProbabilities() {
+        List<Double> probabilities = new ArrayList<>();
+        for (Stop s : destinations) {
+            probabilities.add(s.disembarkRate / totalDisembark);
+        }
+        if (probabilities.size() != 0)
+            destGenerator = new AliasMethod(probabilities);
+    }
+
+    /**
+     * Simulates one tick of time at the stop. Potentially spawns new passengers.
+     * @return number of passengers spawned this tick
+     */
+    int tick() {
         //Poisson random variable generation, found on Wikipedia
         //Generate number of passengers to spawn
         double l = Math.exp(-arrivalRate);
@@ -87,10 +117,15 @@ public class Stop {
 
         //Generate each passenger's destination stop
         for (int i = 0; i < k - 1; ++i) {
-            int destIndex = destGenerator.next();
-            passengerQueue.add(new Passenger(destinations.get(destIndex)));
+
+            if (destGenerator != null) {
+                int destIndex = destGenerator.next();
+                passengerQueue.add(new Passenger(destinations.get(destIndex)));
+            } else {
+                return 0;
+            }
         }
-        return k - 1 > 0;
+        return k - 1;
     }
 
     public static class StopBuilder {
@@ -121,13 +156,18 @@ public class Stop {
             return this;
         }
 
-        StopBuilder disembarkRate(int disembarkRate) {
+        StopBuilder disembarkRate(double disembarkRate) {
             stop.disembarkRate = disembarkRate;
             return this;
         }
 
-        StopBuilder arrivalRate(int arrivalRate) {
+        StopBuilder arrivalRate(double arrivalRate) {
             stop.arrivalRate = arrivalRate;
+            return this;
+        }
+
+        StopBuilder destinations(List<Stop> destinations) {
+            stop.destinations = destinations;
             return this;
         }
 
