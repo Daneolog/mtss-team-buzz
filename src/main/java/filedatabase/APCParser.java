@@ -16,9 +16,9 @@ class APCParser {
     HashSet<Integer> uniqueStopIds;
     HashSet<Integer> uniqueRouteIds;
 //    HashMap<Integer, HashMap<Integer, Boolean>> stopAdjacencyMatrix;
-    HashMap<String, ArrayList<Integer>> routeOrder; //routeID -> orderID -> list of stopId
+    HashMap<Integer, ArrayList<Integer>> routeOrder; //routeID -> orderID -> list of stopId
     ArrayList<Integer> stops;
-    Integer busID;
+    Integer startBusId;
 
     APCParser(Reader reader, DBClass dbclass) {
         this.dbclass = dbclass;
@@ -28,7 +28,7 @@ class APCParser {
         uniqueRouteIds = new HashSet<>();
         routeOrder = new HashMap<>();
         stops = new ArrayList<>();
-        busID = 0; //something
+        startBusId = -1;
     }
 
     boolean parseRecord(CSVRecord record) {
@@ -36,7 +36,7 @@ class APCParser {
         int curr_bus_id = Integer.parseInt(record.get("vehicle_number"));
         String calendar_date = record.get("calendar_day");
         String departure_time = record.get("departure_time");
-        String direction = record.get("direction");
+//        String direction = record.get("direction");
         int passenger_ons = 0;
         if(!record.get("ons").equals("")) {
             passenger_ons = Integer.parseInt(record.get("ons"));
@@ -57,6 +57,10 @@ class APCParser {
             }
             uniqueBusIds.add(curr_bus_id);
         }
+        if (startBusId == -1) {
+            startBusId = curr_bus_id;
+        }
+
         if(!uniqueRouteIds.contains(route_id)) {
             String route_name = record.get("route_name");
             if(dbclass.addNewRoute(route_id, route_name) == false) {
@@ -96,27 +100,21 @@ class APCParser {
             return false;
         }
 
-
-        if (busID != curr_bus_id) {
+        if (startBusId != curr_bus_id) {
             for (int i = 0; i < stops.size(); i++) {
-
-                for (int j = i + 1; j < stops.size(); j++) {
-                    if (stops[i] == stops[j]) {
+                for (int j = i + 1; j < stops.size() - 1; j++) {
+                    if (stops.get(i) == stops.get(j)) {
                         if(!(routeOrder.containsKey(route_id)) || j-i > routeOrder.get(route_id).size()) {
-                            Arraylist<Integer> temp = stops.subList(i, j);
+                            ArrayList<Integer> temp = (ArrayList) stops.subList(i, j);
                             routeOrder.put(route_id, temp);
-
                         }
-
                     }
                 }
             }
             stops.clear();
-            busID = curr_bus_id;
+            startBusId = curr_bus_id;
         }
         stops.add(stop_id);
-
-
 
         return true;
     }
@@ -140,6 +138,11 @@ class APCParser {
         }
         if(dbclass.createBusLocationTable() == false) {
             System.err.println("Could not create the BusLocation table.");
+            return;
+        }
+
+        if (dbclass.createRouteOrderTable() == false) {
+            System.err.println("Could not create the RouteOrder table.");
             return;
         }
         // TODO:
@@ -180,6 +183,13 @@ class APCParser {
                     "Encountered an error while trying to insert record %s",
                     record.toString()));
                 break;
+            }
+        }
+        for (Integer routeId : routeOrder.keySet()) {
+            int counter = 1;
+            for (Integer stopId : routeOrder.get(routeId)) {
+                dbclass.addNewStopToRouteOrder(routeId, stopId, counter);
+                counter++;
             }
         }
         dbclass.closeConnection();
