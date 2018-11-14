@@ -19,6 +19,7 @@ class APCParser {
     HashMap<Integer, ArrayList<Integer>> routeOrder; //routeID -> orderID -> list of stopId
     ArrayList<Integer> stops;
     Integer startBusId;
+    int prev_route_id;
 
     APCParser(Reader reader, DBClass dbclass) {
         this.dbclass = dbclass;
@@ -29,6 +30,7 @@ class APCParser {
         routeOrder = new HashMap<>();
         stops = new ArrayList<>();
         startBusId = -1;
+        prev_route_id = -1;
     }
 
     boolean parseRecord(CSVRecord record) {
@@ -46,6 +48,9 @@ class APCParser {
             passenger_offs = Integer.parseInt(record.get("offs"));
         }
         int route_id = Integer.parseInt(record.get("route"));
+        if(prev_route_id == -1) {
+            prev_route_id = route_id;
+        }
         int stop_id = Integer.parseInt(record.get("stop_id"));
         String datetime = null;
 
@@ -102,19 +107,22 @@ class APCParser {
 
         if (startBusId != curr_bus_id) {
             for (int i = 0; i < stops.size(); i++) {
-                for (int j = i + 1; j < stops.size() - 1; j++) {
-                    if (stops.get(i) == stops.get(j)) {
-                        if(!(routeOrder.containsKey(route_id)) || j-i > routeOrder.get(route_id).size()) {
-                            ArrayList<Integer> temp = (ArrayList) stops.subList(i, j);
-                            routeOrder.put(route_id, temp);
+                for (int j = i + 1; j < stops.size(); j++) {
+                    if (stops.get(i).equals(stops.get(j))) {
+                        if(!(routeOrder.containsKey(prev_route_id))) {
+                            ArrayList<Integer> temp = new ArrayList<Integer>(stops.subList(i, j));
+                            routeOrder.put(prev_route_id, temp);
                         }
                     }
                 }
             }
             stops.clear();
             startBusId = curr_bus_id;
+            prev_route_id = route_id;
         }
-        stops.add(stop_id);
+        if(stop_id != 99999) {
+            stops.add(stop_id);
+        }
 
         return true;
     }
