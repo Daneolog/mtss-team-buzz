@@ -148,7 +148,6 @@ class APCParser {
             System.err.println("Could not create the BusLocation table.");
             return;
         }
-
         if (dbclass.createRouteOrderTable() == false) {
             System.err.println("Could not create the RouteOrder table.");
             return;
@@ -196,7 +195,7 @@ class APCParser {
         for (Integer routeId : routeOrder.keySet()) {
             int counter = 1;
             for (Integer stopId : routeOrder.get(routeId)) {
-                dbclass.addNewStopToRouteOrder(routeId, stopId, counter);
+                dbclass.addNewRouteOrder(routeId, stopId, counter);
                 counter++;
             }
         }
