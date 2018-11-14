@@ -13,7 +13,7 @@ class FileManager {
         HashMap<Integer, Route> routes = new HashMap<>();
 
         try {
-            File file = new File("scenarios/" + filename);
+            File file = new File(filename);
             BufferedReader f = new BufferedReader(new FileReader(file));
             String line;
 
@@ -22,16 +22,20 @@ class FileManager {
 
                 switch (command[0]) {
                     case "add_stop":
-                        stops.put(Integer.parseInt(command[1]), new Stop(Integer.parseInt(command[1]), command[2], Double.parseDouble(command[4]), Double.parseDouble(command[5])));
+                        Stop.StopBuilder stopBuilder = new Stop.StopBuilder();
+                        stopBuilder.id(Integer.parseInt(command[1])).name(command[2]).x(Double.parseDouble(command[4])).y(Double.parseDouble(command[5])).arrivalRate(1);
+                        stops.put(Integer.parseInt(command[1]), stopBuilder.build());
                         break;
                     case "add_route":
                         routes.put(Integer.parseInt(command[1]), new Route(Integer.parseInt(command[1]), new ArrayList<>(), false));
                         break;
                     case "extend_route":
-                        routes.get(Integer.parseInt(command[1])).stops.add(stops.get(Integer.parseInt(command[2])));
+                        routes.get(Integer.parseInt(command[1])).addStop(stops.get(Integer.parseInt(command[2])));
                         break;
                     case "add_bus":
-                        buses.put(Integer.parseInt(command[1]), new Bus(Integer.parseInt(command[1]), routes.get(Integer.parseInt(command[2])), Integer.parseInt(command[3]), Integer.parseInt(command[4]), Integer.parseInt(command[5]), Double.parseDouble(command[8]), simTime));
+                        Bus.BusBuilder busBuilder = new Bus.BusBuilder(routes.get(Integer.parseInt(command[2])), simTime);
+                        busBuilder.id(Integer.parseInt(command[1])).startStop(Integer.parseInt(command[3])).initPassengers(Integer.parseInt(command[4])).capacity(Integer.parseInt(command[5])).speed(Double.parseDouble(command[8]));
+                        buses.put(Integer.parseInt(command[1]), busBuilder.build());
                         break;
                     case "add_event":
                         // aren't we doing this dynamically in simulation...?
