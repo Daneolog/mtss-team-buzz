@@ -1,9 +1,6 @@
 package corelogic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class SimulationManager {
 
@@ -14,57 +11,67 @@ public class SimulationManager {
     static private int simTime;
     static private boolean running;
 
+    static Timer timer;
+    static float interval;
+
     static class Run extends TimerTask {
         public void run() {
             if (running) {
-                Tick();
-                simTime++;
+                tick();
             }
-            System.out.println("Bus 1 is at stop " + buses.get(0).getCurrentStop().getName());
         }
     }
 
     public static void main(String[] args) {
-        InitSim(1);
+        initSim("test_scenario_fun.txt", 1);
 
-        interrupt();
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            scanner.nextLine();
+            interrupt();
+        }
     }
 
     /**
      * Simulate one tick on every simulation entity until a bus arrives at a stop
      */
-    private static void MoveNextBus() {
-        while (!Tick()) {}
-    }
-
-    private static boolean Tick() {
-        boolean busArrived = false;
-        for (Stop stop : stops)
-            stop.Tick();
-        for (Bus bus : buses)
-            busArrived = bus.Tick(simTime) || busArrived;
-        return busArrived;
-    }
+//    private static void MoveNextBus() {
+//        while (!tick()) {}
+//    }
 
     private static void interrupt() {
         running = !running;
+        if (running) {
+            timer = new Timer();
+            timer.schedule(new Run(), 0, (int)(interval * 1000));
+        } else {
+            timer.cancel();
+        }
     }
 
-    private static void InitSim(float interval) {
+    private static boolean tick() {
+        boolean busArrived = false;
+        ++simTime;
+        System.out.println("Simtime: " + simTime);
+        for (Stop stop : stops) {
+            int num = stop.tick();
+            System.out.println(stop.getName() + ": Spawned " + num + " passengers");
+        }
+        for (Bus bus : buses) {
+            boolean busArrivedNow = bus.tick(simTime);
+            System.out.println("Bus " + bus.getId() + " is at " + bus.getCurrentStop().getName());
+            busArrived = busArrivedNow || busArrived;
+        }
+        return busArrived;
+    }
+
+    public static void initSim(String path, float interval) {
         buses = new ArrayList<>();
         stops = new ArrayList<>();
         routes = new ArrayList<>();
         simTime = 0;
 
-        //Sample init
-//        stops.add(new Stop(0, "Downtown", 0, -10));
-//        stops.add(new Stop(1, "Midtown", 0, 0));
-//        List<Stop> routeStops = new ArrayList<>(stops);
-//        Route route = new Route(0, routeStops, false);
-//        buses.add(new Bus(0, route, 0, 5, simTime));
-
-        FileManager.importScenario("test_scenario_fun.txt", buses, stops, routes, simTime);
-        Timer timer = new Timer();
-        timer.schedule(new Run(), 1000, (int)(interval * 1000));
+        FileManager.importScenario(path, buses, stops, routes, simTime);
+        SimulationManager.interval = interval;
     }
 }
