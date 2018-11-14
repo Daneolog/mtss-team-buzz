@@ -35,9 +35,9 @@ public class SimulationManager {
     /**
      * Simulate one tick on every simulation entity until a bus arrives at a stop
      */
-//    private static void MoveNextBus() {
-//        while (!tick()) {}
-//    }
+    public static void MoveNextBus() {
+        while (!tick()) {}
+    }
 
     private static void interrupt() {
         running = !running;
