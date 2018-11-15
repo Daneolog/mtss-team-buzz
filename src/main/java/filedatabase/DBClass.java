@@ -139,6 +139,40 @@ class DBClass {
         }
     }
 
+    boolean createRouteOrderTable() {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS RouteOrder (" +
+                "route_id INTEGER," +
+                "stop_id INTEGER," +
+                "order_no INTEGER," +
+                "PRIMARY KEY (route_id, stop_id, order_no)," +
+                "FOREIGN KEY (route_id) REFERENCES Route(id)," +
+                "FOREIGN KEY (stop_id) REFERENCES Stop(id)" +
+                ");");
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    boolean addNewRouteOrder(int route_id, int stop_id, int order_no) {
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(
+                "INSERT INTO RouteOrder VALUES(?,?,?);");
+            pstmt.setInt(1, route_id);
+            pstmt.setInt(2, stop_id);
+            pstmt.setInt(3, order_no);
+            pstmt.executeUpdate();
+            return true;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
     boolean createRouteTable() {
         try {
             Statement stmt = connection.createStatement();

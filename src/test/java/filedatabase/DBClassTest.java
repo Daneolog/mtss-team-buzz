@@ -54,6 +54,7 @@ public class DBClassTest {
         }
         dbclass.queryUpdate("DROP TABLE InUse;");
         dbclass.dropTableIfExists("BusLocation");
+        dbclass.dropTableIfExists("RouteOrder");
         dbclass.dropTableIfExists("Bus");
         dbclass.dropTableIfExists("Route");
         dbclass.dropTableIfExists("Stop");
@@ -184,6 +185,46 @@ public class DBClassTest {
         Assert.assertEquals(rs.getInt("route_id"), 33);
         Assert.assertEquals(rs.getInt("passenger_ons"), 5);
         Assert.assertEquals(rs.getInt("passenger_offs"), 6);
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test()
+    public void createRouteOrderTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        Assert.assertEquals(dbclass.createRouteOrderTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from RouteOrder;");
+        Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test(expected = SQLException.class)
+    public void dropRouteOrderTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        Assert.assertEquals(dbclass.createRouteOrderTable(), true);
+        ResultSet rs = dbclass.query("SELECT * from RouteOrder;");
+        Assert.assertEquals(rs.next(), false);
+        Assert.assertEquals(dbclass.dropTableIfExists("RouteOrder"), true);
+        dbclass.query("SELECT * from RouteOrder;");
+    }
+
+    @Test()
+    public void addRouteOrderTest() throws SQLException {
+        Assert.assertEquals(dbclass.connect(), true);
+        Assert.assertEquals(dbclass.createRouteTable(), true);
+        Assert.assertEquals(dbclass.createStopTable(), true);
+        Assert.assertEquals(dbclass.createRouteOrderTable(), true);
+        Assert.assertEquals(dbclass.addNewRoute(56, "test-route"), true);
+        Assert.assertEquals(dbclass.addNewStop(123456, "test-stop",
+            "33.777094012345678", "-84.396694012345678"), true);
+        Assert.assertEquals(dbclass.addNewRouteOrder(56, 123456, 1), true);
+        ResultSet rs = dbclass.query("SELECT * from RouteOrder;");
+        Assert.assertEquals(rs.next(), true);
+        Assert.assertEquals(rs.getInt("route_id"), 56);
+        Assert.assertEquals(rs.getInt("stop_id"), 123456);
+        Assert.assertEquals(rs.getInt("order_no"), 1);
         Assert.assertEquals(rs.next(), false);
     }
 
