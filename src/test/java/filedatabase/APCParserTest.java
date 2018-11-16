@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 // import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -111,5 +112,46 @@ public class APCParserTest {
         Assert.assertEquals(rs.getInt("passenger_ons"), 2);
         Assert.assertEquals(rs.getInt("passenger_offs"), 3);
         Assert.assertEquals(rs.next(), false);
+    }
+
+    @Test
+    public void apcParserRouteOrderTest() throws SQLException {
+        String testCsvString =
+            "calendar_day,route,route_name,direction,stop_id,stop_name," +
+            "arrival_time,departure_time,ons,offs,latitude,longitude," +
+            "vehicle_number\n" +
+
+            "07/01/2016,55,55: Cleveland Ave/Lakewood Heights,Southbound," +
+            "139050,JONESBORO RD SE/WHATLEY ST SE,12:30:00,12:30:00,2,3," +
+            "33.706679000000001,-84.379644999999996,2409\n" +
+
+                    "07/01/2016,55,55: Cleveland Ave/Lakewood Heights,Southbound," +
+                    "102148,MITCHELL ST SW/PRYOR ST SW,12:13:00,12:13:00,1,0," +
+                    "33.750292,-84.391905,2409\n" +
+
+                    "07/01/2016,55,55: Cleveland Ave/Lakewood Heights,Southbound," +
+                    "102150,CAPITOL SQ SW/CAPITOL PL SW,12:15:00,12:15:00,1,0," +
+                    "33.748217,-84.38812,2409\n" +
+
+                    "07/01/2016,55,55: Cleveland Ave/Lakewood Heights,Southbound," +
+                    "115172,HANK AARON DR/VANIRA AVE SE,12:15:00,12:15:00,0,0," +
+                    "33.72916,-84.38816,2409\n" +
+
+                    "07/01/2016,55,55: Cleveland Ave/Lakewood Heights,Southbound," +
+                    "222222,FAKE_STOP,12:15:00,12:15:00,0,0," +
+                    "33.75,-84.4,1111\n";
+
+        APCParser apcParser = new APCParser(new StringReader(testCsvString), dbclass);
+        apcParser.parse();
+        ResultSet rs;
+
+        Assert.assertEquals(dbclass.connect(), true);
+        rs = dbclass.query("SELECT * from routeorder ORDER BY order_no;");
+
+        int i = 1;
+        while (rs.next()) {
+            Assert.assertEquals(rs.getInt("order_no"), i);
+            i++;
+        }
     }
 }
