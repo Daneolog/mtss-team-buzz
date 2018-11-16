@@ -11,14 +11,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 
-class DBClass {
+public class DBClass {
     String url;
     String user;
     String password;
     Connection connection;
 
-    DBClass(String ip, int port, String db, String user, String password) {
+    public DBClass(String ip, int port, String db, String user, String password) {
         if(port < 0 || port > 65535) {
             throw new IllegalArgumentException("Provided port is out of range.");
         }
@@ -244,6 +246,81 @@ class DBClass {
         } catch(SQLException e) {
             System.err.println(e.getMessage());
             return false;
+        }
+    }
+
+    ArrayList<ResultSet> getBusLocationsInDateRange(Date startDate, Date endDate) {
+        ArrayList<ResultSet> resultList = new ArrayList<>();
+        try {
+            PreparedStatement startIdQuery = connection.prepareStatement(
+                "SELECT id FROM BusLocation " +
+                "WHERE datetime BETWEEN ? AND ? " +
+                "ORDER BY id ASC " +
+                "LIMIT 1;");
+            PreparedStatement endIdQuery = connection.prepareStatement(
+                "SELECT id FROM BusLocation " +
+                "WHERE datetime BETWEEN ? AND ? " +
+                "ORDER BY id DESC " +
+                "LIMIT 1;");
+            startIdQuery.setTimestamp(1,
+                new Timestamp(startDate.getTime()));
+            endIdQuery.setTimestamp(1,
+                new Timestamp(startDate.getTime()));
+            startIdQuery.setTimestamp(2,
+                new Timestamp(endDate.getTime()));
+            endIdQuery.setTimestamp(2,
+                new Timestamp(endDate.getTime()));
+            ResultSet startRs = startIdQuery.executeQuery();
+            ResultSet endRs = endIdQuery.executeQuery();
+            if(!startRs.next()) {
+                startRs.close();
+                endRs.close();
+                return resultList;
+            } else {
+                endRs.next();
+                int startId = startRs.getInt(1);
+                int endId = endRs.getInt(1);
+                startRs.close();
+                endRs.close();
+
+                PreparedStatement uniqueRoutesQuery = connection.prepareStatement(
+                    "SELECT DISTINCT B.route_id, R.name " +
+                    "FROM BusLocation AS B JOIN Route as R " +
+                    "ON B.route_id = R.id " +
+                    "WHERE B.id BETWEEN ? AND ?;");
+                uniqueRoutesQuery.setInt(1, startId);
+                uniqueRoutesQuery.setInt(2, endId);
+
+                PreparedStatement busLocationQuery = connection.prepareStatement(
+                    "SELECT * FROM BusLocation " +
+                    "WHERE id BETWEEN ? AND ? " +
+                    "ORDER BY id ASC;");
+                busLocationQuery.setInt(1, startId);
+                busLocationQuery.setInt(2, endId);
+
+                resultList.add(uniqueRoutesQuery.executeQuery());
+                resultList.add(busLocationQuery.executeQuery());
+                return resultList;
+            }
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    ResultSet getRouteOrder(int route_id) {
+        try {
+            PreparedStatement routeOrderQuery = connection.prepareStatement(
+                "SELECT stop_id, name, latitude, longitude " +
+                "FROM RouteOrder as R JOIN Stop as S " +
+                "ON R.stop_id = S.id " +
+                "WHERE route_id = ? " +
+                "ORDER BY order_no;");
+            routeOrderQuery.setInt(1, route_id);
+            return routeOrderQuery.executeQuery();
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return null;
         }
     }
 }
