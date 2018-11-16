@@ -4,15 +4,19 @@ import java.util.*;
 
 public class SimulationManager {
 
-    static private List<Bus> buses;
-    static private List<Stop> stops;
-    static private List<Route> routes;
+    private static List<Bus> buses;
+    private static List<Stop> stops;
+    private static List<Route> routes;
 
-    static private int simTime;
-    static private boolean running;
+    public static List<Bus> getBuses() { return buses; }
+    public static List<Stop> getStops() { return stops; }
+    public static List<Route> getRoutes() { return routes; }
 
-    static Timer timer;
-    static float interval;
+    private static int simTime;
+    private static boolean running;
+
+    private static Timer timer;
+    private static float interval;
 
     static class Run extends TimerTask {
         public void run() {
