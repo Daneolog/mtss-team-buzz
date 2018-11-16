@@ -20,7 +20,9 @@ public class SimulationGenerator {
 
     public String createSimulationFile(Date startDate, Date endDate) {
         HashSet<Integer> routesInDateRange = new HashSet<>();
-        HashMap<Integer, Integer> busRouteMap = new HashMap<>();
+        ArrayList<String> addRouteCommands = new ArrayList<>();
+        ArrayList<String> addStopCommands = new ArrayList<>();
+        ArrayList<String> extendRouteCommands = new ArrayList<>();
         StringBuilder simulationFile = new StringBuilder();
 
         if(this.dbClass.connect() == false) {
@@ -40,17 +42,17 @@ public class SimulationGenerator {
                 int route_id = resultList.get(0).getInt(1);
                 String route_name = resultList.get(0).getString(2);
                 if(!routesInDateRange.contains(route_id)) {
-                    simulationFile.append(String.format("add_route,%d,%d,%s\n",
+                    addRouteCommands.add(String.format("add_route,%d,%d,%s\n",
                         route_id, route_id, route_name));
                     ResultSet routeOrderRs = this.dbClass.getRouteOrder(route_id);
                     while(routeOrderRs.next()) {
-                        simulationFile.append(String.format("add_stop,%d,%s,%d,%s,%s\n",
+                        addStopCommands.add(String.format("add_stop,%d,%s,%d,%s,%s\n",
                             routeOrderRs.getInt(1),
                             routeOrderRs.getString(2),
                             5,
                             routeOrderRs.getBigDecimal(3).toString(),
                             routeOrderRs.getBigDecimal(4).toString()));
-                        simulationFile.append(String.format("extend_route,%d,%d\n",
+                        extendRouteCommands.add(String.format("extend_route,%d,%d\n",
                             route_id,
                             routeOrderRs.getInt(1)));
                     }
@@ -63,6 +65,16 @@ public class SimulationGenerator {
                 //routesInDateRange.add(resultList.get(1).getInt(1));
             }
             resultList.get(1).close();
+
+            for(String command : addStopCommands) {
+                simulationFile.append(command);
+            }
+            for(String command : addRouteCommands) {
+                simulationFile.append(command);
+            }
+            for(String command : extendRouteCommands) {
+                simulationFile.append(command);
+            }
         } catch(SQLException e) {
             System.err.println(e.getMessage());
             return "";
