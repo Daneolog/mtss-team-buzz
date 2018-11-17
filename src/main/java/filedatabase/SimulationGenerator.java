@@ -20,8 +20,12 @@ public class SimulationGenerator {
 
     public String createSimulationFile(Date startDate, Date endDate) {
         HashSet<Integer> routesInDateRange = new HashSet<>();
+        HashSet<Integer> busesInDateRange = new HashSet<>();
+        HashMap<Integer, Integer> routeLengthMap = new HashMap<>();
+        HashMap<Integer, Integer> routeLastLocationMap = new HashMap<>();
+        ArrayList<String> addBusCommands = new ArrayList<>();
         ArrayList<String> addRouteCommands = new ArrayList<>();
-        ArrayList<String> addStopCommands = new ArrayList<>();
+        HashSet<String> addStopCommands = new HashSet<>();
         ArrayList<String> extendRouteCommands = new ArrayList<>();
         StringBuilder simulationFile = new StringBuilder();
 
@@ -39,25 +43,43 @@ public class SimulationGenerator {
 
         try {
             while(resultList.get(0).next()) {
-                int route_id = resultList.get(0).getInt(1);
-                String route_name = resultList.get(0).getString(2);
-                if(!routesInDateRange.contains(route_id)) {
-                    addRouteCommands.add(String.format("add_route,%d,%d,%s\n",
-                        route_id, route_id, route_name));
-                    ResultSet routeOrderRs = this.dbClass.getRouteOrder(route_id);
-                    while(routeOrderRs.next()) {
-                        addStopCommands.add(String.format("add_stop,%d,%s,%d,%s,%s\n",
-                            routeOrderRs.getInt(1),
-                            routeOrderRs.getString(2),
-                            5,
-                            routeOrderRs.getBigDecimal(3).toString(),
-                            routeOrderRs.getBigDecimal(4).toString()));
-                        extendRouteCommands.add(String.format("extend_route,%d,%d\n",
-                            route_id,
-                            routeOrderRs.getInt(1)));
+                int bus_id = resultList.get(0).getInt(1);
+                int route_id = resultList.get(0).getInt(2);
+                String route_name = resultList.get(0).getString(3);
+                if(!busesInDateRange.contains(bus_id)) {
+                    if(!routesInDateRange.contains(route_id)) {
+                        addRouteCommands.add(String.format("add_route,%d,%d,%s\n",
+                            route_id, route_id, route_name));
+                        ResultSet routeOrderRs = this.dbClass.getRouteOrder(route_id);
+                        routeLengthMap.put(route_id, 0);
+                        while(routeOrderRs.next()) {
+                            addStopCommands.add(String.format("add_stop,%d,%s,%d,%s,%s\n",
+                                routeOrderRs.getInt(1),
+                                routeOrderRs.getString(2),
+                                5,
+                                routeOrderRs.getBigDecimal(3).toString(),
+                                routeOrderRs.getBigDecimal(4).toString()));
+                            extendRouteCommands.add(String.format("extend_route,%d,%d\n",
+                                route_id,
+                                routeOrderRs.getInt(1)));
+                            int length = routeLengthMap.get(route_id);
+                            routeLengthMap.put(route_id, length+1);
+                        }
                     }
+                    routesInDateRange.add(route_id);
+                    int routeLength = 0;
+                    if(routeLengthMap.containsKey(route_id)) {
+                        routeLength = routeLengthMap.get(route_id);
+                    }
+                    int routeLoc = 0;
+                    if(routeLastLocationMap.containsKey(route_id)) {
+                        routeLoc = routeLastLocationMap.get(route_id) + 1;
+                    }
+                    routeLastLocationMap.put(route_id, routeLoc);
+                    addBusCommands.add(String.format("add_bus,%d,%d,%d,100,10\n",
+                        bus_id, route_id, routeLoc % routeLength));
                 }
-                routesInDateRange.add(route_id);
+                busesInDateRange.add(bus_id);
             }
             resultList.get(0).close();
 
@@ -73,6 +95,9 @@ public class SimulationGenerator {
                 simulationFile.append(command);
             }
             for(String command : extendRouteCommands) {
+                simulationFile.append(command);
+            }
+            for(String command : addBusCommands) {
                 simulationFile.append(command);
             }
         } catch(SQLException e) {

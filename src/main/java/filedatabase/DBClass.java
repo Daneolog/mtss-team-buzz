@@ -284,7 +284,7 @@ public class DBClass {
                 endRs.close();
 
                 PreparedStatement uniqueRoutesQuery = connection.prepareStatement(
-                    "SELECT DISTINCT B.route_id, R.name " +
+                    "SELECT DISTINCT B.bus_id, B.route_id, R.name " +
                     "FROM BusLocation AS B JOIN Route as R " +
                     "ON B.route_id = R.id " +
                     "WHERE B.id BETWEEN ? AND ?;");
