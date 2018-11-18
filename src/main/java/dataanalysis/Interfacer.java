@@ -31,6 +31,12 @@ public class Interfacer {
         routes = new ArrayList<Route>();
     }
 
+    public Interfacer(List<Bus> buses, List<Stop> stops, List<Route> routes) {
+        this.buses = buses;
+        this.stops = stops;
+        this.routes = routes;
+    }
+
     public Writer getSimulationFile() {
         return simulationFile;
     }
@@ -45,33 +51,6 @@ public class Interfacer {
 
     public double getEffectiveness() {
         return effectiveness;
-    }
-
-    public void addStop(Stop stop) throws IllegalArgumentException {
-        if (stop == null) {
-            throw new IllegalArgumentException("Stop may not be null.");
-        }
-        stops.add(stop);
-        // Poll Analyzer
-        double score = Analyzer.addStop(stop);
-        // Update FileWriter
-    }
-
-    public void addBus(Bus bus) throws IllegalArgumentException {
-        if (bus == null) {
-            throw new IllegalArgumentException("Buss may not be null.");
-        }
-        // Poll Analyzer
-        // Update FileWriter
-    }
-
-    public void addRoute(Route route) {
-        // Poll Analyzer
-        // Update FileWriter
-    }
-
-    public void extendRoute(Route route, Stop stop) {
-
     }
 
     public void dummySimulationInit(List<Bus> buses, List<Stop> stops, List<Route> routes) {
@@ -96,4 +75,31 @@ public class Interfacer {
 
         this.effectiveness = (totalCost / buses.size()) + (totalWaitTime / stops.size());
     }
+
+    public void addStop(Stop stop) throws IllegalArgumentException {
+        if (stop == null) {
+            throw new IllegalArgumentException("Stop may not be null.");
+        }
+        stops.add(stop);
+        // Poll Analyzer
+        double score = Analyzer.addStop(stop);
+        // Update FileWriter
+    }
+//
+//    public void addBus(Bus bus) throws IllegalArgumentException {
+//        if (bus == null) {
+//            throw new IllegalArgumentException("Buss may not be null.");
+//        }
+//        // Poll Analyzer
+//        // Update FileWriter
+//    }
+//
+//    public void addRoute(Route route) {
+//        // Poll Analyzer
+//        // Update FileWriter
+//    }
+//
+//    public void extendRoute(Route route, Stop stop) {
+//
+//    }
 }

@@ -1,15 +1,24 @@
 package corelogic;
 
+import dataanalysis.Interfacer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class SimulationManager {
+    static private Interfacer DataAnalysis;
 
     // TODO: Pass this stuff to data analysis
     static private List<Bus> buses;
     static private List<Stop> stops;
     static private List<Route> routes;
+
+    public static List<Bus> getBuses() { return buses; }
+    public static List<Stop> getStops() { return stops; }
+    public static List<Route> getRoutes() { return routes; }
+
+    // For Testing Purposes Only
+    public static Interfacer getDataAnalysis() { return DataAnalysis; }
 
     static private int simTime;
 
@@ -43,6 +52,8 @@ public class SimulationManager {
             System.out.println("Bus " + bus.getId() + " is at " + bus.getCurrentStop().getName());
             busArrived = busArrivedNow || busArrived;
         }
+
+        DataAnalysis.updateEffectiveness();
         return busArrived;
     }
 
@@ -51,6 +62,7 @@ public class SimulationManager {
         stops = new ArrayList<>();
         routes = new ArrayList<>();
         simTime = 0;
+        DataAnalysis = new Interfacer(buses, stops, routes);
 
         FileManager.importScenario(path, buses, stops, routes, simTime);
     }
