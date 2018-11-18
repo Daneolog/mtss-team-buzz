@@ -25,24 +25,34 @@
       </ScrollPane>
       <Accordion layoutX="910.0" layoutY="114.0" prefHeight="566.0" prefWidth="264.0">
         <panes>
-            <TitledPane animated="false" text="Sim. Stats">
+            <TitledPane expanded="false" text="Sim. Stats">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </TitledPane>
-          <TitledPane animated="false" text="Bus Info">
+          <TitledPane expanded="false" text="Bus Info">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Stop Info">
+          <TitledPane expanded="false" text="Stop Info">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Routes">
+          <TitledPane text="Routes">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <RadioButton layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Route 2">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="routes" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton layoutX="14.0" layoutY="40.0" mnemonicParsing="false" text="Route 5" toggleGroup="$routes" />
+                        <RadioButton layoutX="14.0" layoutY="67.0" mnemonicParsing="false" text="Route 11" toggleGroup="$routes" />
+                        <RadioButton layoutX="14.0" layoutY="95.0" mnemonicParsing="false" text="Route 18" toggleGroup="$routes" />
+                     </children></AnchorPane>
             </content>
           </TitledPane>
         </panes>
@@ -54,8 +64,10 @@
       </Text>
       <Button layoutX="14.0" layoutY="680.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="105.0" text="Add Bus" />
       <Button layoutX="790.0" layoutY="680.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="105.0" text="Add Stop" />
-      <Button layoutX="331.0" layoutY="680.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="65.0" text="STOP" />
-      <Button layoutX="485.0" layoutY="680.0" mnemonicParsing="false" text="FForward" />
-      <ToggleButton layoutX="394.0" layoutY="680.0" mnemonicParsing="false" text="Play/Pause" />
+      <Button layoutX="315.0" layoutY="680.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="89.0" text="STOP" textFill="RED" />
+      <Button layoutX="507.0" layoutY="680.0" mnemonicParsing="false" text="F. Forward" />
+      <ToggleButton layoutX="402.0" layoutY="680.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="105.0" text="Play/Paused" textAlignment="CENTER">
+ 
+      </ToggleButton>
    </children>
 </Pane>
