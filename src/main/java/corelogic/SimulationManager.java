@@ -4,13 +4,13 @@ import java.util.*;
 
 public class SimulationManager {
 
-    private static List<Bus> buses;
-    private static List<Stop> stops;
-    private static List<Route> routes;
+    private static HashMap<Integer, Bus> buses;
+    private static HashMap<Integer, Stop> stops;
+    private static HashMap<Integer, Route> routes;
 
-    public static List<Bus> getBuses() { return buses; }
-    public static List<Stop> getStops() { return stops; }
-    public static List<Route> getRoutes() { return routes; }
+    public static HashMap<Integer, Bus> getBuses() { return buses; }
+    public static HashMap<Integer, Stop> getStops() { return stops; }
+    public static HashMap<Integer, Route> getRoutes() { return routes; }
 
     private static int simTime;
     private static boolean running;
@@ -57,11 +57,11 @@ public class SimulationManager {
         boolean busArrived = false;
         ++simTime;
         System.out.println("Simtime: " + simTime);
-        for (Stop stop : stops) {
+        for (Stop stop : stops.values()) {
             int num = stop.tick();
             System.out.println(stop.getName() + ": Spawned " + num + " passengers");
         }
-        for (Bus bus : buses) {
+        for (Bus bus : buses.values()) {
             boolean busArrivedNow = bus.tick(simTime);
             System.out.println("Bus " + bus.getId() + " is at " + bus.getCurrentStop().getName());
             busArrived = busArrivedNow || busArrived;
@@ -70,9 +70,9 @@ public class SimulationManager {
     }
 
     public static void initSim(String path, float interval) {
-        buses = new ArrayList<>();
-        stops = new ArrayList<>();
-        routes = new ArrayList<>();
+        buses = new HashMap<>();
+        stops = new HashMap<>();
+        routes = new HashMap<>();
         simTime = 0;
 
         FileManager.importScenario(path, buses, stops, routes, simTime);

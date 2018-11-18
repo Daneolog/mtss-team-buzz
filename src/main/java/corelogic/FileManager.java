@@ -7,10 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 class FileManager {
-    static void importScenario(String filename, List<Bus> busList, List<Stop> stopList, List<Route> routeList, int simTime) {
-        HashMap<Integer, Bus> buses = new HashMap<>();
-        HashMap<Integer, Stop> stops = new HashMap<>();
-        HashMap<Integer, Route> routes = new HashMap<>();
+    static void importScenario(String filename, HashMap<Integer, Bus> buses, HashMap<Integer, Stop> stops, HashMap<Integer, Route> routes, int simTime) {
 
         try {
             File file = new File("scenarios/" + filename);
@@ -47,9 +44,5 @@ class FileManager {
         } catch (IOException e) {
             System.err.println("I have no idea why this would be thrown");
         }
-
-        busList.addAll(buses.values());
-        stopList.addAll(stops.values());
-        routeList.addAll(routes.values());
     }
 }
