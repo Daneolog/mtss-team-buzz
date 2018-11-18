@@ -1,5 +1,6 @@
 package ui;
 
+import corelogic.Bus;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ public class main extends Application {
             //Label root = new Label("Hellow World!");
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+
             primaryStage.show();
             primaryStage.setResizable(false);
         } catch (Exception e) {
