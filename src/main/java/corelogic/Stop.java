@@ -1,7 +1,6 @@
 package corelogic;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class Stop {
     private List<Stop> destinations;
 
     // Sum of all disembark rates of all routes that pass through this stop
-    private double totalDisembark;
+    private double totalDisembarkRate;
 
     private AliasMethod destGenerator;
     public LinkedList<Passenger> passengerQueue;
@@ -55,6 +54,10 @@ public class Stop {
         return name;
     }
 
+    public double getArrivalRate() { return arrivalRate; }
+
+    public double getTotalDisembarkRate() { return totalDisembarkRate; }
+
     public double getDisembarkRate() { return disembarkRate; }
 
     /**
@@ -63,13 +66,13 @@ public class Stop {
      */
     void updateDesinations(List<Stop> destinations) {
         this.destinations = destinations;
-        totalDisembark = 0;
+        totalDisembarkRate = 0;
         for (Stop s : destinations) {
-            totalDisembark += s.getDisembarkRate();
+            totalDisembarkRate += s.getDisembarkRate();
         }
         List<Double> probabilities = new ArrayList<>();
         for (Stop s : destinations) {
-            probabilities.add(s.disembarkRate / totalDisembark);
+            probabilities.add(s.disembarkRate / totalDisembarkRate);
         }
 
         destGenerator = new AliasMethod(probabilities);
@@ -83,7 +86,7 @@ public class Stop {
     void addDestinationNoCalc(Stop destination) {
         if (!destinations.contains(destination)) {
             destinations.add(destination);
-            totalDisembark += destination.getDisembarkRate();
+            totalDisembarkRate += destination.getDisembarkRate();
         }
     }
 
@@ -94,7 +97,7 @@ public class Stop {
     void recomputeDestinationProbabilities() {
         List<Double> probabilities = new ArrayList<>();
         for (Stop s : destinations) {
-            probabilities.add(s.disembarkRate / totalDisembark);
+            probabilities.add(s.disembarkRate / totalDisembarkRate);
         }
         if (probabilities.size() != 0)
             destGenerator = new AliasMethod(probabilities);
