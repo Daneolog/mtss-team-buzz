@@ -1,13 +1,11 @@
 package corelogic;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static org.junit.Assert.*;
 
 public class ExampleTest {
     /**
@@ -53,7 +51,7 @@ public class ExampleTest {
      */
     @Test
     public void test1() {
-        SimulationManager.initSim("test_scenario_moveNextBus.txt", 1);
+        SimulationManager.initSim("scenarios/test_scenario_moveNextBus.txt", 1);
 
         assertFalse(SimulationManager.tick());
         assertTrue(SimulationManager.tick());
@@ -73,11 +71,31 @@ public class ExampleTest {
      */
     @Test
     public void test2() {
-        SimulationManager.initSim("test_scenario_passengers.txt", 1);
+        SimulationManager.initSim("scenarios/test_scenario_passengers.txt", 1);
 
         for (int i = 0; i < 4; i++) {
             assertFalse(SimulationManager.tick());
         }
         assertEquals(10, SimulationManager.getBuses().get(3).getNumPassengers());
+    }
+
+    /**
+     * Test 3 from Core Logic Test Plan
+     * Stop spawns passengers
+     * Test Case:
+     *     - 1 Route with 2 Stops each with 0 Passengers
+     * Expected Behavior:
+     *     - 10 tick() calls return false because the no Bus ever reaches the next Stop
+     *     - After 10 tick() calls, both of the Stops have spawned at least one Passenger
+     */
+    @Test
+    public void test3() {
+        SimulationManager.initSim("scenarios/test_scenario_stop.txt", 1);
+
+        for (int i = 0; i < 10; i++) {
+            assertFalse(SimulationManager.tick());
+        }
+        assertNotEquals(0, SimulationManager.getStops().get(0).passengerQueue.size());
+        assertNotEquals(0, SimulationManager.getStops().get(1).passengerQueue.size());
     }
 }
