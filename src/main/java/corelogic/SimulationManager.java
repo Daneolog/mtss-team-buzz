@@ -16,7 +16,9 @@ public class SimulationManager {
     private static boolean running;
 
     private static Timer timer;
-    private static float interval;
+    private static int interval;
+    private static float fastForwardMultiplier;
+    private static boolean isFast = false;
 
     static class Run extends TimerTask {
         public void run() {
@@ -27,7 +29,11 @@ public class SimulationManager {
     }
 
     public static void main(String[] args) {
-        initSim("test_scenario_fun.txt", 1);
+        if (args.length < 1) {
+            System.out.println("Please include a path to a simulation file");
+            return;
+        }
+        initSim(args[0], 1000, 5);
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -43,16 +49,30 @@ public class SimulationManager {
         while (!tick()) {}
     }
 
+    /**
+     * Toggles automatic ticking of simulation
+     */
     public static void togglePlay() {
         running = !running;
         if (running) {
             timer = new Timer();
-            timer.schedule(new Run(), 0, (int)(interval * 1000));
+            timer.schedule(new Run(), 0, (int)(interval));
         } else {
             timer.cancel();
         }
     }
 
+    /**
+     * Toggles fast forward mode
+     */
+    public static void toggleFastForward() {
+        interval = isFast ? interval : (int) (interval * fastForwardMultiplier);
+    }
+
+    /**
+     * Simulates one time unit of simulation
+     * @return true if a bus reached a stop, otherwise false
+     */
     public static boolean tick() {
         boolean busArrived = false;
         ++simTime;
@@ -69,7 +89,13 @@ public class SimulationManager {
         return busArrived;
     }
 
-    public static void initSim(String path, float interval) {
+    /**
+     * Initializes the simulation with the given file path and tick interval
+     * @param path Path to simulation file
+     * @param interval Interval in milliseconds to tick
+     * @param fastForwardMultiplier Multiplier for fast forward mode
+     */
+    public static void initSim(String path, int interval, float fastForwardMultiplier) {
         buses = new HashMap<>();
         stops = new HashMap<>();
         routes = new HashMap<>();
@@ -77,5 +103,6 @@ public class SimulationManager {
 
         FileManager.importScenario(path, buses, stops, routes, simTime);
         SimulationManager.interval = interval;
+        SimulationManager.fastForwardMultiplier = fastForwardMultiplier;
     }
 }

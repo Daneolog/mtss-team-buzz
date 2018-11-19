@@ -53,7 +53,7 @@ public class ExampleTest {
      */
     @Test
     public void test1() {
-        SimulationManager.initSim("test_scenario_moveNextBus.txt", 1);
+        SimulationManager.initSim("test_scenario_moveNextBus.txt", 1000, 5);
 
         assertFalse(SimulationManager.tick());
         assertTrue(SimulationManager.tick());
@@ -73,7 +73,7 @@ public class ExampleTest {
      */
     @Test
     public void test2() {
-        SimulationManager.initSim("test_scenario_passengers.txt", 1);
+        SimulationManager.initSim("test_scenario_passengers.txt", 1000, 5);
 
         for (int i = 0; i < 4; i++) {
             assertFalse(SimulationManager.tick());
