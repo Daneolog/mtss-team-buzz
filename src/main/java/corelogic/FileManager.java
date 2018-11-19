@@ -10,7 +10,7 @@ class FileManager {
     static void importScenario(String filename, HashMap<Integer, Bus> buses, HashMap<Integer, Stop> stops, HashMap<Integer, Route> routes, int simTime) {
 
         try {
-            File file = new File("scenarios/" + filename);
+            File file = new File(filename);
             BufferedReader f = new BufferedReader(new FileReader(file));
             String line;
 

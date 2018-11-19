@@ -32,7 +32,7 @@ public class SimulationManager {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             scanner.nextLine();
-            interrupt();
+            togglePlay();
         }
     }
 
@@ -43,7 +43,7 @@ public class SimulationManager {
         while (!tick()) {}
     }
 
-    private static void interrupt() {
+    public static void togglePlay() {
         running = !running;
         if (running) {
             timer = new Timer();
