@@ -30,11 +30,16 @@ public class InterfacerTest {
         stops.add(new Stop(3, "Van Leer", 1.2, 0.89, 0.89));
         stops.add(new Stop(4, "Biotech Quad", 1.2, 0.89, 0.89));
         stops.add(new Stop(5, "Student Center", 1.2, 0.89, 0.89));
+        stops.add(new Stop(6, "Home Park", 3.0, 2.3, 1.0));
+        stops.add(new Stop(7, "Atlantic Station", 1.0, 0.1, 2.54));
 
         Route r1 = new Route(0, stops.subList(0, 4), false);
         Route r2 = new Route(1, stops.subList(2, 6), true);
+        Route r3 = new Route(2, stops.subList(6, 8), false);
         routes.add(r1);
         routes.add(r2);
+        routes.add(r3);
+
         Interfacer testInterfacer = new Interfacer(buses, stops, routes,
                 "full.DOT");
         testInterfacer.createGraph();
