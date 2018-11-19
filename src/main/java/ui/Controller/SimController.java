@@ -72,17 +72,17 @@ public class SimController implements Initializable {
     @FXML
     public void loadSim(ActionEvent e) {
         // getting the stage to pass to file chooser
-        lanes.getChildren().removeAll(buses.values());
-        lanes.getChildren().removeAll(stops.values());
-        this.buses = new HashMap<>();
-        this.stops = new HashMap<>();
         Window primaryStage = simLayout.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
         this.file = fileChooser.showOpenDialog(primaryStage);
         if (this.file != null) {
-            System.out.println(this.file.getAbsolutePath());
+            lanes.getChildren().removeAll(buses.values());
+            lanes.getChildren().removeAll(stops.values());
+            this.buses = new HashMap<>();
+            this.stops = new HashMap<>();
+            //System.out.println(this.file.getAbsolutePath());
             SimulationManager.initSim(this.file.getAbsolutePath(), 1);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
@@ -102,11 +102,6 @@ public class SimController implements Initializable {
                 stops.put(stop.getId(), stopObject);
                 lanes.add(stops.get(stop.getId()), 1, stop.getId());
             }
-            for (BusObject bus: buses.values()) {
-                System.out.println(bus.getBus().getId());
-
-            }
-            System.out.println(lanes.getChildren().size());
         }
     }
 
