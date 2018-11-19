@@ -59,6 +59,9 @@ public class Bus {
         return id;
     }
 
+    public int getNumPassengers() {
+        return passengers.size();
+    }
 
     private void CalculateNextStop() {
         if (route.isLinear()) {
