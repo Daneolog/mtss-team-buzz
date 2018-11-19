@@ -16,6 +16,7 @@ public class Writer {
     private FileReader reader = null;
     List<Route> routes = null;
     String file = null;
+    String[] colors = {"brown", "black", "palegreen4", "violetred4"};
 
     /**
      * Writes graph of stops to GraphViz format
@@ -25,7 +26,7 @@ public class Writer {
         try {
             writer = new FileWriter(fileName);
             reader = new FileReader(fileName);
-            file =  "digraph SimData {\n";
+            file =  "digraph SimData {\nrankdir=LR\ncolorscheme=X11\n";
             this.routes = routes;
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
@@ -34,19 +35,27 @@ public class Writer {
     }
 
     public void exportGraph(List<Route> routes) {
+        if (routes == null) {
+            System.out.println("Error null routes");
+            return;
+        }
         try {
+            List<Stop> stops;
             for (int i = 0; i < routes.size(); i++) {
-                List<Stop> stops = routes.get(i).getStops();
+                System.out.println("Route " + i);
+                stops = routes.get(i).getStops();
                 for (int j = 0; j < stops.size() - 1; j++) {
+                    System.out.println(stops.get(j).getName());
                     file += stops.get(j).getName()
                             .replace(" ", "_") + " -> "
-                            + stops.get(j+1).getName().replace(" ", "_") + "\n";
+                            + stops.get(j+1).getName().replace(" ", "_") +
+                            "[label=\"" + i + "\", color=" + colors[i] + "]\n";
                 }
                 // Connects last stop to first stop in route
                 if (!routes.get(i).isLinear()) {
                     file += stops.get(stops.size() - 1).getName().replace(" ", "_") +
                             " -> " + stops.get(0).getName().replace(" ", "_") +
-                            "\n";
+                            "[label=\"" + i + "\", color=" + colors[i] + "]\n";
                 }
             }
             file += "}";

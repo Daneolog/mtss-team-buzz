@@ -17,6 +17,8 @@ public class Interfacer {
     private List<Bus> buses;
     private List<Stop> stops;
     private List<Route> routes;
+    private List<Integer> stopEffectiveness;
+    private String fileName;
 
     private double effectiveness;
 
@@ -30,13 +32,18 @@ public class Interfacer {
         stops = new ArrayList<>();
         routes = new ArrayList<>();
         buses = new ArrayList<>();
+        stopEffectiveness = new ArrayList<>();
+        fileName = "simulation.DOT";
     }
 
-    public Interfacer(List<Bus> buses, List<Stop> stops, List<Route> routes) {
-        simulationFile = new Writer("simulation.DOT", routes);
+    public Interfacer(List<Bus> buses, List<Stop> stops, List<Route> routes,
+                      String fileName) {
+        simulationFile = new Writer(fileName, routes);
         this.buses = buses;
         this.stops = stops;
         this.routes = routes;
+        stopEffectiveness = new ArrayList<>();
+        stopEffectiveness.add(Integer.valueOf(0));
     }
 
     public Writer getSimulationFile() {

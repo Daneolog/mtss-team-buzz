@@ -3,10 +3,19 @@ package dataanalysis;
 import corelogic.Route;
 import corelogic.Stop;
 
+import java.util.List;
+
 public class Analyzer {
 
-    public Analyzer() {
+    List<Route> routes = null;
+    List<Integer> stopEffectiveness = null;
+
+    public Analyzer(List<Route> routes) {
+        this.routes = routes;
+        this.stopEffectiveness = null;
     }
+
+
 
     public static double addStop(Stop stop) {
         return stop.getDisembarkRate();
