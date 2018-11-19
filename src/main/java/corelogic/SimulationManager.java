@@ -62,7 +62,7 @@ public class SimulationManager {
         stops = new ArrayList<>();
         routes = new ArrayList<>();
         simTime = 0;
-        DataAnalysis = new Interfacer(buses, stops, routes);
+        DataAnalysis = new Interfacer(buses, stops, routes, "simulation.DOT");
 
         FileManager.importScenario(path, buses, stops, routes, simTime);
     }
