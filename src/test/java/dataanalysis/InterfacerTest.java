@@ -1,8 +1,8 @@
 package dataanalysis;
 
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import dataanalysis.Interfacer;
 import corelogic.Bus;
 import corelogic.Route;
 import corelogic.Stop;
@@ -11,17 +11,41 @@ import java.util.ArrayList;
 
 public class InterfacerTest {
 
+    List<Stop> stops = null;
+    List<Route> routes = null;
+    List<Bus> buses = null;
+
+    @Before
+    public void setup() {
+        stops = new ArrayList<>();
+        routes = new ArrayList<>();
+        buses = new ArrayList<>();
+    }
+
+    @Test
+    public void writerTest() {
+        stops.add(new Stop(0, "CULC", 0.1, 2, 0.45));
+        stops.add(new Stop(1, "Tech Square", 3.1, 0.4, 2.03));
+        stops.add(new Stop(2, "IC", 1.2, 0.89, 0.89));
+        stops.add(new Stop(3, "Van Leer", 1.2, 0.89, 0.89));
+
+        Route r1 = new Route(0, stops, false);
+        routes.add(r1);
+        Interfacer testInterfacer = new Interfacer(buses, stops, routes);
+        testInterfacer.createGraph();
+
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void constructorNullExceptionTest() {
-        Interfacer testInterfacer = new Interfacer();
-        Stop stop = null;
-        testInterfacer.addStop(stop);
+        Interfacer testInterfacer = new Interfacer(buses, null, routes);
+
     }
 
     @Test
     public void constructorTest() {
-        Interfacer testInterfacer = new Interfacer();
-        testInterfacer.addStop(new Stop(1, "Harold Dr. and 5th", 0.4, 7.0, 1.0));
+        stops.add(new Stop(1, "Harold Dr. and 5th", 0.4, 7.0, 1.0));
+        Interfacer testInterfacer = new Interfacer(buses, stops, routes);
         assertEquals(testInterfacer.getStops().get(0).getName(), "Harold Dr. and 5th");
         assertEquals(testInterfacer.getStops().get(0).getX(), 0.4, 0.01);
         assertEquals(testInterfacer.getStops().get(0).getX(), 0.4, 0.01);

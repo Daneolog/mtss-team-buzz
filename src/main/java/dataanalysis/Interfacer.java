@@ -26,12 +26,14 @@ public class Interfacer {
      *
      */
     public Interfacer() {
-        simulationFile = new Writer("simulation.DOT");
-        stops = new ArrayList<Stop>();
-        routes = new ArrayList<Route>();
+        simulationFile = new Writer("simulation.DOT", null);
+        stops = new ArrayList<>();
+        routes = new ArrayList<>();
+        buses = new ArrayList<>();
     }
 
     public Interfacer(List<Bus> buses, List<Stop> stops, List<Route> routes) {
+        simulationFile = new Writer("simulation.DOT", routes);
         this.buses = buses;
         this.stops = stops;
         this.routes = routes;
@@ -76,14 +78,8 @@ public class Interfacer {
         this.effectiveness = (totalCost / buses.size()) + (totalWaitTime / stops.size());
     }
 
-    public void addStop(Stop stop) throws IllegalArgumentException {
-        if (stop == null) {
-            throw new IllegalArgumentException("Stop may not be null.");
-        }
-        stops.add(stop);
-        // Poll Analyzer
-        double score = Analyzer.addStop(stop);
-        // Update FileWriter
+    public void createGraph() {
+        simulationFile.exportGraph(routes);
     }
 //
 //    public void addBus(Bus bus) throws IllegalArgumentException {
