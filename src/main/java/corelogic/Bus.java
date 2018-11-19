@@ -89,7 +89,7 @@ public class Bus {
             }
         }
         //Board
-        for (int i = current.passengerQueue.size() - 1; i >=0; --i) {
+        for (int i = current.passengerQueue.size() - 1; i >=0 && passengers.size() < capacity; --i) {
             if (route.getStops().contains(current.passengerQueue.get(i).getDestination())) {
                 System.out.println("Bus " + id + " picked up a passenger");
                 passengers.add(current.passengerQueue.remove(i));
