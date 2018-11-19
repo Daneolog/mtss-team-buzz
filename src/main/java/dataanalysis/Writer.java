@@ -42,9 +42,12 @@ public class Writer {
                             .replace(" ", "_") + " -> "
                             + stops.get(j+1).getName().replace(" ", "_") + "\n";
                 }
-                file += stops.get(stops.size()-1).getName().replace(" ", "_") +
-                        " -> " + stops.get(0).getName().replace(" ", "_") +
-                        "\n";
+                // Connects last stop to first stop in route
+                if (!routes.get(i).isLinear()) {
+                    file += stops.get(stops.size() - 1).getName().replace(" ", "_") +
+                            " -> " + stops.get(0).getName().replace(" ", "_") +
+                            "\n";
+                }
             }
             file += "}";
             writer.append(file);
