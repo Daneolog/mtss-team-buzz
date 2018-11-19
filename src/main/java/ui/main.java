@@ -16,7 +16,8 @@ public class main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../../resources/UI_SG.fxml"));
+            //Tip in scene builder have fxml file correspond to controller class by setting fx:id packagename.controller
+            Parent root = FXMLLoader.load(getClass().getResource("../../resources/UI_main.fxml"));
             //Label root = new Label("Hellow World!");
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);

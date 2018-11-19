@@ -47,6 +47,8 @@ public class Stop {
         return x;
     }
 
+    public int getId() { return this.id; }
+
     public double getY() {
         return y;
     }
