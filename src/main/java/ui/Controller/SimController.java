@@ -83,7 +83,7 @@ public class SimController implements Initializable {
             this.buses = new HashMap<>();
             this.stops = new HashMap<>();
             //System.out.println(this.file.getAbsolutePath());
-            SimulationManager.initSim(this.file.getAbsolutePath(), 1);
+            SimulationManager.initSim(this.file.getAbsolutePath(), 1000, 5);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
 
@@ -107,7 +107,7 @@ public class SimController implements Initializable {
 
     @FXML
     public void playSim(ActionEvent e) {
-       //TODO
+        //TODO
     }
 
     @FXML
