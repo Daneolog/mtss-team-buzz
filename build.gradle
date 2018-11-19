@@ -2,7 +2,7 @@ apply plugin: 'java'
 
 jar {
   manifest {
-    attributes 'Main-Class': 'corelogic.SimulationManager'
+    attributes 'Main-Class': 'ui.main'
   }
   from {
     configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
@@ -14,5 +14,7 @@ repositories {
 }
 
 dependencies {
+  compile 'org.apache.commons:commons-csv:1.6'
+  compile 'org.postgresql:postgresql:42.2.5'
   testCompile 'junit:junit:4.12'
 }

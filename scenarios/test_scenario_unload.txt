@@ -1,0 +1,4 @@
+add_stop,0,stop1,0,0,0
+add_route,1,route
+extend_route,1,0
+add_bus,2,1,0,20,20,0,0,1

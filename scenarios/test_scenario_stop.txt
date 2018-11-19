@@ -1,0 +1,5 @@
+add_stop,0,stop1,0,0,0
+add_stop,1,stop2,0,0,-10
+add_route,2,route
+extend_route,2,0
+extend_route,2,1

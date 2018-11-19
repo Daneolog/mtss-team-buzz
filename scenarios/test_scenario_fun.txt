@@ -1,12 +1,6 @@
 add_stop,0,Downtown,0,0,-10
 add_stop,1,Midtown,0,0,0
-add_stop,2,Far Away Land,0,0,1000
 add_route,2,Scenic
 extend_route,2,0
 extend_route,2,1
-add_route,3,Far
-extend_route,3,0
-extend_route,3,1
-extend_route,3,2
 add_bus,3,2,1,0,0,0,0,60
-add_bus,2,3,1,0,0,0,0,60
