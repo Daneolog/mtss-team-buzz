@@ -17,7 +17,7 @@ public class main extends Application {
     public void start(Stage primaryStage) {
         try {
             //Tip in scene builder have fxml file correspond to controller class by setting fx:id packagename.controller
-            Parent root = FXMLLoader.load(getClass().getResource("../../resources/UI_main.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/UI_main.fxml"));
             //Label root = new Label("Hellow World!");
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
