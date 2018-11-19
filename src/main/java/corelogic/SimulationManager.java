@@ -53,7 +53,7 @@ public class SimulationManager {
         }
     }
 
-    private static boolean tick() {
+    public static boolean tick() {
         boolean busArrived = false;
         ++simTime;
         System.out.println("Simtime: " + simTime);
