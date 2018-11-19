@@ -60,7 +60,6 @@ public class SimController implements Initializable {
     private HashMap<Integer, StopObject> stops;
 
     // variable for initialization purposes so that we don't continually add same objects on grid pane
-    private boolean start;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -68,32 +67,25 @@ public class SimController implements Initializable {
         this.file = null;
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
-        this.start = true;
     }
 
     @FXML
     public void loadSim(ActionEvent e) {
         // getting the stage to pass to file chooser
-        if (this.start) {
+        Window primaryStage = simLayout.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        this.file = fileChooser.showOpenDialog(primaryStage);
+        if (this.file != null) {
+            lanes.getChildren().removeAll(buses.values());
+            lanes.getChildren().removeAll(stops.values());
             this.buses = new HashMap<>();
             this.stops = new HashMap<>();
-            Window primaryStage = simLayout.getScene().getWindow();
-            FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-            fileChooser.getExtensionFilters().add(extFilter);
-            this.file = fileChooser.showOpenDialog(primaryStage);
-            System.out.println(this.file.getAbsolutePath());
-        }
-    }
-
-    @FXML
-    public void playSim(ActionEvent e) {
-        if (this.file != null && this.start) {
-            System.out.println(this.file.getAbsolutePath());
+            //System.out.println(this.file.getAbsolutePath());
             SimulationManager.initSim(this.file.getAbsolutePath(), 1);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
-
 
             // intializing bus and stop objexts to be place in the grid
             for (Bus bus : SimulationManager.getBuses().values()) {
@@ -110,13 +102,12 @@ public class SimController implements Initializable {
                 stops.put(stop.getId(), stopObject);
                 lanes.add(stops.get(stop.getId()), 1, stop.getId());
             }
-            for (BusObject bus: buses.values()) {
-                System.out.println(bus.getBus().getId());
-
-            }
-            this.start = false;
-            System.out.println(lanes.getChildren().size());
         }
+    }
+
+    @FXML
+    public void playSim(ActionEvent e) {
+       //TODO
     }
 
     @FXML
@@ -125,6 +116,5 @@ public class SimController implements Initializable {
         lanes.getChildren().removeAll(stops.values());
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
-        this.start = true;
     }
 }
