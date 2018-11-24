@@ -1,6 +1,7 @@
 package corelogic;
 
 import java.util.*;
+import dataanalysis.Interfacer;
 
 public class SimulationManager {
     static private Interfacer DataAnalysis;
