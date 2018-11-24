@@ -128,23 +128,23 @@ class APCParser {
     }
 
     void parse() {
-        if(dbclass.connect() == false) {
+        if (dbclass.connect() == false) {
             System.err.println("Could not connect to the database.");
             return;
         }
-        if(dbclass.createBusTable() == false) {
+        if (dbclass.createBusTable() == false) {
             System.err.println("Could not create the Bus table.");
             return;
         }
-        if(dbclass.createRouteTable() == false) {
+        if (dbclass.createRouteTable() == false) {
             System.err.println("Could not create the Route table.");
             return;
         }
-        if(dbclass.createStopTable() == false) {
+        if (dbclass.createStopTable() == false) {
             System.err.println("Could not create the Stop table.");
             return;
         }
-        if(dbclass.createBusLocationTable() == false) {
+        if (dbclass.createBusLocationTable() == false) {
             System.err.println("Could not create the BusLocation table.");
             return;
         }
@@ -163,15 +163,15 @@ class APCParser {
 
         try {
             CSVFormat csvFormat = CSVFormat.newFormat(',')
-                .withRecordSeparator('\n')
-                .withFirstRecordAsHeader();
+                    .withRecordSeparator('\n')
+                    .withFirstRecordAsHeader();
             records = csvFormat.parse(csvReader);
         } catch (IOException e) {
             System.err.println(e.toString());
             return;
         }
 
-        for(CSVRecord record : records) {
+        for (CSVRecord record : records) {
 //            String currRoute = record.get("route");
             //////            int currStop = Integer.parseInt(record.get("stop_id"));
             //////            int currBus = Integer.parseInt(record.get("stop_id"));
@@ -185,10 +185,10 @@ class APCParser {
             ////                tempRecord = tempRecord.
             ////            }
 
-            if(parseRecord(record) == false) {
+            if (parseRecord(record) == false) {
                 System.err.println(String.format(
-                    "Encountered an error while trying to insert record %s",
-                    record.toString()));
+                        "Encountered an error while trying to insert record %s",
+                        record.toString()));
                 break;
             }
         }
