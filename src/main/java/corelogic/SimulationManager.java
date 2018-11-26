@@ -35,6 +35,7 @@ public class SimulationManager {
             System.out.println("Please include a path to a simulation file");
             return;
         }
+        dataAnalysis = new Interfacer();
         initSim(args[0], 1000, 5);
 
         Scanner scanner = new Scanner(System.in);
