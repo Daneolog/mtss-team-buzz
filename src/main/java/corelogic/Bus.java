@@ -17,6 +17,9 @@ public class Bus {
     private int nextStop;
 
     private int arrivalTime;
+    private int prevArrivalTime;
+
+    public int getDeltaArrivalTime() { return arrivalTime - prevArrivalTime; }
 
     public Bus(int id, Route route, int startStop, int initialPassengers, int capacity, double speed, int simTime) {
         this.id = id;
@@ -38,6 +41,7 @@ public class Bus {
         }
         CalculateNextStop();
         CalculateArrival(simTime);
+        prevArrivalTime = simTime;
     }
 
     boolean tick(int simTime) {
@@ -59,6 +63,20 @@ public class Bus {
         return id;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public Stop getNextStop() { return route.getStops().get(nextStop); }
+
     public int getNumPassengers() {
         return passengers.size();
     }
@@ -76,10 +94,11 @@ public class Bus {
     }
 
     private void CalculateArrival(int currTime) {
+        prevArrivalTime = arrivalTime;
         Stop current = route.getStops().get(currentStop);
         Stop next = route.getStops().get(nextStop);
         double dist = Math.sqrt(Math.pow(next.getX() - current.getX(), 2) + Math.pow(next.getY() - current.getY(), 2));
-        arrivalTime = Math.max((int)(dist / speed), 1) + currTime;
+        arrivalTime = (int)(dist / speed) + 1 + currTime;
     }
 
     private void ExchangePassengers() {

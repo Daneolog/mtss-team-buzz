@@ -62,6 +62,10 @@ public class Stop {
 
     public double getDisembarkRate() { return disembarkRate; }
 
+    public List<Stop> getDestinations() {
+        return destinations;
+    }
+
     /**
      * Updates the reachable stops from this stop
      * @param destinations New reachable stops

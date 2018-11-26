@@ -17,6 +17,8 @@ public class SimulationManager {
     private static int simTime;
     private static boolean running;
 
+    public static int getSimTime() { return simTime; }
+
     private static Timer timer;
     private static int interval;
     private static float fastForwardMultiplier;
