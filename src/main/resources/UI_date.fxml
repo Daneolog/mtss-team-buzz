@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <DatePicker layoutX="52.0" layoutY="169.0" promptText="Start Date" />
+      <DatePicker layoutX="329.0" layoutY="169.0" promptText="End Date" />
+      <Text layoutX="14.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Simulation Date Range">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Text>
+      <Text layoutX="52.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose a Start Date:" />
+      <Text layoutX="329.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose an End Date:" />
+      <Button layoutX="438.0" layoutY="260.0" mnemonicParsing="false" text="Create Simulation" />
+   </children>
+</Pane>
