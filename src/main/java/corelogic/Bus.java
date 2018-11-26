@@ -79,7 +79,7 @@ public class Bus {
         Stop current = route.getStops().get(currentStop);
         Stop next = route.getStops().get(nextStop);
         double dist = Math.sqrt(Math.pow(next.getX() - current.getX(), 2) + Math.pow(next.getY() - current.getY(), 2));
-        arrivalTime = Math.max((int)(dist / speed), 1) + currTime;
+        arrivalTime = (int)(dist / speed) + 1 + currTime;
     }
 
     private void ExchangePassengers() {
