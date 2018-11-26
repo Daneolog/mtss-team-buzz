@@ -47,8 +47,8 @@ public class SimulationGenerator {
                 String route_name = resultList.get(0).getString(3);
                 if (!busesInDateRange.contains(bus_id)) {
                     if (!routesInDateRange.contains(route_id)) {
-                        addRouteCommands.add(String.format("add_route,%d,%d,%s\n",
-                                route_id, route_id, route_name));
+                        addRouteCommands.add(String.format("add_route,%d,%s\n",
+                                route_id, route_name));
                         ResultSet routeOrderRs = this.dbClass.getRouteOrder(route_id);
                         routeLengthMap.put(route_id, 0);
                         while (routeOrderRs.next()) {
