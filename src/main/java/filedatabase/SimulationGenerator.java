@@ -1,8 +1,8 @@
 package filedatabase;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,7 +12,6 @@ import java.util.HashSet;
 
 public class SimulationGenerator {
     DBClass dbClass;
-    SimulationFile simulationFile;
 
     public SimulationGenerator(DBClass dbClass) {
         this.dbClass = dbClass;
@@ -108,10 +107,17 @@ public class SimulationGenerator {
         return simulationFile.toString();
     }
 
-    public boolean send(SimulationFile simulationFile) {
-        return false;
+    public void writeSimulationFile(Date startDate, Date endDate, String filePath) throws IOException {
+        File file = new File(filePath);
+        if(file.exists()) {
+            if(file.isDirectory()) {
+                throw new IOException("Cannot write simulation to directory, please specify a file path");
+            }
+            if(!file.delete()) {
+                throw new IOException("File already exists and could not be deleted");
+            }
+        }
+        FileWriter writer = new FileWriter(file);
+        writer.write(this.createSimulationFile(startDate, endDate));
     }
-
-
-
 }
