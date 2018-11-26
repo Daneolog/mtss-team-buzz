@@ -1,4 +1,5 @@
-#Mass Transit Simulation
+Mass Transit Simulation
+=================
 This application is to be used by 
 
 People in this team:
