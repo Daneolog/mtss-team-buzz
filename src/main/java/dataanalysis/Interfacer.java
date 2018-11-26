@@ -28,16 +28,17 @@ public class Interfacer {
      *
      */
     public Interfacer() {
-        simulationFile = new Writer("simulation.DOT", null);
+        fileName = "simulation.DOT";
+        simulationFile = new Writer(fileName, null);
         stops = new ArrayList<>();
         routes = new ArrayList<>();
         buses = new ArrayList<>();
         stopEffectiveness = new ArrayList<>();
-        fileName = "simulation.DOT";
     }
 
     public Interfacer(List<Bus> buses, List<Stop> stops, List<Route> routes,
                       String fileName) {
+        this.fileName = fileName;
         simulationFile = new Writer(fileName, routes);
         this.buses = buses;
         this.stops = stops;

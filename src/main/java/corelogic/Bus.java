@@ -63,6 +63,20 @@ public class Bus {
         return id;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public Stop getNextStop() { return route.getStops().get(nextStop); }
+
     public int getNumPassengers() {
         return passengers.size();
     }
