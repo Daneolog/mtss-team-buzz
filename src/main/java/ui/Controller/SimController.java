@@ -1,27 +1,33 @@
 package ui.Controller;
 
 import corelogic.Bus;
+import corelogic.Route;
 import corelogic.SimulationManager;
 import corelogic.Stop;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.ToggleGroup;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import javafx.scene.control.ToggleButton;
+
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import ui.BusObject;
 import ui.StopObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class SimController implements Initializable {
@@ -31,6 +37,12 @@ public class SimController implements Initializable {
 
     @FXML
     private GridPane lanes;
+
+    @FXML
+    private Accordion infoPanes;
+
+    @FXML
+    private TitledPane busInfo;
 
     @FXML
     private ToggleGroup routes;
@@ -53,11 +65,56 @@ public class SimController implements Initializable {
     @FXML
     private Button load;
 
+    @FXML
+    private Text busInfoNumPpl;
+
+    @FXML
+    private Text busInfoStop;
+
+    @FXML
+    private Text busInfoNextS;
+
+    @FXML
+    private Text busInfoBusId;
+
+    @FXML
+    private Text busInfoSpeed;
+
+    @FXML
+    private Text busInfoRoute;
+
+    @FXML
+    private MenuButton busInfoStops;
+
+    @FXML
+    private TitledPane stopInfo;
+
+    @FXML
+    private Text stopInfoArrive;
+
+    @FXML
+    private Text stopInfoId;
+
+    @FXML
+    private Text stopInfoName;
+
+    @FXML
+    private MenuButton stopInfoDes;
+
+    @FXML
+    private Text stopInfoDrate;
+
+
+
     private File file;
 
     private HashMap<Integer, BusObject> buses;
 
     private HashMap<Integer, StopObject> stops;
+
+    private HashMap<Integer, Route> routesMap;
+
+    private boolean simLoaded;
 
     // variable for initialization purposes so that we don't continually add same objects on grid pane
 
@@ -67,6 +124,60 @@ public class SimController implements Initializable {
         this.file = null;
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
+        this.routesMap = new HashMap<>();
+        setInfoTextVisible(false, false);
+
+    }
+
+    public HashMap<Integer, BusObject> getBuses() {
+        return this.buses;
+    }
+
+    public HashMap<Integer, StopObject> getStops() {
+        return this.stops;
+    }
+
+    public HashMap<Integer, Route> getRoutesMap() { return this.routesMap; }
+
+    private void setImageSizes(ImageView element, double height, double width) {
+        element.setFitHeight(height);
+        element.setFitWidth(width);
+    }
+
+    /**
+     * Clears all data from ui and sets data structures to initial state.
+     */
+    private void clearData() {
+        this.lanes.getChildren().removeAll(buses.values());
+        this.lanes.getChildren().removeAll(stops.values());
+        this.buses = new HashMap<>();
+        this.stops = new HashMap<>();
+        setInfoTextVisible(false, true);
+    }
+
+    /**
+     * use to clear textfield and stops in bus pane
+     * @param visible if true to make text visible otherwise not visible
+     * @param clear if true clear stops list
+     */
+    private void setInfoTextVisible(boolean visible, boolean clear) {
+        this.busInfoBusId.setVisible(visible);
+        this.busInfoSpeed.setVisible(visible);
+        this.busInfoNumPpl.setVisible(visible);
+        this.busInfoStop.setVisible(visible);
+        this.busInfoNextS.setVisible(visible);
+        this.stopInfoDrate.setVisible(visible);
+        this.stopInfoArrive.setVisible(visible);
+        this.stopInfoName.setVisible(visible);
+        this.stopInfoId.setVisible(visible);
+        TitledPane expanded = this.infoPanes.getExpandedPane();
+        if (expanded != null) {
+            this.infoPanes.getExpandedPane().setExpanded(visible);
+        }
+        if (clear) {
+            this.busInfoStops.getItems().clear();
+            this.stopInfoDes.getItems().clear();
+        }
     }
 
     @FXML
@@ -78,27 +189,54 @@ public class SimController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
         this.file = fileChooser.showOpenDialog(primaryStage);
         if (this.file != null) {
-            lanes.getChildren().removeAll(buses.values());
-            lanes.getChildren().removeAll(stops.values());
-            this.buses = new HashMap<>();
-            this.stops = new HashMap<>();
-            //System.out.println(this.file.getAbsolutePath());
+            this.simLoaded = true;
+            // clearing buses and stops from ui
+            clearData();
             SimulationManager.initSim(this.file.getAbsolutePath(), 1000, 5);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
+            routesMap = SimulationManager.getRoutes();
 
             // intializing bus and stop objexts to be place in the grid
             for (Bus bus : SimulationManager.getBuses().values()) {
                 BusObject busObject = new BusObject(bus, busImage);
-                busObject.setFitHeight(70);
-                busObject.setFitWidth(70);
+                setImageSizes(busObject, 70, 70);
+                busObject.setOnMouseClicked(event -> {
+                    // TODO
+                    // may need to change this to be contained in border pane for highlighting
+                    infoPanes.setExpandedPane(busInfo);
+                    this.busInfoBusId.setText(String.valueOf(bus.getId()));
+                    this.busInfoStop.setText(bus.getCurrentStop().getName());
+                    this.busInfoNextS.setText(bus.getNextStop().getName());
+                    this.busInfoNumPpl.setText(String.valueOf(bus.getNumPassengers()));
+                    this.busInfoSpeed.setText(String.valueOf(bus.getSpeed()));
+                    this.busInfoRoute.setText("Route: " + bus.getRoute().getId());
+                    setInfoTextVisible(true, true);
+                    for (Stop stop : bus.getRoute().getStops()) {
+                        MenuItem stopDisplay = new MenuItem(stop.getName());
+                        this.busInfoStops.getItems().add(stopDisplay);
+                    }
+                });
                 buses.put(bus.getId(), busObject);
                 lanes.add(buses.get(bus.getId()), 0, bus.getCurrentStop().getId());
             }
             for (Stop stop : SimulationManager.getStops().values()) {
                 StopObject stopObject = new StopObject(stop, stopImage);
-                stopObject.setFitHeight(70);
-                stopObject.setFitWidth(70);
+                stopObject.setOnMouseClicked(event -> {
+                    //TODO
+                    // Issue with only beeing able to click on image itself and not white interior
+                    infoPanes.setExpandedPane(this.stopInfo);
+                    this.stopInfoId.setText(String.valueOf(stop.getId()));
+                    this.stopInfoName.setText(stop.getName());
+                    this.stopInfoArrive.setText(String.valueOf(stop.getArrivalRate()));
+                    this.stopInfoDrate.setText(String.valueOf(stop.getDisembarkRate()));
+                    setInfoTextVisible(true, true);
+                    for (Stop des : stop.getDestinations()) {
+                        MenuItem stopDisplay = new MenuItem(des.getName());
+                        this.stopInfoDes.getItems().add(stopDisplay);
+                    }
+                });
+                setImageSizes(stopObject, 70, 70);
                 stops.put(stop.getId(), stopObject);
                 lanes.add(stops.get(stop.getId()), 1, stop.getId());
             }
@@ -108,13 +246,41 @@ public class SimController implements Initializable {
     @FXML
     public void playSim(ActionEvent e) {
         //TODO
+        SimulationManager.togglePlay();
+    }
+
+    @FXML
+    public void addBusSim(ActionEvent e) throws IOException {
+        if (simLoaded) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI_addBus.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage addBusStage = new Stage();
+            addBusStage.initOwner(addBus.getScene().getWindow());
+            addBusStage.initModality(Modality.APPLICATION_MODAL); // only allows child stage to allow for user events.
+            addBusStage.setScene(scene);
+            addBusStage.setResizable(false);
+
+            //passing and recieving information from the controllers
+            addBusController controller = loader.getController();
+            controller.setParent(this); // used to access variables from this controller in child.
+            controller.getBusProperty().addListener((observable, oldValue, newValue) -> {
+                // listerner to changes in creating a new bus object to update ui
+                setImageSizes(newValue, 70, 70);
+                Bus newBus = newValue.getBus();
+                buses.put(newValue.getBus().getId(), newValue);
+                SimulationManager.getBuses().put(newBus.getId(), newBus);
+                lanes.add(newValue, 0, newBus.getCurrentStop().getId());
+                System.out.println(newBus.getId());
+
+            });
+            addBusStage.showAndWait(); // wait till addBusStage closes to resume execution
+        }
+
     }
 
     @FXML
     public void stopSim(ActionEvent e) {
-        lanes.getChildren().removeAll(buses.values());
-        lanes.getChildren().removeAll(stops.values());
-        this.buses = new HashMap<>();
-        this.stops = new HashMap<>();
+        this.simLoaded = false;
+        clearData();
     }
 }
