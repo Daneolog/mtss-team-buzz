@@ -1,7 +1,8 @@
-# Mass Transit Simulation
+#Mass Transit Simulation
 This application is to be used by 
 
-##People in this team:
+People in this team:
+-----------------
 * UI
     * Sorabh Kumar Gupta, John M Hess, Alejandro Serna
 * Core Logic
@@ -11,9 +12,11 @@ This application is to be used by
 * Data Analysis
     * Alexander Gadiel Diaz, Destin Luke Winata
 
-##Required installation:
+Required installation:
+-----------------
 * [GraphViz](https://graphviz.gitlab.io/download/)
 
-##Usage
+Usage
+-----------------
 * Run Application: `//TODO`
 * Convert .DOT file to PNG: `dot -Tpng -O fileName.DOT`
