@@ -15,7 +15,6 @@ class APCParser {
     HashSet<Integer> uniqueBusIds;
     HashSet<Integer> uniqueStopIds;
     HashSet<Integer> uniqueRouteIds;
-//    HashMap<Integer, HashMap<Integer, Boolean>> stopAdjacencyMatrix;
     HashMap<Integer, ArrayList<Integer>> routeOrder; //routeID -> orderID -> list of stopId
     ArrayList<Integer> stops;
     Integer startBusId;
@@ -38,26 +37,26 @@ class APCParser {
         int curr_bus_id = Integer.parseInt(record.get("vehicle_number"));
         String calendar_date = record.get("calendar_day");
         String departure_time = record.get("departure_time");
-//        String direction = record.get("direction");
+        //        String direction = record.get("direction");
         int passenger_ons = 0;
-        if(!record.get("ons").equals("")) {
+        if (!record.get("ons").equals("")) {
             passenger_ons = Integer.parseInt(record.get("ons"));
         }
         int passenger_offs = 0;
-        if(!record.get("offs").equals("")) {
+        if (!record.get("offs").equals("")) {
             passenger_offs = Integer.parseInt(record.get("offs"));
         }
         int route_id = Integer.parseInt(record.get("route"));
-        if(prev_route_id == -1) {
+        if (prev_route_id == -1) {
             prev_route_id = route_id;
         }
         int stop_id = Integer.parseInt(record.get("stop_id"));
         String datetime = null;
 
-        if(!uniqueBusIds.contains(curr_bus_id)) {
-            if(dbclass.addNewBus(curr_bus_id) == false) {
+        if (!uniqueBusIds.contains(curr_bus_id)) {
+            if (dbclass.addNewBus(curr_bus_id) == false) {
                 System.err.println(String.format(
-                    "Could not add new bus with ID %d.", curr_bus_id));
+                        "Could not add new bus with ID %d.", curr_bus_id));
                 return false;
             }
             uniqueBusIds.add(curr_bus_id);
@@ -66,42 +65,42 @@ class APCParser {
             startBusId = curr_bus_id;
         }
 
-        if(!uniqueRouteIds.contains(route_id)) {
+        if (!uniqueRouteIds.contains(route_id)) {
             String route_name = record.get("route_name");
-            if(dbclass.addNewRoute(route_id, route_name) == false) {
+            if (dbclass.addNewRoute(route_id, route_name) == false) {
                 System.err.println(String.format(
-                    "Could not add new route with ID %d.", route_id));
+                        "Could not add new route with ID %d.", route_id));
                 return false;
             }
             uniqueRouteIds.add(route_id);
         }
-        if(!uniqueStopIds.contains(stop_id)) {
+        if (!uniqueStopIds.contains(stop_id)) {
             String latitude = "0.0";
-            if(!record.get("latitude").equals("")) {
+            if (!record.get("latitude").equals("")) {
                 latitude = record.get("latitude");
             }
             String longitude = "0.0";
-            if(!record.get("longitude").equals("")) {
+            if (!record.get("longitude").equals("")) {
                 longitude = record.get("longitude");
             }
             String stop_name = record.get("stop_name");
-            if(dbclass.addNewStop(stop_id, stop_name, latitude, longitude) == false) {
+            if (dbclass.addNewStop(stop_id, stop_name, latitude, longitude) == false) {
                 System.err.println(String.format(
-                    "Could not add new stop with ID %d.", stop_id));
+                        "Could not add new stop with ID %d.", stop_id));
                 return false;
             }
             uniqueStopIds.add(stop_id);
         }
 
-        if(!arrival_time.equals("")) {
+        if (!arrival_time.equals("")) {
             datetime = String.format("%s %s", calendar_date, arrival_time);
-        } else if(!departure_time.equals("")) {
+        } else if (!departure_time.equals("")) {
             datetime = String.format("%s %s", calendar_date, departure_time);
         }
-        if(dbclass.addNewBusLocation(datetime, curr_bus_id, stop_id, route_id,
-               passenger_ons, passenger_offs) == false) {
+        if (dbclass.addNewBusLocation(datetime, curr_bus_id, stop_id, route_id,
+                passenger_ons, passenger_offs) == false) {
             System.err.println(String.format(
-                "Could not add new bus with ID %d.", curr_bus_id));
+                    "Could not add new bus with ID %d.", curr_bus_id));
             return false;
         }
 
@@ -109,7 +108,7 @@ class APCParser {
             for (int i = 0; i < stops.size(); i++) {
                 for (int j = i + 1; j < stops.size(); j++) {
                     if (stops.get(i).equals(stops.get(j))) {
-                        if(!(routeOrder.containsKey(prev_route_id))) {
+                        if (!(routeOrder.containsKey(prev_route_id))) {
                             ArrayList<Integer> temp = new ArrayList<Integer>(stops.subList(i, j));
                             routeOrder.put(prev_route_id, temp);
                         }
@@ -120,7 +119,7 @@ class APCParser {
             startBusId = curr_bus_id;
             prev_route_id = route_id;
         }
-        if(stop_id != 99999) {
+        if (stop_id != 99999) {
             stops.add(stop_id);
         }
 
@@ -172,7 +171,7 @@ class APCParser {
         }
 
         for (CSVRecord record : records) {
-//            String currRoute = record.get("route");
+            //            String currRoute = record.get("route");
             //////            int currStop = Integer.parseInt(record.get("stop_id"));
             //////            int currBus = Integer.parseInt(record.get("stop_id"));
             ////
