@@ -57,7 +57,10 @@ public class SimController implements Initializable {
     private Button stopButton;
 
     @FXML
-    private Button fastForward;
+    private Button createSimButton;
+
+    @FXML
+    private ToggleButton fastForward;
 
     @FXML
     private ToggleButton play;
@@ -125,7 +128,7 @@ public class SimController implements Initializable {
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
         this.routesMap = new HashMap<>();
-        setInfoTextVisible(false, false);
+        setInfoTextVisible(false, false, true);
 
     }
 
@@ -152,31 +155,88 @@ public class SimController implements Initializable {
         this.lanes.getChildren().removeAll(stops.values());
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
-        setInfoTextVisible(false, true);
+        setInfoTextVisible(false, false, true);
     }
 
     /**
      * use to clear textfield and stops in bus pane
-     * @param visible if true to make text visible otherwise not visible
+     * @param busVisible if true to make text visible otherwise not visible
+     * @param stopVisible if true to makke text visibile in stopPane
      * @param clear if true clear stops list
      */
-    private void setInfoTextVisible(boolean visible, boolean clear) {
-        this.busInfoBusId.setVisible(visible);
-        this.busInfoSpeed.setVisible(visible);
-        this.busInfoNumPpl.setVisible(visible);
-        this.busInfoStop.setVisible(visible);
-        this.busInfoNextS.setVisible(visible);
-        this.stopInfoDrate.setVisible(visible);
-        this.stopInfoArrive.setVisible(visible);
-        this.stopInfoName.setVisible(visible);
-        this.stopInfoId.setVisible(visible);
+    private void setInfoTextVisible(boolean busVisible, boolean stopVisible, boolean clear) {
+        //bus pane
+        this.busInfoBusId.setVisible(busVisible);
+        this.busInfoSpeed.setVisible(busVisible);
+        this.busInfoNumPpl.setVisible(busVisible);
+        this.busInfoStop.setVisible(busVisible);
+        this.busInfoNextS.setVisible(busVisible);
+        //stop pane
+        this.stopInfoDrate.setVisible(stopVisible);
+        this.stopInfoArrive.setVisible(stopVisible);
+        this.stopInfoName.setVisible(stopVisible);
+        this.stopInfoId.setVisible(stopVisible);
         TitledPane expanded = this.infoPanes.getExpandedPane();
         if (expanded != null) {
-            this.infoPanes.getExpandedPane().setExpanded(visible);
+            if (expanded.getText().equals("Bus Info")) {
+                this.infoPanes.getExpandedPane().setExpanded(busVisible);
+            } else if (expanded.getText().equals("Stop Info")) {
+                expanded.setExpanded(stopVisible);
+            }
         }
         if (clear) {
             this.busInfoStops.getItems().clear();
             this.stopInfoDes.getItems().clear();
+        }
+    }
+
+    /**
+     * Used to update the busInfo pane
+     * @param bus
+     */
+    private void updateBusInfoPane(Bus bus) {
+        //TODO
+        // may need to change this to be contained in border pane for highlighting
+        infoPanes.setExpandedPane(busInfo);
+        this.busInfoBusId.setText(String.valueOf(bus.getId()));
+        this.busInfoStop.setText(bus.getCurrentStop().getName());
+        this.busInfoNextS.setText(bus.getNextStop().getName());
+        this.busInfoNumPpl.setText(String.valueOf(bus.getNumPassengers()));
+        this.busInfoSpeed.setText(String.valueOf(bus.getSpeed()));
+        this.busInfoRoute.setText("Route: " + bus.getRoute().getId());
+        setInfoTextVisible(true, false, true);
+        for (Stop stop : bus.getRoute().getStops()) {
+            MenuItem stopDisplay = new MenuItem(stop.getName());
+            this.busInfoStops.getItems().add(stopDisplay);
+        }
+    }
+
+    private void updateStopInfoPane(Stop stop) {
+        //TODO
+        // Issue with only beeing able to click on image itself and not white interior
+        infoPanes.setExpandedPane(this.stopInfo);
+        this.stopInfoId.setText(String.valueOf(stop.getId()));
+        this.stopInfoName.setText(stop.getName());
+        this.stopInfoArrive.setText(String.valueOf(stop.getArrivalRate()));
+        this.stopInfoDrate.setText(String.valueOf(stop.getDisembarkRate()));
+        setInfoTextVisible(false, true, true);
+        for (Stop des : stop.getDestinations()) {
+            MenuItem stopDisplay = new MenuItem(des.getName());
+            this.stopInfoDes.getItems().add(stopDisplay);
+        }
+    }
+
+    @FXML
+    public void createSimFile(ActionEvent event) throws IOException {
+        if (!simLoaded) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI_date.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage addBusStage = new Stage();
+            addBusStage.initOwner(addBus.getScene().getWindow());
+            addBusStage.initModality(Modality.APPLICATION_MODAL); // only allows child stage to allow for user events.
+            addBusStage.setScene(scene);
+            addBusStage.setResizable(false);
+            addBusStage.show();
         }
     }
 
@@ -202,20 +262,7 @@ public class SimController implements Initializable {
                 BusObject busObject = new BusObject(bus, busImage);
                 setImageSizes(busObject, 70, 70);
                 busObject.setOnMouseClicked(event -> {
-                    // TODO
-                    // may need to change this to be contained in border pane for highlighting
-                    infoPanes.setExpandedPane(busInfo);
-                    this.busInfoBusId.setText(String.valueOf(bus.getId()));
-                    this.busInfoStop.setText(bus.getCurrentStop().getName());
-                    this.busInfoNextS.setText(bus.getNextStop().getName());
-                    this.busInfoNumPpl.setText(String.valueOf(bus.getNumPassengers()));
-                    this.busInfoSpeed.setText(String.valueOf(bus.getSpeed()));
-                    this.busInfoRoute.setText("Route: " + bus.getRoute().getId());
-                    setInfoTextVisible(true, true);
-                    for (Stop stop : bus.getRoute().getStops()) {
-                        MenuItem stopDisplay = new MenuItem(stop.getName());
-                        this.busInfoStops.getItems().add(stopDisplay);
-                    }
+                    updateBusInfoPane(bus);
                 });
                 buses.put(bus.getId(), busObject);
                 lanes.add(buses.get(bus.getId()), 0, bus.getCurrentStop().getId());
@@ -223,18 +270,7 @@ public class SimController implements Initializable {
             for (Stop stop : SimulationManager.getStops().values()) {
                 StopObject stopObject = new StopObject(stop, stopImage);
                 stopObject.setOnMouseClicked(event -> {
-                    //TODO
-                    // Issue with only beeing able to click on image itself and not white interior
-                    infoPanes.setExpandedPane(this.stopInfo);
-                    this.stopInfoId.setText(String.valueOf(stop.getId()));
-                    this.stopInfoName.setText(stop.getName());
-                    this.stopInfoArrive.setText(String.valueOf(stop.getArrivalRate()));
-                    this.stopInfoDrate.setText(String.valueOf(stop.getDisembarkRate()));
-                    setInfoTextVisible(true, true);
-                    for (Stop des : stop.getDestinations()) {
-                        MenuItem stopDisplay = new MenuItem(des.getName());
-                        this.stopInfoDes.getItems().add(stopDisplay);
-                    }
+                    updateStopInfoPane(stop);
                 });
                 setImageSizes(stopObject, 70, 70);
                 stops.put(stop.getId(), stopObject);
@@ -270,6 +306,7 @@ public class SimController implements Initializable {
                 buses.put(newValue.getBus().getId(), newValue);
                 SimulationManager.getBuses().put(newBus.getId(), newBus);
                 lanes.add(newValue, 0, newBus.getCurrentStop().getId());
+                updateBusInfoPane(newBus);
                 System.out.println(newBus.getId());
 
             });
