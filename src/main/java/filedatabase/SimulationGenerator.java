@@ -52,12 +52,13 @@ public class SimulationGenerator {
                         ResultSet routeOrderRs = this.dbClass.getRouteOrder(route_id);
                         routeLengthMap.put(route_id, 0);
                         while (routeOrderRs.next()) {
-                            addStopCommands.add(String.format("add_stop,%d,%s,%d,%s,%s\n",
+                            addStopCommands.add(String.format("add_stop,%d,%s,%s,%s,%d,%d\n",
                                     routeOrderRs.getInt(1),
                                     routeOrderRs.getString(2),
-                                    5,
                                     routeOrderRs.getBigDecimal(3).toString(),
-                                    routeOrderRs.getBigDecimal(4).toString()));
+                                    routeOrderRs.getBigDecimal(4).toString(),
+                                    1,
+                                    1));
                             extendRouteCommands.add(String.format("extend_route,%d,%d\n",
                                     route_id,
                                     routeOrderRs.getInt(1)));
