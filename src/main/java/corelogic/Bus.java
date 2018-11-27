@@ -12,7 +12,7 @@ public class Bus {
     private double speed;
     private int capacity;
     private Route route;
-    private List<Passenger> passengers;
+    List<Passenger> passengers;
     private int currentStop;
     private int nextStop;
 

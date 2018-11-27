@@ -1,0 +1,6 @@
+add_stop,ID,Name,Latitude,Longitude,Arrival Rate,Disembark Rate
+add_route,ID,Name
+extend_route,ID,Stop ID
+add_bus,ID,Route ID,Starting Index in Route,Capacity,Speed
+add_pass_bus,Bus ID,Destination Stop ID
+add_pass_stop,Stop ID,Destination Stop ID
