@@ -24,25 +24,34 @@ public class Interfacer {
 
     /***
      * Initiates FileWriter and Analyzer objects.
-     * Initiates new references to Core Logic's stop/route ArrayLists.
+     * Initiates new references to Core Logic objects. (not linked w/Core Logic)
      *
      */
     public Interfacer() {
-        fileName = "simulation.DOT";
-        simulationFile = new Writer(fileName, null);
+        fileName = "simulation.DOT"; // Default file name
         stops = new ArrayList<>();
         routes = new ArrayList<>();
         buses = new ArrayList<>();
+        simulationFile = new Writer(fileName, routes);
         stopEffectiveness = new ArrayList<>();
     }
 
+    /***
+     * Initiates FileWriter and Analyzer objects.
+     * Initiates references to Core Logic's ArrayList objects.
+     *
+     * @param buses List of all buses in corelogic.SimulationManager.
+     * @param stops List of all stops in corelogic.SimulationManager.
+     * @param routes List of all routes in corelogic.SimulationManager.
+     * @param fileName String for the name of the .DOT file to be created.
+     */
     public Interfacer(List<Bus> buses, List<Stop> stops, List<Route> routes,
                       String fileName) {
         this.fileName = fileName;
-        simulationFile = new Writer(fileName, routes);
         this.buses = buses;
         this.stops = stops;
         this.routes = routes;
+        simulationFile = new Writer(fileName, routes);
         stopEffectiveness = new ArrayList<>();
         stopEffectiveness.add(Integer.valueOf(0));
     }
@@ -69,21 +78,19 @@ public class Interfacer {
         this.routes = routes;
     }
 
-    /**
+    /***
      * Updates effectiveness of the route in a "snapshot" approach
+     *
      */
     public void updateEffectiveness() {
         double totalCost = 0;
         for (Bus bus: buses) {
-            totalCost = totalCost + 0; //bus.getSpeed() + bus.getPassengers().size();
+            for (Stop stop:bus.getRoute().getStops()) {
+                totalCost += stop.getTotalDisembarkRate()/bus.getSpeed();
+            }
         }
 
-        double totalWaitTime = 0;
-        for (Stop stop: stops) {
-            totalWaitTime = totalWaitTime + stop.getDisembarkRate();
-        }
-
-        this.effectiveness = (totalCost / buses.size()) + (totalWaitTime / stops.size());
+        this.effectiveness = (buses.size() > 0 ? totalCost / buses.size(): 0);
     }
 
     public void createGraph() {
