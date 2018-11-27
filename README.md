@@ -19,4 +19,7 @@ Required installation:
 Usage
 -----------------
 * Run Application: `//TODO`
-* Convert .DOT file to PNG: `dot -Tpng -O fileName.DOT`
+* Convert .DOT file to PNG: `dot -Tpng -o[outputFileName].PNG [inputFileName]
+.DOT`
+
+    **NOTE: There is no space between "-o" and the outputFileName**
