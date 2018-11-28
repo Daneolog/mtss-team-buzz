@@ -17,7 +17,7 @@ public class Interfacer {
     private HashMap<Integer, Bus> buses;
     private HashMap<Integer, Stop> stops;
     private HashMap<Integer, Route> routes;
-    private HashMap<Integer, Integer> stopEffectiveness;
+    private HashMap<Stop, Double> stopEffectiveness;
 
     private double effectiveness;
 
@@ -65,17 +65,17 @@ public class Interfacer {
      */
     public void updateEffectiveness() {
         double totalCost = 0;
-        for (Bus bus: buses.values()) {
-            for (Stop stop:bus.getRoute().getStops()) {
-                totalCost += stop.getTotalDisembarkRate()/bus.getSpeed();
-            }
+        for (Stop stop:this.stops.values()) {
+            this.stopEffectiveness.put(stop,
+                    stop.getArrivalRate() * stop.getDestinations().size()
+                    /stop.getDisembarkRate());
         }
 
         this.effectiveness = (buses.size() > 0 ? totalCost / buses.size(): 0);
     }
 
     public void createGraph() {
-        simulationFile.exportGraph(routes);
+        simulationFile.exportGraph(routes, stopEffectiveness);
     }
 //
 //    public void addBus(Bus bus) throws IllegalArgumentException {
