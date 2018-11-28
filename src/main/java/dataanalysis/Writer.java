@@ -34,7 +34,8 @@ public class Writer {
         }
     }
 
-    public void exportGraph(HashMap<Integer, Route> routes) {
+    public void exportGraph(HashMap<Integer, Route> routes, HashMap<Stop,
+            Double> stopEffectiveness) {
         if (routes == null) {
             System.out.println("Error null routes");
             return;
@@ -43,13 +44,21 @@ public class Writer {
             List<Stop> stops;
             for (int i = 0; i < routes.size(); i++) {
                 stops = routes.get(i).getStops();
+
                 for (int j = 0; j < stops.size() - 1; j++) {
-                    System.out.println(stops.get(j).getName());
-                    file += stops.get(j).getName()
-                            .replace(" ", "_") + " -> "
-                            + stops.get(j+1).getName().replace(" ", "_") +
-                            "[label=\"" + i + "\", color=" + colors[i] + "]\n";
+                    String name1 = stops.get(j).getName().replace(" ", "_");
+                    String name2 = stops.get(j + 1).getName().replace(" ", "_");
+                    file += name1 + " [label = \"" + name1 + ": "
+                            + stopEffectiveness.getOrDefault(stops.get(j), 0.0)
+                            + "\"]\n";
+                    file += name1 + " -> " + name2 + "[label=\"" + i + "\", "
+                            + "color=" + colors[i] + "]\n";
                 }
+                Stop lastStop = stops.get(stops.size() - 1);
+                file += lastStop.getName().replace(" ", "_") + " [label = \""
+                        + stops.get(stops.size() - 1).getName().replace(" ", "_")
+                        + ": " + stopEffectiveness.getOrDefault(lastStop, 0.0)
+                        + "\"]\n";
                 // Connects last stop to first stop in route
                 if (!routes.get(i).isLinear()) {
                     file += stops.get(stops.size() - 1).getName().replace(" ", "_") +
