@@ -142,9 +142,26 @@ public class SimController implements Initializable {
 
     public HashMap<Integer, Route> getRoutesMap() { return this.routesMap; }
 
-    private void setImageSizes(ImageView element, double height, double width) {
+    private void updatePlaceBus(BusObject element, double height, double width, int row) {
         element.setFitHeight(height);
         element.setFitWidth(width);
+        Bus bus = element.getBus();
+        element.setOnMouseClicked(event -> {
+            updateBusInfoPane(bus);
+        });
+        buses.put(bus.getId(), element);
+        lanes.add(element, 0, row);
+    }
+
+    private void updatePlaceStop(StopObject element, double height, double width, int row) {
+        element.setFitHeight(height);
+        element.setFitWidth(width);
+        Stop stop = element.getStop();
+        element.setOnMouseClicked(event -> {
+            updateStopInfoPane(stop);
+        });
+        stops.put(stop.getId(), element);
+        lanes.add(element, 0, row);
     }
 
     /**
@@ -226,6 +243,7 @@ public class SimController implements Initializable {
         }
     }
 
+
     @FXML
     public void createSimFile(ActionEvent event) throws IOException {
         if (!simLoaded) {
@@ -236,7 +254,7 @@ public class SimController implements Initializable {
             addBusStage.initModality(Modality.APPLICATION_MODAL); // only allows child stage to allow for user events.
             addBusStage.setScene(scene);
             addBusStage.setResizable(false);
-            addBusStage.show();
+            addBusStage.showAndWait();
         }
     }
 
@@ -260,21 +278,11 @@ public class SimController implements Initializable {
             // intializing bus and stop objexts to be place in the grid
             for (Bus bus : SimulationManager.getBuses().values()) {
                 BusObject busObject = new BusObject(bus, busImage);
-                setImageSizes(busObject, 70, 70);
-                busObject.setOnMouseClicked(event -> {
-                    updateBusInfoPane(bus);
-                });
-                buses.put(bus.getId(), busObject);
-                lanes.add(buses.get(bus.getId()), 0, bus.getCurrentStop().getId());
+                updatePlaceBus(busObject, 70, 70, bus.getCurrentStop().getId());
             }
             for (Stop stop : SimulationManager.getStops().values()) {
                 StopObject stopObject = new StopObject(stop, stopImage);
-                stopObject.setOnMouseClicked(event -> {
-                    updateStopInfoPane(stop);
-                });
-                setImageSizes(stopObject, 70, 70);
-                stops.put(stop.getId(), stopObject);
-                lanes.add(stops.get(stop.getId()), 1, stop.getId());
+                updatePlaceStop(stopObject, 70, 70, stop.getId());
             }
         }
     }
@@ -301,12 +309,14 @@ public class SimController implements Initializable {
             controller.setParent(this); // used to access variables from this controller in child.
             controller.getBusProperty().addListener((observable, oldValue, newValue) -> {
                 // listerner to changes in creating a new bus object to update ui
-                setImageSizes(newValue, 70, 70);
+                updatePlaceBus(newValue, 70, 70, 1);
                 Bus newBus = newValue.getBus();
+                newValue.setOnMouseClicked(event -> {
+                    updateBusInfoPane(newBus);
+                });
                 buses.put(newValue.getBus().getId(), newValue);
                 SimulationManager.getBuses().put(newBus.getId(), newBus);
                 lanes.add(newValue, 0, newBus.getCurrentStop().getId());
-                updateBusInfoPane(newBus);
                 System.out.println(newBus.getId());
 
             });

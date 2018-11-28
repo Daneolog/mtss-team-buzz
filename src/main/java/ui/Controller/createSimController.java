@@ -33,14 +33,18 @@ public class createSimController {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(currentWindow);
+
         if (file != null) {
             try {
+                String absolutePath = file.getAbsolutePath();
+                file.
                String ip = "68.183.20.174";
                int port = 5432;
                String db_prefix = "cs3300";
                String user = "cs3300_readonly";
                String password = "cs3300_b80ed2986e";
                SimulationGenerator fileGen = new SimulationGenerator(new DBClass(ip, port, db_prefix, user, password));
+
                fileGen.writeSimulationFile(Date.valueOf(startDate.getValue()), Date.valueOf(endDate.getValue()), file.getAbsolutePath());
                System.out.println(Date.valueOf(startDate.getValue()));
                currentWindow.hide();
