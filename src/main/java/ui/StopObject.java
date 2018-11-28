@@ -10,6 +10,7 @@ public class StopObject extends ImageView {
     public StopObject(Stop stop, Image StopImage, int laneNumber) {
         super(StopImage);
         this.stop = stop;
+        this.laneNumber = laneNumber;
     }
 
     public Stop getStop() {

@@ -313,6 +313,7 @@ public class SimController implements Initializable {
                 // listerner to changes in creating a new bus object to update ui
                 Bus newBus = newValue.getBus();
                 SimulationManager.getBuses().put(newBus.getId(), newBus);
+                StopObject uiStop = stops.get(newBus.getCurrentStop().getId());
                 updatePlaceBus(newValue, 70, 70, stops.get(newBus.getCurrentStop().getId()).getLaneNumber());
                 System.out.println(newBus.getId());
 
