@@ -4,8 +4,8 @@ package dataanalysis;
 import corelogic.Bus;
 import corelogic.Route;
 import corelogic.Stop;
-import java.util.List;
-import java.util.ArrayList;
+
+import java.util.HashMap;
 
 /**
  * Hub that interfaces with Core Logic (Maybe also Database), Analyzer, and
@@ -14,27 +14,12 @@ import java.util.ArrayList;
 public class Interfacer {
 
     private Writer simulationFile;
-    private List<Bus> buses;
-    private List<Stop> stops;
-    private List<Route> routes;
-    private List<Integer> stopEffectiveness;
-    private String fileName;
+    private HashMap<Integer, Bus> buses;
+    private HashMap<Integer, Stop> stops;
+    private HashMap<Integer, Route> routes;
+    private HashMap<Integer, Integer> stopEffectiveness;
 
     private double effectiveness;
-
-    /***
-     * Initiates FileWriter and Analyzer objects.
-     * Initiates new references to Core Logic objects. (not linked w/Core Logic)
-     *
-     */
-    public Interfacer() {
-        fileName = "simulation.DOT"; // Default file name
-        stops = new ArrayList<>();
-        routes = new ArrayList<>();
-        buses = new ArrayList<>();
-        simulationFile = new Writer(fileName, routes);
-        stopEffectiveness = new ArrayList<>();
-    }
 
     /***
      * Initiates FileWriter and Analyzer objects.
@@ -45,26 +30,20 @@ public class Interfacer {
      * @param routes List of all routes in corelogic.SimulationManager.
      * @param fileName String for the name of the .DOT file to be created.
      */
-    public Interfacer(List<Bus> buses, List<Stop> stops, List<Route> routes,
-                      String fileName) {
-        this.fileName = fileName;
+    public Interfacer(HashMap<Integer, Bus> buses, HashMap<Integer, Stop> stops,
+                      HashMap<Integer, Route> routes, String fileName) {
         this.buses = buses;
         this.stops = stops;
         this.routes = routes;
         simulationFile = new Writer(fileName, routes);
-        stopEffectiveness = new ArrayList<>();
-        stopEffectiveness.add(Integer.valueOf(0));
+        stopEffectiveness = new HashMap<>();
     }
 
-    public Writer getSimulationFile() {
-        return simulationFile;
-    }
-
-    public List<Stop> getStops() {
+    public HashMap<Integer, Stop> getStops() {
         return stops;
     }
 
-    public List<Route> getRoutes() {
+    public HashMap<Integer, Route> getRoutes() {
         return routes;
     }
 
@@ -72,7 +51,9 @@ public class Interfacer {
         return effectiveness;
     }
 
-    public void dummySimulationInit(List<Bus> buses, List<Stop> stops, List<Route> routes) {
+    public void dummySimulationInit(HashMap<Integer, Bus> buses,
+                                    HashMap<Integer, Stop> stops,
+                                    HashMap<Integer, Route> routes) {
         this.buses = buses;
         this.stops = stops;
         this.routes = routes;
@@ -84,7 +65,7 @@ public class Interfacer {
      */
     public void updateEffectiveness() {
         double totalCost = 0;
-        for (Bus bus: buses) {
+        for (Bus bus: buses.values()) {
             for (Stop stop:bus.getRoute().getStops()) {
                 totalCost += stop.getTotalDisembarkRate()/bus.getSpeed();
             }
