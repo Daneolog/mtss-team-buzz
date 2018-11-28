@@ -79,16 +79,16 @@ public class addBusController implements Initializable {
             routeDisplay.setOnAction(event -> {
                 selectedRoute = e;
                 routes.setText("Route " + e.getId());
+                for (Stop stop: selectedRoute.getStops()) {
+                    MenuItem stopDisplay = new MenuItem("Stop Id: " + stop.getId() + " " + stop.getName());
+                    stopDisplay.setOnAction(event2 -> {
+                        selectedStop = stop;
+                        firstStop.setText(stop.getName());
+                    });
+                    firstStop.getItems().add(stopDisplay);
+                }
             });
             routes.getItems().add(routeDisplay);
-        }
-        for (StopObject e: parentController.getStops().values()) {
-            MenuItem stopDisplay = new MenuItem("Stop Id: " + e.getStop().getId() + " " + e.getStop().getName());
-            stopDisplay.setOnAction(event -> {
-                selectedStop = e.getStop();
-                firstStop.setText(e.getStop().getName());
-            });
-            firstStop.getItems().add(stopDisplay);
         }
 
     }
@@ -115,7 +115,14 @@ public class addBusController implements Initializable {
             } else if (firstStop == null) {
                 error.setText("- Please select a beginning stop for the bus.");
             } else {
-                Bus newBus = new Bus(id, selectedRoute, selectedStop.getId(), passengers, fuel, speedVal, SimulationManager.getSimTime());
+                int counter = 0;
+                for (Stop index: selectedRoute.getStops()) {
+                    if (selectedStop.getId() == index.getId()) {
+                        break;
+                    }
+                    counter++;
+                }
+                Bus newBus = new Bus(id, selectedRoute, counter, passengers, fuel, speedVal, SimulationManager.getSimTime());
                 newBusObject.set(new BusObject(newBus, new Image("busImg.png")));
                 okButton.getScene().getWindow().hide();
             }

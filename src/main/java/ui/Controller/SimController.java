@@ -161,7 +161,7 @@ public class SimController implements Initializable {
             updateStopInfoPane(stop);
         });
         stops.put(stop.getId(), element);
-        lanes.add(element, 0, row);
+        lanes.add(element, 1, row);
     }
 
     /**
@@ -276,13 +276,15 @@ public class SimController implements Initializable {
             routesMap = SimulationManager.getRoutes();
 
             // intializing bus and stop objexts to be place in the grid
+            int counter = 0;
+            for (Stop stop : SimulationManager.getStops().values()) {
+                StopObject stopObject = new StopObject(stop, stopImage, counter);
+                updatePlaceStop(stopObject, 70, 70, counter);
+                counter++;
+            }
             for (Bus bus : SimulationManager.getBuses().values()) {
                 BusObject busObject = new BusObject(bus, busImage);
-                updatePlaceBus(busObject, 70, 70, bus.getCurrentStop().getId());
-            }
-            for (Stop stop : SimulationManager.getStops().values()) {
-                StopObject stopObject = new StopObject(stop, stopImage);
-                updatePlaceStop(stopObject, 70, 70, stop.getId());
+                updatePlaceBus(busObject, 70, 70, stops.get(bus.getCurrentStop().getId()).getLaneNumber());
             }
         }
     }
@@ -309,14 +311,9 @@ public class SimController implements Initializable {
             controller.setParent(this); // used to access variables from this controller in child.
             controller.getBusProperty().addListener((observable, oldValue, newValue) -> {
                 // listerner to changes in creating a new bus object to update ui
-                updatePlaceBus(newValue, 70, 70, 1);
                 Bus newBus = newValue.getBus();
-                newValue.setOnMouseClicked(event -> {
-                    updateBusInfoPane(newBus);
-                });
-                buses.put(newValue.getBus().getId(), newValue);
                 SimulationManager.getBuses().put(newBus.getId(), newBus);
-                lanes.add(newValue, 0, newBus.getCurrentStop().getId());
+                updatePlaceBus(newValue, 70, 70, stops.get(newBus.getCurrentStop().getId()).getLaneNumber());
                 System.out.println(newBus.getId());
 
             });
