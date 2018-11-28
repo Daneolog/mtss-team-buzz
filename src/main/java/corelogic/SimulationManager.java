@@ -37,7 +37,6 @@ public class SimulationManager {
             System.out.println("Please include a path to a simulation file");
             return;
         }
-        dataAnalysis = new Interfacer();
         initSim(args[0], 1000, 5);
 
         Scanner scanner = new Scanner(System.in);
@@ -107,7 +106,8 @@ public class SimulationManager {
         stops = new HashMap<>();
         routes = new HashMap<>();
         simTime = 0;
-        
+
+        dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
         FileManager.importScenario(path, buses, stops, routes, simTime);
         SimulationManager.interval = interval;
         SimulationManager.fastForwardMultiplier = fastForwardMultiplier;
