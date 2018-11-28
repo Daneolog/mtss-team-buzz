@@ -112,4 +112,11 @@ public class SimulationManager {
         SimulationManager.interval = interval;
         SimulationManager.fastForwardMultiplier = fastForwardMultiplier;
     }
+
+    /**
+     * Exports current simulation into .DOT file for Data Analysis
+     */
+    public static void takeSnapshot() {
+        dataAnalysis.createGraph();
+    }
 }
