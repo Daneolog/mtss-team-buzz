@@ -20,6 +20,7 @@ public class main extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("/UI_main.fxml"));
             //Label root = new Label("Hellow World!");
             Scene scene = new Scene(root);
+            //scene.getStylesheets().add(getClass().getResource("/highlighted.css").toExternalForm());
             primaryStage.setScene(scene);
 
             primaryStage.show();

@@ -79,6 +79,7 @@ public class addBusController implements Initializable {
             routeDisplay.setOnAction(event -> {
                 selectedRoute = e;
                 routes.setText("Route " + e.getId());
+                //populating the stops of menubutton based upon the selected route.
                 for (Stop stop: selectedRoute.getStops()) {
                     MenuItem stopDisplay = new MenuItem("Stop Id: " + stop.getId() + " " + stop.getName());
                     stopDisplay.setOnAction(event2 -> {

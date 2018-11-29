@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.io.File;
@@ -25,6 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import ui.BusObject;
+import ui.ImageWrapper;
 import ui.StopObject;
 
 import java.util.HashMap;
@@ -111,11 +111,13 @@ public class SimController implements Initializable {
 
     private File file;
 
-    private HashMap<Integer, BusObject> buses;
+    private HashMap<Integer, ImageWrapper> buses;
 
-    private HashMap<Integer, StopObject> stops;
+    private HashMap<Integer, ImageWrapper> stops;
 
     private HashMap<Integer, Route> routesMap;
+
+    private ToggleGroup clipBoard;
 
     private boolean simLoaded;
 
@@ -128,15 +130,24 @@ public class SimController implements Initializable {
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
         this.routesMap = new HashMap<>();
+        this.clipBoard = new ToggleGroup();
+        // check to see if a specific image wrapper has been clicked then highlights and update all relevant info.
+        this.lanes.setOnMouseClicked(event -> {
+            if (event.getTarget() instanceof ImageWrapper) {
+                clipBoard.selectToggle((ImageWrapper) event.getTarget());
+            } else {
+                clipBoard.selectToggle(null);
+            }
+        });
         setInfoTextVisible(false, false, true);
 
     }
 
-    public HashMap<Integer, BusObject> getBuses() {
+    public HashMap<Integer, ImageWrapper> getBuses() {
         return this.buses;
     }
 
-    public HashMap<Integer, StopObject> getStops() {
+    public HashMap<Integer, ImageWrapper> getStops() {
         return this.stops;
     }
 
@@ -146,22 +157,43 @@ public class SimController implements Initializable {
         element.setFitHeight(height);
         element.setFitWidth(width);
         Bus bus = element.getBus();
-        element.setOnMouseClicked(event -> {
+        ImageWrapper newBusBorder = new ImageWrapper(String.valueOf(bus.getId()), element);
+        newBusBorder.setContentDisplay(ContentDisplay.TOP);
+        newBusBorder.setOnMouseClicked(event -> {
             updateBusInfoPane(bus);
+
         });
-        buses.put(bus.getId(), element);
-        lanes.add(element, 0, row);
+        newBusBorder.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                newBusBorder.getStyleClass().add("highlighted");
+            } else {
+                newBusBorder.getStyleClass().remove(1);
+            }
+        });
+        newBusBorder.setToggleGroup(this.clipBoard);
+        buses.put(bus.getId(), newBusBorder);
+        lanes.add(newBusBorder, 0, row);
     }
 
     private void updatePlaceStop(StopObject element, double height, double width, int row) {
         element.setFitHeight(height);
         element.setFitWidth(width);
         Stop stop = element.getStop();
-        element.setOnMouseClicked(event -> {
+        ImageWrapper newStopBorder = new ImageWrapper((stop.getName()), element);
+        newStopBorder.setContentDisplay(ContentDisplay.TOP);
+        newStopBorder.setOnMouseClicked(event -> {
             updateStopInfoPane(stop);
         });
-        stops.put(stop.getId(), element);
-        lanes.add(element, 1, row);
+        newStopBorder.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                newStopBorder.getStyleClass().add("highlighted");
+            } else {
+                newStopBorder.getStyleClass().remove(1);
+            }
+        });
+        newStopBorder.setToggleGroup(this.clipBoard);
+        stops.put(stop.getId(), newStopBorder);
+        lanes.add(newStopBorder, 1, row);
     }
 
     /**
@@ -172,6 +204,7 @@ public class SimController implements Initializable {
         this.lanes.getChildren().removeAll(stops.values());
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
+        this.clipBoard = new ToggleGroup();
         setInfoTextVisible(false, false, true);
     }
 
@@ -279,12 +312,15 @@ public class SimController implements Initializable {
             int counter = 0;
             for (Stop stop : SimulationManager.getStops().values()) {
                 StopObject stopObject = new StopObject(stop, stopImage, counter);
-                updatePlaceStop(stopObject, 70, 70, counter);
+                updatePlaceStop(stopObject, 50, 50, counter);
                 counter++;
             }
             for (Bus bus : SimulationManager.getBuses().values()) {
                 BusObject busObject = new BusObject(bus, busImage);
-                updatePlaceBus(busObject, 70, 70, stops.get(bus.getCurrentStop().getId()).getLaneNumber());
+                int key = bus.getCurrentStop().getId();
+                ImageWrapper label = stops.get(key);
+                StopObject uiStop = (StopObject) label.getGraphic();
+                updatePlaceBus(busObject, 50, 50, uiStop.getLaneNumber());
             }
         }
     }
@@ -313,8 +349,8 @@ public class SimController implements Initializable {
                 // listerner to changes in creating a new bus object to update ui
                 Bus newBus = newValue.getBus();
                 SimulationManager.getBuses().put(newBus.getId(), newBus);
-                StopObject uiStop = stops.get(newBus.getCurrentStop().getId());
-                updatePlaceBus(newValue, 70, 70, stops.get(newBus.getCurrentStop().getId()).getLaneNumber());
+                StopObject uiStop = (StopObject) stops.get(newBus.getCurrentStop().getId()).getGraphic();
+                updatePlaceBus(newValue, 50, 50, uiStop.getLaneNumber());
                 System.out.println(newBus.getId());
 
             });
