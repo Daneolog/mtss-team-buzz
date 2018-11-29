@@ -17,6 +17,8 @@ public class SimulationManager {
     private static int simTime;
     private static boolean running;
 
+    public static int getSimTime() { return simTime; }
+
     private static Timer timer;
     private static int interval;
     private static float fastForwardMultiplier;
@@ -104,9 +106,17 @@ public class SimulationManager {
         stops = new HashMap<>();
         routes = new HashMap<>();
         simTime = 0;
-        
+
+        dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
         FileManager.importScenario(path, buses, stops, routes, simTime);
         SimulationManager.interval = interval;
         SimulationManager.fastForwardMultiplier = fastForwardMultiplier;
+    }
+
+    /**
+     * Exports current simulation into .DOT file for Data Analysis
+     */
+    public static void takeSnapshot() {
+        dataAnalysis.createGraph();
     }
 }

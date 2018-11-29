@@ -8,6 +8,8 @@ public class Route {
     private List<Stop> stops;
     private boolean isLinear;
 
+    public int getId() { return this.id; }
+
     public Route(int id, List<Stop> stops, boolean isLinear) {
         this.id = id;
         this.stops = stops;
@@ -49,5 +51,11 @@ public class Route {
 
     public boolean isLinear() {
         return isLinear;
+    }
+
+    @Override
+    public String toString() {
+        return "Route " + this.id + " Beginning in " + stops.get(0).getName() + " and ending in "
+                + stops.get(stops.size() - 1).getName();
     }
 }
