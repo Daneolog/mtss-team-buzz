@@ -294,7 +294,9 @@ public class DBClass {
                 PreparedStatement stopOnOffQuery = connection.prepareStatement(
                     "SELECT stop_id, passenger_ons, passenger_offs FROM BusLocation " +
                     "WHERE id BETWEEN ? AND ? " +
-                    "ORDER BY id ASC;");
+                    "ORDER BY id ASC;",
+                        ResultSet.TYPE_SCROLL_SENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
                 stopOnOffQuery.setInt(1, startId);
                 stopOnOffQuery.setInt(2, endId);
 
