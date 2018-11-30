@@ -98,4 +98,18 @@ public class ExampleTest {
         assertNotEquals(0, SimulationManager.getStops().get(0).passengerQueue.size());
         assertNotEquals(0, SimulationManager.getStops().get(1).passengerQueue.size());
     }
+
+    @Test
+    public void test4() {
+        SimulationManager.initSim("scenarios/test_scenario_unload.txt", 1000, 5);
+
+        for (int i = 1; i <= 99; i++) {
+            if (i % 3 != 0) {
+                assertFalse(SimulationManager.tick());
+            } else {
+                assertTrue(SimulationManager.tick());
+            }
+            assertTrue(SimulationManager.getBuses().get(3).getNumPassengers() <= 20);
+        }
+    }
 }

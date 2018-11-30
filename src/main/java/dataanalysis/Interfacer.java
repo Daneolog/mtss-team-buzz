@@ -37,6 +37,7 @@ public class Interfacer {
         this.routes = routes;
         simulationFile = new Writer(fileName, routes);
         stopEffectiveness = new HashMap<>();
+        updateEffectiveness();
     }
 
     public HashMap<Integer, Stop> getStops() {
