@@ -106,14 +106,14 @@ public class Bus {
         //Unload
         for (int i = passengers.size() - 1; i >= 0; --i) {
             if (passengers.get(i).getDestination() == current) {
-                System.out.println("Bus " + id + " dropped off a passenger");
+                //System.out.println("Bus " + id + " dropped off a passenger");
                 passengers.remove(i);
             }
         }
         //Board
         for (int i = current.passengerQueue.size() - 1; i >=0 && passengers.size() < capacity; --i) {
             if (route.getStops().contains(current.passengerQueue.get(i).getDestination())) {
-                System.out.println("Bus " + id + " picked up a passenger");
+                //System.out.println("Bus " + id + " picked up a passenger");
                 passengers.add(current.passengerQueue.remove(i));
             }
         }
