@@ -298,6 +298,8 @@ public class DBClass {
                 busLocationQuery.setInt(1, startId);
                 busLocationQuery.setInt(2, endId);
 
+                getPassengerOnsAndOffs(startId, endId);
+
                 resultList.add(uniqueRoutesQuery.executeQuery());
                 resultList.add(busLocationQuery.executeQuery());
                 return resultList;
@@ -306,6 +308,27 @@ public class DBClass {
             System.err.println(e.getMessage());
             return null;
         }
+    }
+
+    private ArrayList<ResultSet> getPassengerOnsAndOffs(int startId, int endId) {
+        ArrayList<ResultSet> resultList = new ArrayList<>();
+        try {
+                PreparedStatement passengerOnsOffsQuery = connection.prepareStatement(
+                        "SELECT stop_id, passenger_ons, passenger_offs FROM BusLocation " +
+                                "WHERE id BETWEEN ? AND ? " +
+                                "ORDER BY id ASC;");
+                passengerOnsOffsQuery.setInt(1, startId);
+                passengerOnsOffsQuery.setInt(2, endId);
+
+                getPassengerOnsAndOffs(startId, endId);
+
+                resultList.add(passengerOnsOffsQuery.executeQuery());
+                return resultList;
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+
     }
 
     ResultSet getRouteOrder(int route_id) {

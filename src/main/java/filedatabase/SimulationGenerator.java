@@ -27,6 +27,8 @@ public class SimulationGenerator {
         HashSet<String> addStopCommands = new HashSet<>();
         ArrayList<String> extendRouteCommands = new ArrayList<>();
         StringBuilder simulationFile = new StringBuilder();
+        HashMap<Integer, Integer[]> stopRidersOn;
+        HashMap<Integer, Integer[]> stopRidersOff;
 
         if (this.dbClass.connect() == false) {
             System.err.println("Could not connect to the database.");
@@ -52,13 +54,11 @@ public class SimulationGenerator {
                         ResultSet routeOrderRs = this.dbClass.getRouteOrder(route_id);
                         routeLengthMap.put(route_id, 0);
                         while (routeOrderRs.next()) {
-                            addStopCommands.add(String.format("add_stop,%d,%s,%s,%s,%d,%d\n",
+                            addStopCommands.add(String.format("add_stop,%d,%s,%s,%s\n",
                                     routeOrderRs.getInt(1),
                                     routeOrderRs.getString(2),
                                     routeOrderRs.getBigDecimal(3).toString(),
-                                    routeOrderRs.getBigDecimal(4).toString(),
-                                    1,
-                                    1));
+                                    routeOrderRs.getBigDecimal(4).toString()));
                             extendRouteCommands.add(String.format("extend_route,%d,%d\n",
                                     route_id,
                                     routeOrderRs.getInt(1)));
@@ -79,6 +79,7 @@ public class SimulationGenerator {
                     addBusCommands.add(String.format("add_bus,%d,%d,%d,100,10\n",
                             bus_id, route_id, routeLoc % routeLength));
                 }
+                int stopI
                 busesInDateRange.add(bus_id);
             }
             resultList.get(0).close();
@@ -108,6 +109,27 @@ public class SimulationGenerator {
         return simulationFile.toString();
     }
 
+    //need a path to prob_distr that corresponds to the simulation
+
+    private void createProbDist(Date startDate, Date endDate, String filePath) throws IOException {
+        File file = new File(filePath);
+        if (file.exists()) {
+            if (file.isDirectory()) {
+                throw new IOException("Cannot write simulation to directory, please specify a file path");
+            }
+            if (!file.delete()) {
+                throw new IOException("File already exists and could not be deleted");
+            }
+        }
+        FileWriter writer = new FileWriter(file);
+        writer.write(this.getProbDist(startDate, endDate));
+        writer.close();
+    }
+
+    private String getProbDist(Date startDate, Date endDate) {
+        db.class
+    }
+
     public void writeSimulationFile(Date startDate, Date endDate, String filePath) throws IOException {
         File file = new File(filePath);
         if (file.exists()) {
@@ -121,5 +143,8 @@ public class SimulationGenerator {
         FileWriter writer = new FileWriter(file);
         writer.write(this.createSimulationFile(startDate, endDate));
         writer.close();
+
+        String newPath = filePath.substring(0,filePath.length() - 4) + "prob.txt";
+        createProbDist(startDate, endDate, newPath);
     }
 }
