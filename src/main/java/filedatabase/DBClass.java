@@ -291,15 +291,15 @@ public class DBClass {
                 uniqueRoutesQuery.setInt(1, startId);
                 uniqueRoutesQuery.setInt(2, endId);
 
-                PreparedStatement busLocationQuery = connection.prepareStatement(
-                    "SELECT * FROM BusLocation " +
+                PreparedStatement stopOnOffQuery = connection.prepareStatement(
+                    "SELECT stop_id, passenger_ons, passenger_offs FROM BusLocation " +
                     "WHERE id BETWEEN ? AND ? " +
                     "ORDER BY id ASC;");
                 busLocationQuery.setInt(1, startId);
                 busLocationQuery.setInt(2, endId);
 
                 resultList.add(uniqueRoutesQuery.executeQuery());
-                resultList.add(busLocationQuery.executeQuery());
+                resultList.add(stopOnOffQuery.executeQuery());
                 return resultList;
             }
         } catch(SQLException e) {

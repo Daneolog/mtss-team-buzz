@@ -17,7 +17,7 @@ public class SimulationGenerator {
         this.dbClass = dbClass;
     }
 
-    public String createSimulationFile(Date startDate, Date endDate) {
+    public ArrayList<String> createSimulationFile(Date startDate, Date endDate) {
         HashSet<Integer> routesInDateRange = new HashSet<>();
         HashSet<Integer> busesInDateRange = new HashSet<>();
         HashMap<Integer, Integer> routeLengthMap = new HashMap<>();
@@ -27,6 +27,11 @@ public class SimulationGenerator {
         HashSet<String> addStopCommands = new HashSet<>();
         ArrayList<String> extendRouteCommands = new ArrayList<>();
         StringBuilder simulationFile = new StringBuilder();
+
+        HashMap<Integer, Integer> stopMinPassengersOn = new HashMap<>();
+        HashMap<Integer, Integer> stopMaxPassengersOn = new HashMap<>();
+        HashMap<Integer, Integer> stopMinPassengersOff = new HashMap<>();
+        HashMap<Integer, Integer> stopMaxPassengersOff = new HashMap<>();
 
         if (this.dbClass.connect() == false) {
             System.err.println("Could not connect to the database.");
@@ -84,7 +89,33 @@ public class SimulationGenerator {
             resultList.get(0).close();
 
             while (resultList.get(1).next()) {
-                //routesInDateRange.add(resultList.get(1).getInt(1));
+                int stop_id = resultList.get(1).getInt(1);
+                int passenger_ons = resultList.get(1).getInt(2);
+                int passenger_offs = resultList.get(1).getInt(3);
+
+                if(!stopMinPassengersOn.containsKey(stop_id)) {
+                    stopMinPassengersOn.put(stop_id, passenger_ons);
+                } else if(stopMinPassengersOn.get(stop_id) > passenger_ons) {
+                    stopMinPassengersOn.put(stop_id, passenger_ons);
+                }
+
+                if(!stopMaxPassengersOn.containsKey(stop_id)) {
+                    stopMaxPassengersOn.put(stop_id, passenger_ons);
+                } else if(stopMaxPassengersOn.get(stop_id) < passenger_ons) {
+                    stopMaxPassengersOn.put(stop_id, passenger_ons);
+                }
+
+                if(!stopMinPassengersOff.containsKey(stop_id)) {
+                    stopMinPassengersOff.put(stop_id, passenger_offs);
+                } else if(stopMinPassengersOff.get(stop_id) > passenger_offs) {
+                    stopMinPassengersOff.put(stop_id, passenger_offs);
+                }
+
+                if(!stopMaxPassengersOff.containsKey(stop_id)) {
+                    stopMaxPassengersOff.put(stop_id, passenger_offs);
+                } else if(stopMaxPassengersOff.get(stop_id) < passenger_offs) {
+                    stopMaxPassengersOff.put(stop_id, passenger_offs);
+                }
             }
             resultList.get(1).close();
 
