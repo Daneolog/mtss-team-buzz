@@ -39,16 +39,17 @@ public class Bus {
         for (int i = 0; i < initialPassengers; ++i) {
             passengers.add(new Passenger(null));
         }
-        CalculateNextStop();
-        CalculateArrival(simTime);
+        calculateNextStop();
+        calculateArrival(simTime);
         prevArrivalTime = simTime;
     }
 
     boolean tick(int simTime) {
         if (simTime == arrivalTime) {
             currentStop = nextStop;
-            CalculateNextStop();
-            CalculateArrival(simTime);
+            prevArrivalTime = arrivalTime;
+            calculateNextStop();
+            calculateArrival(simTime);
             ExchangePassengers();
             return true;
         }
@@ -81,7 +82,7 @@ public class Bus {
         return passengers.size();
     }
 
-    private void CalculateNextStop() {
+    private void calculateNextStop() {
         if (route.isLinear()) {
             if (currentStop + 1 == route.getStops().size()) {
                 nextStop = currentStop - 1;
@@ -93,12 +94,11 @@ public class Bus {
         }
     }
 
-    private void CalculateArrival(int currTime) {
-        prevArrivalTime = arrivalTime;
+    void calculateArrival(int currTime) {
         Stop current = route.getStops().get(currentStop);
         Stop next = route.getStops().get(nextStop);
         double dist = Math.sqrt(Math.pow(next.getX() - current.getX(), 2) + Math.pow(next.getY() - current.getY(), 2));
-        arrivalTime = (int)(dist / speed) + 1 + currTime;
+        arrivalTime = Math.max((int)Math.ceil(dist / speed), 1) + currTime;
     }
 
     private void ExchangePassengers() {

@@ -106,6 +106,10 @@ public class SimulationManager {
      * @param fastForwardMultiplier Multiplier for fast forward mode
      */
     public static void initSim(String path, int interval, float fastForwardMultiplier) {
+        initSim(path, interval, fastForwardMultiplier, true);
+    }
+
+    static void initSim(String path, int interval, float fastForwardMultiplier, boolean shouldConvert) {
         buses = new HashMap<>();
         stops = new HashMap<>();
         routes = new HashMap<>();
@@ -114,14 +118,17 @@ public class SimulationManager {
         dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
         FileManager.importScenario(path, buses, stops, routes, simTime);
 
-        //Convert all the input values in terms of miles per minute
-        for (Stop s : stops.values()) {
-            s.x *= LONGITUDE_TO_MILES;
-            s.y *= LATITUDE_TO_MILES;
-        }
+        if (shouldConvert) {
+            //Convert all the input values in terms of miles per minute
+            for (Stop s : stops.values()) {
+                s.x *= LONGITUDE_TO_MILES;
+                s.y *= LATITUDE_TO_MILES;
+            }
 
-        for (Bus b : buses.values()) {
-            b.speed /= 60;
+            for (Bus b : buses.values()) {
+                b.speed /= 60;
+                b.calculateArrival(simTime);
+            }
         }
 
         SimulationManager.interval = interval;
