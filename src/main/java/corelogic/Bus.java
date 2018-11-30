@@ -9,7 +9,7 @@ import java.util.List;
 public class Bus {
 
     private int id;
-    private double speed;
+    double speed;
     private int capacity;
     private Route route;
     List<Passenger> passengers;
@@ -39,16 +39,17 @@ public class Bus {
         for (int i = 0; i < initialPassengers; ++i) {
             passengers.add(new Passenger(null));
         }
-        CalculateNextStop();
-        CalculateArrival(simTime);
+        calculateNextStop();
+        calculateArrival(simTime);
         prevArrivalTime = simTime;
     }
 
     boolean tick(int simTime) {
         if (simTime == arrivalTime) {
             currentStop = nextStop;
-            CalculateNextStop();
-            CalculateArrival(simTime);
+            prevArrivalTime = arrivalTime;
+            calculateNextStop();
+            calculateArrival(simTime);
             ExchangePassengers();
             return true;
         }
@@ -81,7 +82,7 @@ public class Bus {
         return passengers.size();
     }
 
-    private void CalculateNextStop() {
+    private void calculateNextStop() {
         if (route.isLinear()) {
             if (currentStop + 1 == route.getStops().size()) {
                 nextStop = currentStop - 1;
@@ -93,12 +94,11 @@ public class Bus {
         }
     }
 
-    private void CalculateArrival(int currTime) {
-        prevArrivalTime = arrivalTime;
+    void calculateArrival(int currTime) {
         Stop current = route.getStops().get(currentStop);
         Stop next = route.getStops().get(nextStop);
         double dist = Math.sqrt(Math.pow(next.getX() - current.getX(), 2) + Math.pow(next.getY() - current.getY(), 2));
-        arrivalTime = (int)(dist / speed) + 1 + currTime;
+        arrivalTime = Math.max((int)Math.ceil(dist / speed), 1) + currTime;
     }
 
     private void ExchangePassengers() {
@@ -106,14 +106,14 @@ public class Bus {
         //Unload
         for (int i = passengers.size() - 1; i >= 0; --i) {
             if (passengers.get(i).getDestination() == current) {
-                System.out.println("Bus " + id + " dropped off a passenger");
+                //System.out.println("Bus " + id + " dropped off a passenger");
                 passengers.remove(i);
             }
         }
         //Board
         for (int i = current.passengerQueue.size() - 1; i >=0 && passengers.size() < capacity; --i) {
             if (route.getStops().contains(current.passengerQueue.get(i).getDestination())) {
-                System.out.println("Bus " + id + " picked up a passenger");
+                //System.out.println("Bus " + id + " picked up a passenger");
                 passengers.add(current.passengerQueue.remove(i));
             }
         }

@@ -1,6 +1,7 @@
-add_stop,0,Downtown,0,-10,1,1
-add_stop,1,Midtown,0,0,1,1
+add_stop,0,Downtown,0,-.010,100,10
+add_stop,1,Midtown,0,0,100,10
 add_route,0,Scenic
 extend_route,0,0
 extend_route,0,1
-add_bus,0,0,1,2,60
+add_bus,0,0,1,200,5
+add_bus,1,0,0,200,10

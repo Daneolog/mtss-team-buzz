@@ -120,5 +120,6 @@ public class SimulationGenerator {
         }
         FileWriter writer = new FileWriter(file);
         writer.write(this.createSimulationFile(startDate, endDate));
+        writer.close();
     }
 }
