@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import sun.tools.asm.ArrayData;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +35,7 @@ public class createSimController {
 
         if (file != null) {
             try {
-                String absolutePath = file.getAbsolutePath();
-                file.
+               String absolutePath = file.getAbsolutePath();
                String ip = "68.183.20.174";
                int port = 5432;
                String db_prefix = "cs3300";
