@@ -120,7 +120,7 @@ public class SimulationGenerator {
                 }
 
             }
-//            resultList.get(1).close();
+            //            resultList.get(1).close();
             resultList.get(1).beforeFirst();
 
             while (resultList.get(1).next()) {
@@ -135,7 +135,7 @@ public class SimulationGenerator {
                         stopMinPassengersOn.getOrDefault(stop_id, 0),
                         stopMaxPassengersOff.getOrDefault(stop_id, 0),
                         stopMinPassengersOff.getOrDefault(stop_id, 0)
-                        ));
+                ));
             }
             resultList.get(1).close();
             System.out.println(probDistFile);
