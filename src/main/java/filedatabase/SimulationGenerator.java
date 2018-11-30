@@ -27,6 +27,7 @@ public class SimulationGenerator {
         HashSet<String> addStopCommands = new HashSet<>();
         ArrayList<String> extendRouteCommands = new ArrayList<>();
         StringBuilder simulationFile = new StringBuilder();
+        StringBuilder distributionFile = new StringBuilder();
 
         HashMap<Integer, Integer> stopMinPassengersOn = new HashMap<>();
         HashMap<Integer, Integer> stopMaxPassengersOn = new HashMap<>();
@@ -118,6 +119,19 @@ public class SimulationGenerator {
                 }
             }
             resultList.get(1).close();
+            for(int stopId : stopMinPassengersOn.keySet()) {
+                distributionFile.append(String.format(
+                    "%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
+                    stopId,
+                    1,
+                    1,
+                    stopMaxPassengersOff.get(stopId),
+                    stopMinPassengersOff.get(stopId),
+                    stopMaxPassengersOn.get(stopId),
+                    stopMinPassengersOn.get(stopId),
+                    1,
+                    1));
+            }
 
             for (String command : addStopCommands) {
                 simulationFile.append(command);
@@ -136,7 +150,10 @@ public class SimulationGenerator {
             return null;
         }
 
-        return simulationFile.toString();
+        ArrayList<String> to_return = new ArrayList<>();
+        to_return.add(simulationFile.toString());
+        to_return.add(distributionFile.toString());
+        return to_return;
     }
 
     public void writeSimulationFile(Date startDate, Date endDate, String filePath) throws IOException {
