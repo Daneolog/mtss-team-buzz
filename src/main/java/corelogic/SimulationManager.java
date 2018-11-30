@@ -114,10 +114,14 @@ public class SimulationManager {
         dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
         FileManager.importScenario(path, buses, stops, routes, simTime);
 
-        //Convert all the input values in terms of miles per hour
+        //Convert all the input values in terms of miles per minute
         for (Stop s : stops.values()) {
             s.x *= LONGITUDE_TO_MILES;
             s.y *= LATITUDE_TO_MILES;
+        }
+
+        for (Bus b : buses.values()) {
+            b.speed /= 60;
         }
 
         SimulationManager.interval = interval;

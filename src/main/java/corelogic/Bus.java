@@ -9,7 +9,7 @@ import java.util.List;
 public class Bus {
 
     private int id;
-    private double speed;
+    double speed;
     private int capacity;
     private Route route;
     List<Passenger> passengers;
