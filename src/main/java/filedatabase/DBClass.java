@@ -295,8 +295,8 @@ public class DBClass {
                     "SELECT stop_id, passenger_ons, passenger_offs FROM BusLocation " +
                     "WHERE id BETWEEN ? AND ? " +
                     "ORDER BY id ASC;");
-                busLocationQuery.setInt(1, startId);
-                busLocationQuery.setInt(2, endId);
+                stopOnOffQuery.setInt(1, startId);
+                stopOnOffQuery.setInt(2, endId);
 
                 resultList.add(uniqueRoutesQuery.executeQuery());
                 resultList.add(stopOnOffQuery.executeQuery());

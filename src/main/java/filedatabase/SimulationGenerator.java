@@ -36,13 +36,13 @@ public class SimulationGenerator {
         if (this.dbClass.connect() == false) {
             System.err.println("Could not connect to the database.");
             simulationFile = null;
-            return "asdf";
+            return null;
         }
 
         ArrayList<ResultSet> resultList = this.dbClass.getBusLocationsInDateRange(
                 startDate, endDate);
         if (resultList.size() != 2) {
-            return String.format("bbbb %d", resultList.size());
+            return null;
         }
 
         try {
@@ -133,7 +133,7 @@ public class SimulationGenerator {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            return "";
+            return null;
         }
 
         return simulationFile.toString();
