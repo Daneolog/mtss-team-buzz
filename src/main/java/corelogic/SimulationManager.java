@@ -75,6 +75,8 @@ public class SimulationManager {
      */
     public static void toggleFastForward() {
         interval = isFast ? interval : (int) (interval * fastForwardMultiplier);
+        togglePlay();
+        togglePlay();
     }
 
     /**
