@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -19,20 +25,20 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="simLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="853.0" prefWidth="1174.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller.SimController">
+<Pane fx:id="simLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="853.0" prefWidth="1174.0" style="-fx-background-color: #CCCCCC; -fx-font-family: &quot;Helvetica Neue&quot; &quot;Helvetica&quot; &quot;sans-serif&quot;;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller.SimController">
    <children>
-      <ScrollPane layoutX="14.0" layoutY="58.0" prefHeight="675.0" prefWidth="894.0">
+      <ScrollPane layoutX="14.0" layoutY="114.0" prefHeight="566.0" prefWidth="881.0">
          <content>
-            <GridPane fx:id="lanes" gridLinesVisible="true" maxWidth="894.0" prefHeight="547.0" prefWidth="894.0" stylesheets="@highlighted.css" vgap="2.0">
+            <GridPane fx:id="lanes" gridLinesVisible="true" maxWidth="879.0" prefHeight="560.0" prefWidth="879.0" stylesheets="@highlighted.css" vgap="2.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="763.0" minWidth="763.0" prefWidth="763.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="768.0" minWidth="10.0" prefWidth="768.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="111.0" minWidth="0.0" prefWidth="111.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints fillHeight="false" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                <RowConstraints fillHeight="false" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                <RowConstraints fillHeight="false" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                <RowConstraints fillHeight="false" maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
          </content>
@@ -280,21 +286,29 @@
           </TitledPane>
         </panes>
       </Accordion>
-      <Text layoutX="399.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time: ">
+      <Text layoutX="396.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time: ">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <Text layoutX="458.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tick#" wrappingWidth="52.822265625" />
-      <Button fx:id="addBus" layoutX="14.0" layoutY="733.0" mnemonicParsing="false" onAction="#addBusSim" prefHeight="43.0" prefWidth="105.0" text="Add Bus" />
-      <Button fx:id="addStop" layoutX="790.0" layoutY="733.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="105.0" text="Add Stop" />
-      <Button fx:id="stopButton" layoutX="313.0" layoutY="733.0" mnemonicParsing="false" onAction="#stopSim" prefHeight="31.0" prefWidth="89.0" text="STOP" textFill="RED" />
-      <ToggleButton fx:id="play" layoutX="402.0" layoutY="733.0" mnemonicParsing="false" onAction="#playSim" prefHeight="31.0" prefWidth="105.0" text="Play" textAlignment="CENTER">
+      <Text layoutX="455.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tick#" wrappingWidth="52.822265625" />
+      <Button fx:id="addBus" layoutX="14.0" layoutY="680.0" mnemonicParsing="false" onAction="#addBusSim" prefHeight="43.0" prefWidth="105.0" text="Add Bus" />
+      <Button fx:id="createSimButton" layoutX="140.0" layoutY="680.0" mnemonicParsing="false" onAction="#createSimFile" prefHeight="43.0" prefWidth="148.0" text="Create Simulation" />
+      <Button fx:id="load" layoutX="140.0" layoutY="727.0" mnemonicParsing="false" onAction="#loadSim" prefHeight="43.0" prefWidth="148.0" text="Load Simulation" />
+      <Button fx:id="stopButton" layoutX="315.0" layoutY="680.0" mnemonicParsing="false" onAction="#stopSim" prefHeight="31.0" prefWidth="89.0" text="STOP" textFill="RED">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Button>
+      <ToggleButton fx:id="play" layoutX="402.0" layoutY="680.0" mnemonicParsing="false" onAction="#playSim" prefHeight="31.0" prefWidth="105.0" text="Play" textAlignment="CENTER">
  
       </ToggleButton>
-      <ToggleButton fx:id="fastForward" layoutX="507.0" layoutY="733.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="105.0" text="F.Forward" />
-      <Button fx:id="createSimButton" layoutX="130.0" layoutY="733.0" mnemonicParsing="false" onAction="#createSimFile" prefHeight="43.0" prefWidth="148.0" text="Create Simulation" />
-      <Button fx:id="load" layoutX="130.0" layoutY="776.0" mnemonicParsing="false" onAction="#loadSim" prefHeight="43.0" prefWidth="148.0" text="Load Simulation" />
-      <Button layoutX="626.0" layoutY="733.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="148.0" text="Take Snapshot!" />
+      <ToggleButton fx:id="fastForward" layoutX="508.0" layoutY="680.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="105.0" text="F.Forward" />
+      <Button layoutX="627.0" layoutY="680.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="148.0" text="Take Snapshot!" />
+      <Button fx:id="addStop" layoutX="790.0" layoutY="680.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="105.0" text="Add Stop" />
+      <ImageView fitHeight="70.0" fitWidth="200.0">
+         <image>
+            <Image url="@MARTA%20Logos%20-%20All/Signature%20Logo/MARTA%20Signature%20RGB.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
