@@ -31,6 +31,7 @@ public class SimulationManager {
     static class Run extends TimerTask {
         public void run() {
             if (running) {
+                System.out.println("ticking");
                 tick();
             }
         }
@@ -57,14 +58,19 @@ public class SimulationManager {
         while (!tick()) {}
     }
 
+    public static void togglePlay() {
+        togglePlay(false);
+    }
+
     /**
      * Toggles automatic ticking of simulation
      */
-    public static void togglePlay() {
+    public static void togglePlay(boolean fastForward) {
         running = !running;
         if (running) {
             timer = new Timer();
-            timer.schedule(new Run(), interval, interval);
+            int time = fastForward ? (int) (interval / fastForwardMultiplier) : interval;
+            timer.schedule(new Run(), time, time);
         } else {
             timer.cancel();
         }
@@ -74,9 +80,9 @@ public class SimulationManager {
      * Toggles fast forward mode
      */
     public static void toggleFastForward() {
-        interval = isFast ? interval : (int) (interval / fastForwardMultiplier);
         togglePlay();
-        togglePlay();
+        togglePlay(isFast);
+        isFast = !isFast;
     }
 
     /**
@@ -86,7 +92,7 @@ public class SimulationManager {
     public static boolean tick() {
         boolean busArrived = false;
         ++simTime;
-        System.out.println("Simtime: " + simTime);
+//        System.out.println("Simtime: " + simTime);
         for (Stop stop : stops.values()) {
             int num = stop.tick();
             //System.out.println(stop.getName() + ": Spawned " + num + " passengers");
