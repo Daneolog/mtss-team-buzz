@@ -11,16 +11,18 @@ class FileManager {
 
         try {
             File scenario = new File(scenarioFilename);
-            File distribution = new File(distributionFilename);
             BufferedReader s = new BufferedReader(new FileReader(scenario));
-            BufferedReader d = new BufferedReader(new FileReader(distribution));
             String line;
 
             HashMap<Integer, String> distributions = new HashMap<>();
+            if (distributionFilename != null) {
+                File distribution = new File(distributionFilename);
+                BufferedReader d = new BufferedReader(new FileReader(distribution));
 
-            for (int i = 0; (line = d.readLine()) != null; ++i) {
-                String[] split = line.split(",", 2);
-                distributions.put(Integer.parseInt(split[0]), split[1]);
+                for (int i = 0; (line = d.readLine()) != null; ++i) {
+                    String[] split = line.split(",", 2);
+                    distributions.put(Integer.parseInt(split[0]), split[1]);
+                }
             }
 
             for (int i = 0; (line = s.readLine()) != null; ++i) {

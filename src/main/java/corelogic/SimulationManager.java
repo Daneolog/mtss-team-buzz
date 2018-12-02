@@ -124,7 +124,7 @@ public class SimulationManager {
         simTime = 0;
 
         dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
-        FileManager.importScenario(path, "scenarios/test_evening_distribution.csv", buses, stops, routes, simTime);
+        FileManager.importScenario(path, null, buses, stops, routes, simTime);
 
         if (shouldConvert) {
             //Convert all the input values in terms of miles per minute
