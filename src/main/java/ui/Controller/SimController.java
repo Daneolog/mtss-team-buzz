@@ -28,10 +28,10 @@ import javafx.stage.Window;
 import javafx.util.Duration;
 import ui.BusObject;
 import ui.ImageWrapper;
+import ui.RouteRadio;
 import ui.StopObject;
 
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class SimController implements Initializable {
 
@@ -48,7 +48,7 @@ public class SimController implements Initializable {
     private TitledPane busInfo;
 
     @FXML
-    private ToggleGroup routes;
+    private GridPane routesGrid;
 
     @FXML
     private Button addBus;
@@ -110,6 +110,12 @@ public class SimController implements Initializable {
     @FXML
     private Text stopInfoDrate;
 
+    @FXML
+    private Text time;
+
+    @FXML
+    private Button effectiveness;
+
     private int interval;
 
     private File file;
@@ -118,9 +124,11 @@ public class SimController implements Initializable {
 
     private HashMap<Integer, ImageWrapper> stops;
 
-    private HashMap<Integer, Route> routesMap;
+    private List<Route> sortedRoute;
 
     private ToggleGroup clipBoard;
+
+    private ToggleGroup routeButtons;
 
     private boolean simLoaded; // Very important boolean value that checks if sim is loaded
 
@@ -134,6 +142,8 @@ public class SimController implements Initializable {
 
     private int multiplier;
 
+    private List<ImageWrapper> hiddenBusses;
+
     // variable for initialization purposes so that we don't continually add same objects on grid pane
 
     @Override
@@ -142,11 +152,13 @@ public class SimController implements Initializable {
         this.file = null;
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
-        this.routesMap = new HashMap<>();
+        this.sortedRoute = new ArrayList<>();
         this.clipBoard = new ToggleGroup();
+        this.routeButtons = new ToggleGroup();
         this.interval = 2000;
         this.multiplier = 2;
         this.ROW_WIDTH = lanes.getMaxWidth();
+        this.hiddenBusses = new ArrayList<>();
         this.rowNum = 0;
         // check to see if a specific image wrapper has been clicked then highlights and update all relevant info.
         this.lanes.setOnMouseClicked(event -> {
@@ -158,6 +170,7 @@ public class SimController implements Initializable {
         });
         int duration = 100; // change duration for update
         KeyFrame frame = new KeyFrame(Duration.millis(duration), event -> {
+            time.setText(String.valueOf(SimulationManager.getSimTime()));
             for (ImageWrapper busLabel : buses.values()) {
                 moveBus(busLabel, duration);
             }
@@ -176,7 +189,7 @@ public class SimController implements Initializable {
         return this.rowNum;
     }
 
-    public HashMap<Integer, Route> getRoutesMap() { return this.routesMap; }
+    public List<Route> getSortedRoute() { return this.sortedRoute; }
 
     /**
      * Used to animate the bus
@@ -263,6 +276,8 @@ public class SimController implements Initializable {
         this.buses = new HashMap<>();
         this.stops = new HashMap<>();
         this.clipBoard = new ToggleGroup();
+        this.routeButtons = new ToggleGroup();
+        this.routesGrid.getChildren().clear();
         setInfoTextVisible(false, false, true);
     }
 
@@ -373,7 +388,13 @@ public class SimController implements Initializable {
             SimulationManager.initSim(this.file.getAbsolutePath(), null, this.interval, this.multiplier);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
-            routesMap = SimulationManager.getRoutes();
+            sortedRoute = new ArrayList<>(SimulationManager.getRoutes().values());
+            sortedRoute.sort(new Comparator<Route>() {
+                @Override
+                public int compare(Route o1, Route o2) {
+                    return Integer.compare(o1.getId(), o2.getId());
+                }
+            });
 
             // intializing bus and stop objexts to be place in the grid
             rowNum = 0;
@@ -385,7 +406,36 @@ public class SimController implements Initializable {
                 intializeBus(busObject, 30, 30, rowNum);
                 rowNum++;
             }
+            RadioButton showAll = new RadioButton("Show All Routes");
+            showAll.setToggleGroup(this.routeButtons);
+            showAll.setOnAction(event -> {
+                for (ImageWrapper busLabel : buses.values()) {
+                    busLabel.setVisible(true);
+                }
+            });
+            routesGrid.add(showAll, 0, 0);
+            int radioRow = 1;
+            for (Route path: sortedRoute) {
+                createRouteButton(path, radioRow);
+                radioRow++;
+            }
         }
+    }
+
+    private void createRouteButton(Route routeArg, int row) {
+        int routeId = routeArg.getId();
+        RouteRadio routeRadio = new RouteRadio(String.valueOf(routeId), routeArg);
+        routeRadio.setToggleGroup(this.routeButtons);
+        routeRadio.setOnAction(event -> {
+            for (ImageWrapper busLabel : buses.values()) {
+                if (routeId == ((BusObject)busLabel.getGraphic()).getBus().getRoute().getId()) {
+                    busLabel.setVisible(true);
+                } else {
+                    busLabel.setVisible(false);
+                }
+            }
+        });
+        routesGrid.add(routeRadio,0, row);
     }
 
     @FXML
@@ -460,6 +510,13 @@ public class SimController implements Initializable {
         if (simLoaded && play.isSelected()) {
             this.interval /= multiplier;
             SimulationManager.toggleFastForward();
+        }
+    }
+
+    @FXML
+    void takeSnap(ActionEvent event) {
+        if (simLoaded) {
+            SimulationManager.takeSnapshot();
         }
     }
 }

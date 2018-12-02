@@ -74,7 +74,7 @@ public class addBusController implements Initializable {
      */
     public void setParent(SimController parent) {
         this.parentController = parent;
-        for (Route e: parentController.getRoutesMap().values()) {
+        for (Route e: parentController.getSortedRoute()) {
             MenuItem routeDisplay = new MenuItem(e.toString());
             routeDisplay.setOnAction(event -> {
                 selectedRoute = e;
