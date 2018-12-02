@@ -42,7 +42,7 @@ public class SimulationManager {
             System.out.println("Please include a path to a simulation file");
             return;
         }
-        initSim(args[0], 1000, 5);
+        initSim(args[0], null, 1000, 5);
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -109,22 +109,23 @@ public class SimulationManager {
 
     /**
      * Initializes the simulation with the given file path and tick interval
-     * @param path Path to simulation file
+     * @param simFilePath Path to simulation file
+     * @param distFilePath Path to random distribution file
      * @param interval Interval in milliseconds to tick
      * @param fastForwardMultiplier Multiplier for fast forward mode
      */
-    public static void initSim(String path, int interval, float fastForwardMultiplier) {
-        initSim(path, interval, fastForwardMultiplier, true);
+    public static void initSim(String simFilePath, String distFilePath, int interval, float fastForwardMultiplier) {
+        initSim(simFilePath, distFilePath, interval, fastForwardMultiplier, true);
     }
 
-    static void initSim(String path, int interval, float fastForwardMultiplier, boolean shouldConvert) {
+    static void initSim(String simFilePath, String distFilePath, int interval, float fastForwardMultiplier, boolean shouldConvert) {
         buses = new HashMap<>();
         stops = new HashMap<>();
         routes = new HashMap<>();
         simTime = 0;
 
         dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
-        FileManager.importScenario(path, null, buses, stops, routes, simTime);
+        FileManager.importScenario(simFilePath, distFilePath, buses, stops, routes, simTime);
 
         if (shouldConvert) {
             //Convert all the input values in terms of miles per minute

@@ -370,7 +370,7 @@ public class SimController implements Initializable {
 
             this.interval = 2000;
 
-            SimulationManager.initSim(this.file.getAbsolutePath(), this.interval, this.multiplier);
+            SimulationManager.initSim(this.file.getAbsolutePath(), null, this.interval, this.multiplier);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
             routesMap = SimulationManager.getRoutes();
