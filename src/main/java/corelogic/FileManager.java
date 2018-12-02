@@ -32,13 +32,16 @@ class FileManager {
                     case "add_stop":
                         Stop.StopBuilder stopBuilder = new Stop.StopBuilder();
                         stopBuilder.id(Integer.parseInt(command[1])).name(command[2]).x(Double.parseDouble(command[3])).y(Double.parseDouble(command[4]));
-                        if (distributionFilename == null || command[1].equals("0")) {
-                            stopBuilder.arrivalRate(Double.parseDouble(command[5])).disembarkRate(Double.parseDouble(command[6]));
-                        } else {
-                            String[] dist = distributions.get(Integer.parseInt(command[1])).split(",");
+                        String[] dist;
+
+                        try {
+                            dist = distributions.get(Integer.parseInt(command[1])).split(",");
                             stopBuilder.arrivalRate((Integer.parseInt(dist[0]) + Integer.parseInt(dist[1])) / 2.0);
                             stopBuilder.disembarkRate((Integer.parseInt(dist[2]) + Integer.parseInt(dist[3])) / 2.0);
+                        } catch (NullPointerException e) {
+                            stopBuilder.arrivalRate(Double.parseDouble(command[5])).disembarkRate(Double.parseDouble(command[6]));
                         }
+
                         stops.put(Integer.parseInt(command[1]), stopBuilder.build());
                         break;
                     case "add_route":
