@@ -124,11 +124,13 @@ public class SimController implements Initializable {
 
     private boolean simLoaded; // Very important boolean value that checks if sim is loaded
 
-    private final double ROW_WIDTH = 763;
+    private double ROW_WIDTH;
 
     private Timeline animation;
 
     private double nodeStartPosition;
+
+    private int rowNum;
 
     // variable for initialization purposes so that we don't continually add same objects on grid pane
 
@@ -140,6 +142,9 @@ public class SimController implements Initializable {
         this.stops = new HashMap<>();
         this.routesMap = new HashMap<>();
         this.clipBoard = new ToggleGroup();
+        this.interval = 2000;
+        this.ROW_WIDTH = lanes.getMaxWidth();
+        this.rowNum = 0;
         // check to see if a specific image wrapper has been clicked then highlights and update all relevant info.
         this.lanes.setOnMouseClicked(event -> {
             if (event.getTarget() instanceof ImageWrapper) {
@@ -164,8 +169,8 @@ public class SimController implements Initializable {
         return this.buses;
     }
 
-    public HashMap<Integer, ImageWrapper> getStops() {
-        return this.stops;
+    public int getRowNum() {
+        return this.rowNum;
     }
 
     public HashMap<Integer, Route> getRoutesMap() { return this.routesMap; }
@@ -176,15 +181,19 @@ public class SimController implements Initializable {
      * @param duration
      */
     private void moveBus(ImageWrapper busLabel, int duration) {
-        Bus bus = ((BusObject) busLabel.getGraphic()).getBus();
-        int lane = ((StopObject) stops.get(bus.getCurrentStop().getId()).getGraphic()).getLaneNumber();
-        if (GridPane.getRowIndex(busLabel) != lane) {
-            GridPane.setRowIndex(busLabel, lane);
+        BusObject busImage = (BusObject) busLabel.getGraphic();
+        ImageWrapper stopLabel = stops.get(busImage.getLaneNumber());
+        Stop stop = busImage.getBus().getCurrentStop();
+        if ( stop != ((StopObject) stopLabel.getGraphic()).getStop()) {
             busLabel.setTranslateX(this.nodeStartPosition);
+            stopLabel.setText(stop.getName());
+            ((StopObject) stopLabel.getGraphic()).setStop(stop);
         }
 
-        double arrivalTimeBus = ((BusObject) busLabel.getGraphic()).getBus().getDeltaArrivalTime() * this.interval;
+        double arrivalTimeBus = (((BusObject) busLabel.getGraphic()).getBus().getDeltaArrivalTime()) * this.interval;
+        //System.out.println(arrivalTimeBus);
         double deltaMove = ROW_WIDTH / (arrivalTimeBus / duration);
+        //System.out.println(deltaMove);
         busLabel.setTranslateX(busLabel.getTranslateX() + deltaMove);
     }
 
@@ -221,7 +230,8 @@ public class SimController implements Initializable {
         ImageWrapper newStopBorder = new ImageWrapper((stop.getName()), element);
         newStopBorder.setContentDisplay(ContentDisplay.BOTTOM);
         newStopBorder.setOnMouseClicked(event -> {
-            updateStopInfoPane(stop);
+            Stop newStop = ((StopObject)newStopBorder.getGraphic()).getStop();
+            updateStopInfoPane(newStop);
         });
 
         // setup to make the ImageWrapper highlighted
@@ -235,7 +245,7 @@ public class SimController implements Initializable {
         newStopBorder.setToggleGroup(this.clipBoard);
         // end of setup
 
-        stops.put(stop.getId(), newStopBorder);
+        stops.put(row, newStopBorder);
         lanes.add(newStopBorder, 1, row);
     }
 
@@ -243,6 +253,7 @@ public class SimController implements Initializable {
      * Clears all data from ui and sets data structures to initial state.
      */
     private void clearData() {
+        this.rowNum = 0;
         this.animation.pause();
         this.lanes.getChildren().removeAll(buses.values());
         this.lanes.getChildren().removeAll(stops.values());
@@ -337,6 +348,11 @@ public class SimController implements Initializable {
 
     @FXML
     public void loadSim(ActionEvent e) {
+        //checks to see if play is on to pause simulation
+        if (play.isSelected() && this.simLoaded) {
+            animation.pause();
+            SimulationManager.togglePlay();
+        }
         // getting the stage to pass to file chooser
         Window primaryStage = simLayout.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
@@ -347,31 +363,22 @@ public class SimController implements Initializable {
             this.simLoaded = true;
             // clearing buses and stops from ui
             clearData();
-            //checks to see if play is on to pause simulation
-            if (play.isSelected()) {
-                animation.pause();
-                SimulationManager.togglePlay();
-                play.setSelected(false);
-            }
-            this.interval = 2000;
-            SimulationManager.initSim(this.file.getAbsolutePath(), 2000, 2);
+            play.setSelected(false);
+
+            SimulationManager.initSim(this.file.getAbsolutePath(), this.interval, 2);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
             routesMap = SimulationManager.getRoutes();
 
             // intializing bus and stop objexts to be place in the grid
-            int counter = 0;
-            for (Stop stop : SimulationManager.getStops().values()) {
-                StopObject stopObject = new StopObject(stop, stopImage, counter);
-                initializeStop(stopObject, 50, 50, counter);
-                counter++;
-            }
+            rowNum = 0;
             for (Bus bus : SimulationManager.getBuses().values()) {
-                BusObject busObject = new BusObject(bus, busImage);
-                int key = bus.getCurrentStop().getId();
-                ImageWrapper label = stops.get(key);
-                StopObject uiStop = (StopObject) label.getGraphic();
-                intializeBus(busObject, 50, 50, uiStop.getLaneNumber());
+                Stop stop = bus.getCurrentStop();
+                StopObject stopObject = new StopObject(stop, stopImage, rowNum);
+                initializeStop(stopObject, 30, 30, rowNum);
+                BusObject busObject = new BusObject(bus, busImage, rowNum);
+                intializeBus(busObject, 30, 30, rowNum);
+                rowNum++;
             }
         }
     }
@@ -392,6 +399,10 @@ public class SimController implements Initializable {
     @FXML
     public void addBusSim(ActionEvent e) throws IOException {
         if (simLoaded) {
+            if (play.isSelected()) {
+                animation.pause();
+                SimulationManager.togglePlay();
+            }
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI_addBus.fxml"));
             Scene scene = new Scene(loader.load());
             Stage addBusStage = new Stage();
@@ -407,12 +418,20 @@ public class SimController implements Initializable {
                 // listerner to changes in creating a new bus object to update ui
                 Bus newBus = newValue.getBus();
                 SimulationManager.getBuses().put(newBus.getId(), newBus);
-                StopObject uiStop = (StopObject) stops.get(newBus.getCurrentStop().getId()).getGraphic();
-                intializeBus(newValue, 50, 50, uiStop.getLaneNumber());
+                intializeBus(newValue, 30, 30, ++rowNum);
+                Image stopImage = new Image("stopImg.png");
+                Stop stop = newBus.getCurrentStop();
+                StopObject stopObject = new StopObject(stop, stopImage, rowNum);
+                initializeStop(stopObject, 30, 30, rowNum);
                 System.out.println(newBus.getId());
+
 
             });
             addBusStage.showAndWait(); // wait till addBusStage closes to resume execution
+            if (play.isSelected()) {
+                animation.play();
+                SimulationManager.togglePlay();
+            }
         }
 
     }

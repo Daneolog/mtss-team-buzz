@@ -64,7 +64,7 @@ public class SimulationManager {
         running = !running;
         if (running) {
             timer = new Timer();
-            timer.schedule(new Run(), 0, interval);
+            timer.schedule(new Run(), interval, interval);
         } else {
             timer.cancel();
         }

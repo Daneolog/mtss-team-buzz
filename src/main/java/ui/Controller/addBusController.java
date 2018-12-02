@@ -124,7 +124,7 @@ public class addBusController implements Initializable {
                     counter++;
                 }
                 Bus newBus = new Bus(id, selectedRoute, counter, passengers, fuel, speedVal, SimulationManager.getSimTime());
-                newBusObject.set(new BusObject(newBus, new Image("busImg.png")));
+                newBusObject.set(new BusObject(newBus, new Image("busImg.png"), parentController.getRowNum() + 1));
                 okButton.getScene().getWindow().hide();
             }
             this.error.setVisible(true);
