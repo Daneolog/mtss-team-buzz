@@ -10,25 +10,24 @@ class FileManager {
     static void importScenario(String scenarioFilename, String distributionFilename, HashMap<Integer, Bus> buses, HashMap<Integer, Stop> stops, HashMap<Integer, Route> routes, int simTime) {
 
         try {
-            File scenario = new File(scenarioFilename);
-            File distribution = null;
-            BufferedReader d = null;
-            if (distributionFilename != null) {
-                distribution = new File(distributionFilename);
-                d = new BufferedReader(new FileReader(distribution));
-            }
-            BufferedReader s = new BufferedReader(new FileReader(scenario));
-
             String line;
 
+            File distribution = null;
+            BufferedReader d = null;
             HashMap<Integer, String> distributions = new HashMap<>();
 
             if (distributionFilename != null) {
+                distribution = new File(distributionFilename);
+                d = new BufferedReader(new FileReader(distribution));
+
                 for (int i = 0; (line = d.readLine()) != null; ++i) {
                     String[] split = line.split(",", 2);
                     distributions.put(Integer.parseInt(split[0]), split[1]);
                 }
             }
+
+            File scenario = new File(scenarioFilename);
+            BufferedReader s = new BufferedReader(new FileReader(scenario));
 
             for (int i = 0; (line = s.readLine()) != null; ++i) {
                 String[] command = line.split(",");
