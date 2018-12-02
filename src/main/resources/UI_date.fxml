@@ -21,6 +21,7 @@
       </Text>
       <Text layoutX="52.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose a Start Date:" />
       <Text layoutX="329.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose an End Date:" />
-      <Button fx:id="createSim" layoutX="438.0" layoutY="260.0" mnemonicParsing="false" onAction="#createSimFile" text="Create Simulation" />
+      <Button fx:id="createSim" layoutX="408.0" layoutY="260.0" mnemonicParsing="false" onAction="#createSimFile" prefHeight="31.0" prefWidth="84.0" text="Save" />
+      <Button cancelButton="true" layoutX="502.0" layoutY="260.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="84.0" text="Close" />
    </children>
 </Pane>
