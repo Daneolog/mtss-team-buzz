@@ -5,7 +5,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="377.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text layoutX="14.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add a Stop">
@@ -13,46 +12,46 @@
             <Font size="47.0" />
          </font>
       </Text>
-      <Text layoutX="14.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stop ID : ">
+      <Text layoutX="14.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stop ID:">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <Text fill="RED" layoutX="79.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
-      <TextField layoutX="92.0" layoutY="99.0" promptText="ex: 123456" />
-      <Text layoutX="14.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stop Name :">
+      <Text fill="RED" layoutX="81.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
+      <TextField layoutX="100.0" layoutY="110.0" promptText="ex: 123456" />
+      <Text layoutX="14.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stop Name:">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
+      <TextField layoutX="127.0" layoutY="162.0" prefHeight="31.0" prefWidth="231.0" promptText="ex: 5 Points" />
       <Text layoutX="14.0" layoutY="248.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Passengers Waiting:">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <Text layoutX="19.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Latitude :">
+      <TextField layoutX="202.0" layoutY="224.0" prefHeight="31.0" prefWidth="66.0" promptText="0" />
+      <Text layoutX="19.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Latitude:">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
       <TextField layoutX="110.0" layoutY="284.0" prefHeight="31.0" prefWidth="66.0" promptText="0" />
-      <Text layoutX="19.0" layoutY="368.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Longitude :">
+      <Text layoutX="19.0" layoutY="368.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Longitude:">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
       <TextField layoutX="127.0" layoutY="344.0" prefHeight="31.0" prefWidth="66.0" promptText="0" />
-      <Button layoutX="285.0" layoutY="418.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" text="Cancel" />
       <Button layoutX="189.0" layoutY="418.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" text="OK" />
+      <Button layoutX="285.0" layoutY="418.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" text="Cancel" />
       <Text fill="RED" layoutX="10.0" layoutY="434.0" strokeType="OUTSIDE" strokeWidth="0.0" text="* required field">
          <font>
             <Font name="System Italic" size="15.0" />
          </font>
       </Text>
-      <TextField layoutX="127.0" layoutY="162.0" prefHeight="31.0" prefWidth="231.0" promptText="ex: 5 Points" />
-      <TextField layoutX="202.0" layoutY="224.0" prefHeight="31.0" prefWidth="66.0" promptText="0" />
-      <Text fill="RED" layoutX="109.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
-      <Text fill="RED" layoutX="89.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
-      <Text fill="RED" layoutX="106.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
+      <Text fill="RED" layoutX="114.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
+      <Text fill="RED" layoutX="97.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
+      <Text fill="RED" layoutX="114.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*" />
    </children>
 </Pane>
