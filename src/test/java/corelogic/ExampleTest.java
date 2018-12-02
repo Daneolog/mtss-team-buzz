@@ -56,7 +56,7 @@ public class ExampleTest {
     public void test1() {
 
 
-        SimulationManager.initSim("scenarios/test_scenario_moveNextBus.txt", 1000, 5, false);
+        SimulationManager.initSim("scenarios/test_scenario_moveNextBus.txt", 1000, 5);
 
         assertFalse(SimulationManager.tick());
         assertTrue(SimulationManager.tick());
@@ -78,7 +78,7 @@ public class ExampleTest {
     public void test2() {
         SimulationManager.initSim(
                 "scenarios/test_scenario_passengers.txt",
-                1000, 5, false);
+                1000, 5);
 
         for (int i = 0; i < 4; i++) {
             assertFalse(SimulationManager.tick());
@@ -98,7 +98,7 @@ public class ExampleTest {
     @Test
     public void test3() {
         SimulationManager.initSim("scenarios/test_scenario_stop.txt",
-                1000, 5, false);
+                1000, 5);
 
         for (int i = 0; i < 10; i++) {
             assertFalse(SimulationManager.tick());
@@ -120,7 +120,7 @@ public class ExampleTest {
     @Test
     public void test4() {
         SimulationManager.initSim("scenarios/test_scenario_unload.txt",
-                1000, 5, false);
+                1000, 5);
 
         for (int i = 1; i <= 99; i++) {
             if (i % 3 != 0) {
