@@ -132,6 +132,8 @@ public class SimController implements Initializable {
 
     private int rowNum;
 
+    private int multiplier;
+
     // variable for initialization purposes so that we don't continually add same objects on grid pane
 
     @Override
@@ -143,6 +145,7 @@ public class SimController implements Initializable {
         this.routesMap = new HashMap<>();
         this.clipBoard = new ToggleGroup();
         this.interval = 2000;
+        this.multiplier = 2;
         this.ROW_WIDTH = lanes.getMaxWidth();
         this.rowNum = 0;
         // check to see if a specific image wrapper has been clicked then highlights and update all relevant info.
@@ -365,7 +368,9 @@ public class SimController implements Initializable {
             clearData();
             play.setSelected(false);
 
-            SimulationManager.initSim(this.file.getAbsolutePath(), this.interval, 2);
+            this.interval = 2000;
+
+            SimulationManager.initSim(this.file.getAbsolutePath(), this.interval, this.multiplier);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
             routesMap = SimulationManager.getRoutes();
@@ -392,6 +397,7 @@ public class SimController implements Initializable {
                 animation.play();
             } else {
                 animation.pause();
+                this.interval = 2000;
             }
         }
     }
@@ -446,6 +452,14 @@ public class SimController implements Initializable {
                 play.setSelected(false);
             }
             clearData();
+        }
+    }
+
+    @FXML
+    void playFaster(ActionEvent event) {
+        if (simLoaded && play.isSelected()) {
+            this.interval /= multiplier;
+            SimulationManager.toggleFastForward();
         }
     }
 }

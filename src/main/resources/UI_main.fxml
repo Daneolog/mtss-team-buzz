@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -16,6 +10,8 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -25,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="simLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="853.0" prefWidth="1174.0" style="-fx-background-color: #CCCCCC; -fx-font-family: &quot;Helvetica Neue&quot; &quot;Helvetica&quot; &quot;sans-serif&quot;;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller.SimController">
+<Pane fx:id="simLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="853.0" prefWidth="1174.0" style="-fx-background-color: #CCCCCC; -fx-font-family: &quot;Helvetica Neue&quot; &quot;Helvetica&quot; &quot;sans-serif&quot;;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller.SimController">
    <children>
       <ScrollPane layoutX="14.0" layoutY="114.0" prefHeight="566.0" prefWidth="881.0">
          <content>
@@ -302,7 +298,7 @@
       <ToggleButton fx:id="play" layoutX="402.0" layoutY="680.0" mnemonicParsing="false" onAction="#playSim" prefHeight="31.0" prefWidth="105.0" text="Play" textAlignment="CENTER">
  
       </ToggleButton>
-      <ToggleButton fx:id="fastForward" layoutX="508.0" layoutY="680.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="105.0" text="F.Forward" />
+      <ToggleButton fx:id="fastForward" layoutX="508.0" layoutY="680.0" mnemonicParsing="false" onAction="#playFaster" prefHeight="31.0" prefWidth="105.0" text="F.Forward" />
       <Button layoutX="627.0" layoutY="680.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="148.0" text="Take Snapshot!" />
       <Button fx:id="addStop" layoutX="790.0" layoutY="680.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="105.0" text="Add Stop" />
       <ImageView fitHeight="70.0" fitWidth="200.0">
