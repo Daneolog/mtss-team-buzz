@@ -18,7 +18,7 @@ public class ProbDistTest {
             sg.writeSimulationFile(
                     format.parse("2016/07/01 12:30:00"),
                     format.parse("2016/07/01 13:35:00"),
-                    "C:\\Users\\Michael Sherman\\Desktop\\simulation.txt");
+                    "simulation.txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -26,7 +26,7 @@ public class ProbDistTest {
 
     @Test
     public void correct_path() {
-        String filePath = "C:\\Users\\Michael Sherman\\Desktop\\simulation.txt";
+        String filePath = "simulation.txt";
         System.out.println(filePath);
 
         int cutOff = filePath.lastIndexOf("\\");
