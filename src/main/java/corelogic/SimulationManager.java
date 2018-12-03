@@ -107,8 +107,8 @@ public class SimulationManager {
         routes = new HashMap<>();
         simTime = 0;
 
-        dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
         FileManager.importScenario(path, buses, stops, routes, simTime);
+        dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
         SimulationManager.interval = interval;
         SimulationManager.fastForwardMultiplier = fastForwardMultiplier;
     }
