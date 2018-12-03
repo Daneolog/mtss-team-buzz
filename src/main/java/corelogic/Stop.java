@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Stop {
     private int id;
-    private double x;
-    private double y;
+    double x;
+    double y;
     private String name;
 
     // Average number of passengers that get off at this stop per tick

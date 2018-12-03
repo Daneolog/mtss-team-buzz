@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller.createSimController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="600.0" style="-fx-background-color: #CCCCCC; -fx-font-family: &quot;Helvetica Neue&quot; &quot;Helvetica&quot; &quot;sans-serif&quot;;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller.createSimController">
    <children>
       <DatePicker fx:id="startDate" layoutX="52.0" layoutY="169.0" promptText="Start Date" />
       <DatePicker fx:id="endDate" layoutX="329.0" layoutY="169.0" promptText="End Date" />
@@ -17,6 +21,7 @@
       </Text>
       <Text layoutX="52.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose a Start Date:" />
       <Text layoutX="329.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose an End Date:" />
-      <Button fx:id="createSim" layoutX="438.0" layoutY="260.0" mnemonicParsing="false" onAction="#createSimFile" text="Create Simulation" />
+      <Button fx:id="createSim" layoutX="408.0" layoutY="260.0" mnemonicParsing="false" onAction="#createSimFile" prefHeight="31.0" prefWidth="84.0" text="Save" />
+      <Button cancelButton="true" layoutX="502.0" layoutY="260.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="84.0" text="Close" />
    </children>
 </Pane>

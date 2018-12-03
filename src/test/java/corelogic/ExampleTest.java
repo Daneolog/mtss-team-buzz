@@ -11,7 +11,7 @@ public class ExampleTest {
     /**
      * Example test checking behavior of Stops, Buses, and Routes
      * Test case: Stop1 @ (1,5) and Stop2 @ (1,1), Bus starts at Stop1 with speed 1
-     * Expected behavior: After Bus ticks 5 times, Bus arrives at Stop2
+     * Expected behavior: After Bus ticks 4 times, Bus arrives at Stop2
      */
     @Test
     public void exampleTest() {
@@ -32,6 +32,9 @@ public class ExampleTest {
         assertEquals(stop2.getDisembarkRate(), 2, 0.00001);
         assertTrue(route.isLinear());
         assertEquals(bus.getCurrentStop(), stop1);
+        assertFalse(bus.tick(2));
+        assertFalse(bus.tick(3));
+        assertFalse(bus.tick(4));
         assertTrue(bus.tick(5));
         assertEquals(bus.getCurrentStop(), stop2);
     }
@@ -51,7 +54,9 @@ public class ExampleTest {
      */
     @Test
     public void test1() {
-        SimulationManager.initSim("scenarios/test_scenario_moveNextBus.txt", 1000, 5);
+
+
+        SimulationManager.initSim("scenarios/test_scenario_moveNextBus.txt", null, 1000, 5, false);
 
         assertFalse(SimulationManager.tick());
         assertTrue(SimulationManager.tick());
@@ -64,19 +69,21 @@ public class ExampleTest {
      * Bus does not prematurely remove passengers
      * Test Case:
      *     - 1 Route with 2 Stops 10 miles apart
-     *     - 1 Bus with speed 2, startStop 1, and 10 passengers
+     *     - 1 Bus with speed 2, startStop 1, and 4 passengers
      * Expected Behavior:
      *     - First 4 tick() calls return false because the Bus has not reached the next stop
-     *     - After 4 tick() calls, the Bus still has 10 passengers
+     *     - After 4 tick() calls, the Bus still has 4 passengers
      */
     @Test
     public void test2() {
-        SimulationManager.initSim("scenarios/test_scenario_passengers.txt", 1000, 5);
+        SimulationManager.initSim(
+                "scenarios/test_scenario_passengers.txt",
+                null, 1000, 5, false);
 
         for (int i = 0; i < 4; i++) {
             assertFalse(SimulationManager.tick());
         }
-        assertEquals(10, SimulationManager.getBuses().get(3).getNumPassengers());
+        assertEquals(4, SimulationManager.getBuses().get(3).getNumPassengers());
     }
 
     /**
@@ -90,7 +97,8 @@ public class ExampleTest {
      */
     @Test
     public void test3() {
-        SimulationManager.initSim("scenarios/test_scenario_stop.txt", 1000, 5);
+        SimulationManager.initSim("scenarios/test_scenario_stop.txt",
+                null, 1000, 5, false);
 
         for (int i = 0; i < 10; i++) {
             assertFalse(SimulationManager.tick());
@@ -99,9 +107,20 @@ public class ExampleTest {
         assertNotEquals(0, SimulationManager.getStops().get(1).passengerQueue.size());
     }
 
+    /**
+     * Custom Test
+     * Bus doesn't pick up more passengers than it can handle
+     * Test Case:
+     *     - 1 Route with 2 Stops 6 miles apart each with 0 Passengers
+     *     - 1 Bus with speed 2 traveling between them
+     * Expected Behavior:
+     *     - For 99 tick calls, bus's number of passengers should not exceed 20
+     *     - Every 3rd tick should have the bus arrive at the stop
+     */
     @Test
     public void test4() {
-        SimulationManager.initSim("scenarios/test_scenario_unload.txt", 1000, 5);
+        SimulationManager.initSim("scenarios/test_scenario_unload.txt",
+                null, 1000, 5, false);
 
         for (int i = 1; i <= 99; i++) {
             if (i % 3 != 0) {

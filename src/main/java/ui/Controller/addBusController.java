@@ -74,11 +74,12 @@ public class addBusController implements Initializable {
      */
     public void setParent(SimController parent) {
         this.parentController = parent;
-        for (Route e: parentController.getRoutesMap().values()) {
+        for (Route e: parentController.getSortedRoute()) {
             MenuItem routeDisplay = new MenuItem(e.toString());
             routeDisplay.setOnAction(event -> {
                 selectedRoute = e;
                 routes.setText("Route " + e.getId());
+                //populating the stops of menubutton based upon the selected route.
                 for (Stop stop: selectedRoute.getStops()) {
                     MenuItem stopDisplay = new MenuItem("Stop Id: " + stop.getId() + " " + stop.getName());
                     stopDisplay.setOnAction(event2 -> {
@@ -123,7 +124,7 @@ public class addBusController implements Initializable {
                     counter++;
                 }
                 Bus newBus = new Bus(id, selectedRoute, counter, passengers, fuel, speedVal, SimulationManager.getSimTime());
-                newBusObject.set(new BusObject(newBus, new Image("busImg.png")));
+                newBusObject.set(new BusObject(newBus, new Image("busImg.png"), parentController.getRowNum() + 1));
                 okButton.getScene().getWindow().hide();
             }
             this.error.setVisible(true);

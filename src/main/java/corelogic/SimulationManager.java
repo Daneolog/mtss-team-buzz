@@ -24,9 +24,14 @@ public class SimulationManager {
     private static float fastForwardMultiplier;
     private static boolean isFast = false;
 
+    private static final double LATITUDE_TO_MILES = 69;
+    private static final double LATITUDE_OF_ORIGIN = 33.7; //Aprox latitude of Atlanta
+    private static final double LONGITUDE_TO_MILES = Math.cos(LATITUDE_OF_ORIGIN) * LATITUDE_TO_MILES;
+
     static class Run extends TimerTask {
         public void run() {
             if (running) {
+                System.out.println("ticking");
                 tick();
             }
         }
@@ -37,7 +42,7 @@ public class SimulationManager {
             System.out.println("Please include a path to a simulation file");
             return;
         }
-        initSim(args[0], 1000, 5);
+        initSim(args[0], null, 1000, 5);
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -53,14 +58,19 @@ public class SimulationManager {
         while (!tick()) {}
     }
 
+    public static void togglePlay() {
+        togglePlay(false);
+    }
+
     /**
      * Toggles automatic ticking of simulation
      */
-    public static void togglePlay() {
+    public static void togglePlay(boolean fastForward) {
         running = !running;
         if (running) {
             timer = new Timer();
-            timer.schedule(new Run(), 0, (int)(interval));
+            int time = fastForward ? (int) (interval / fastForwardMultiplier) : interval;
+            timer.schedule(new Run(), time, time);
         } else {
             timer.cancel();
         }
@@ -70,7 +80,9 @@ public class SimulationManager {
      * Toggles fast forward mode
      */
     public static void toggleFastForward() {
-        interval = isFast ? interval : (int) (interval * fastForwardMultiplier);
+        togglePlay();
+        togglePlay(isFast);
+        isFast = !isFast;
     }
 
     /**
@@ -80,14 +92,14 @@ public class SimulationManager {
     public static boolean tick() {
         boolean busArrived = false;
         ++simTime;
-        System.out.println("Simtime: " + simTime);
+//        System.out.println("Simtime: " + simTime);
         for (Stop stop : stops.values()) {
             int num = stop.tick();
-            System.out.println(stop.getName() + ": Spawned " + num + " passengers");
+            //System.out.println(stop.getName() + ": Spawned " + num + " passengers");
         }
         for (Bus bus : buses.values()) {
             boolean busArrivedNow = bus.tick(simTime);
-            System.out.println("Bus " + bus.getId() + " is at " + bus.getCurrentStop().getName());
+            //System.out.println("Bus " + bus.getId() + " is at " + bus.getCurrentStop().getName());
             busArrived = busArrivedNow || busArrived;
         }
 
@@ -97,18 +109,37 @@ public class SimulationManager {
 
     /**
      * Initializes the simulation with the given file path and tick interval
-     * @param path Path to simulation file
+     * @param simFilePath Path to simulation file
+     * @param distFilePath Path to random distribution file
      * @param interval Interval in milliseconds to tick
      * @param fastForwardMultiplier Multiplier for fast forward mode
      */
-    public static void initSim(String path, int interval, float fastForwardMultiplier) {
+    public static void initSim(String simFilePath, String distFilePath, int interval, float fastForwardMultiplier) {
+        initSim(simFilePath, distFilePath, interval, fastForwardMultiplier, true);
+    }
+
+    static void initSim(String simFilePath, String distFilePath, int interval, float fastForwardMultiplier, boolean shouldConvert) {
         buses = new HashMap<>();
         stops = new HashMap<>();
         routes = new HashMap<>();
         simTime = 0;
+        
+        FileManager.importScenario(simFilePath, distFilePath, buses, stops, routes, simTime);
 
-        FileManager.importScenario(path, buses, stops, routes, simTime);
+        if (shouldConvert) {
+            //Convert all the input values in terms of miles per minute
+            for (Stop s : stops.values()) {
+                s.x *= LONGITUDE_TO_MILES;
+                s.y *= LATITUDE_TO_MILES;
+            }
+
+            for (Bus b : buses.values()) {
+                b.speed /= 60;
+                b.calculateArrival(simTime);
+            }
+        }
         dataAnalysis = new Interfacer(buses, stops, routes, "DataAnalysis.DOT");
+
         SimulationManager.interval = interval;
         SimulationManager.fastForwardMultiplier = fastForwardMultiplier;
     }
