@@ -42,28 +42,28 @@ public class Writer {
         }
         try {
             List<Stop> stops;
-            for (int i = 0; i < routes.size(); i++) {
+            for (int i : routes.keySet()) {
                 stops = routes.get(i).getStops();
 
                 for (int j = 0; j < stops.size() - 1; j++) {
-                    String name1 = stops.get(j).getName().replace(" ", "_");
-                    String name2 = stops.get(j + 1).getName().replace(" ", "_");
+                    String name1 = fix(stops.get(j).getName());
+                    String name2 = fix(stops.get(j + 1).getName());
                     file += name1 + " [label = \"" + name1 + ": "
                             + stopEffectiveness.getOrDefault(stops.get(j), 0.0)
                             + "\"]\n";
                     file += name1 + " -> " + name2 + "[label=\"" + i + "\", "
-                            + "color=" + colors[i] + "]\n";
+                            + "color=" + colors[i % colors.length] + "]\n";
                 }
                 Stop lastStop = stops.get(stops.size() - 1);
-                file += lastStop.getName().replace(" ", "_") + " [label = \""
-                        + stops.get(stops.size() - 1).getName().replace(" ", "_")
+                file += fix(lastStop.getName()) + " [label = \""
+                        + fix(stops.get(stops.size() - 1).getName())
                         + ": " + stopEffectiveness.getOrDefault(lastStop, 0.0)
                         + "\"]\n";
                 // Connects last stop to first stop in route
                 if (!routes.get(i).isLinear()) {
-                    file += stops.get(stops.size() - 1).getName().replace(" ", "_") +
-                            " -> " + stops.get(0).getName().replace(" ", "_") +
-                            "[label=\"" + i + "\", color=" + colors[i] + "]\n";
+                    file += fix(stops.get(stops.size() - 1).getName()) +
+                            " -> " + fix(stops.get(0).getName()) +
+                            "[label=\"" + i + "\", color=" + colors[i % colors.length] + "]\n";
                 }
             }
             file += "}";
@@ -73,5 +73,10 @@ public class Writer {
             System.err.println(e.getMessage());
             System.out.println("Error reported");
         }
+    }
+    private String fix(String input) {
+        return input.replace(" ", "_").replace("/", "_").replace("-", "_")
+                .replace("(", "_").replace(")", "_").replace("*", "_")
+                .replace("@", "_at_").replace("&", "_and_");
     }
 }
