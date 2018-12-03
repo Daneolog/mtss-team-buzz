@@ -32,12 +32,9 @@ public class Interfacer {
      */
     public Interfacer(HashMap<Integer, Bus> buses, HashMap<Integer, Stop> stops,
                       HashMap<Integer, Route> routes, String fileName) {
-        this.buses = buses;
-        this.stops = stops;
-        this.routes = routes;
         simulationFile = new Writer(fileName, routes);
         stopEffectiveness = new HashMap<>();
-        updateEffectiveness();
+        updateEffectiveness(buses, stops, routes);
     }
 
     public HashMap<Integer, Stop> getStops() {
@@ -64,12 +61,17 @@ public class Interfacer {
      * Updates effectiveness of the route in a "snapshot" approach
      *
      */
-    public void updateEffectiveness() {
+    public void updateEffectiveness(HashMap<Integer, Bus> buses,
+                                    HashMap<Integer, Stop> stops,
+                                    HashMap<Integer, Route> routes) {
+        this.buses = buses;
+        this.stops = stops;
+        this.routes = routes;
         double totalCost = 0;
         for (Stop stop:this.stops.values()) {
             this.stopEffectiveness.put(stop,
-                    stop.getArrivalRate() * stop.getDestinations().size()
-                    /stop.getDisembarkRate());
+                    Double.valueOf(stop.passengerQueue.size()));
+            System.out.print(stop.passengerQueue.size() + ":");
         }
 
         this.effectiveness = (buses.size() > 0 ? totalCost / buses.size(): 0);

@@ -56,6 +56,7 @@ public class SimulationManager {
      */
     public static void MoveNextBus() {
         while (!tick()) {}
+        dataAnalysis.updateEffectiveness(buses, stops, routes);
     }
 
     public static void togglePlay() {
@@ -103,7 +104,6 @@ public class SimulationManager {
             busArrived = busArrivedNow || busArrived;
         }
 
-        dataAnalysis.updateEffectiveness();
         return busArrived;
     }
 
@@ -123,7 +123,7 @@ public class SimulationManager {
         stops = new HashMap<>();
         routes = new HashMap<>();
         simTime = 0;
-        
+
         FileManager.importScenario(simFilePath, distFilePath, buses, stops, routes, simTime);
 
         if (shouldConvert) {
@@ -148,6 +148,7 @@ public class SimulationManager {
      * Exports current simulation into .DOT file for Data Analysis
      */
     public static void takeSnapshot() {
+        dataAnalysis.updateEffectiveness(buses, stops, routes);
         dataAnalysis.createGraph();
     }
 }
