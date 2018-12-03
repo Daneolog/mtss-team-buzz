@@ -38,13 +38,15 @@ class FileManager {
                     case "add_stop":
                         Stop.StopBuilder stopBuilder = new Stop.StopBuilder();
                         stopBuilder.id(Integer.parseInt(command[1])).name(command[2]).x(Double.parseDouble(command[3])).y(Double.parseDouble(command[4]));
-                        stopBuilder.arrivalRate(Double.parseDouble(command[5])).disembarkRate(Double.parseDouble(command[6]));
+                        
                         String[] dist;
 
                         if (distributionFilename != null) {
                             dist = distributions.get(Integer.parseInt(command[1])).split(",");
                             stopBuilder.arrivalRate((Integer.parseInt(dist[0]) + Integer.parseInt(dist[1])) / 2.0);
                             stopBuilder.disembarkRate((Integer.parseInt(dist[2]) + Integer.parseInt(dist[3])) / 2.0);
+                        } else {
+                            stopBuilder.arrivalRate(Double.parseDouble(command[5])).disembarkRate(Double.parseDouble(command[6]));
                         }
 
                         stops.put(Integer.parseInt(command[1]), stopBuilder.build());
@@ -99,7 +101,7 @@ class FileManager {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.err.println("File not found, please enter valid filename");
+            System.err.println(e.getMessage());
         } catch (IOException e) {
             System.err.println("I have no idea why this would be thrown");
         }

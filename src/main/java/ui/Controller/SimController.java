@@ -384,8 +384,12 @@ public class SimController implements Initializable {
             play.setSelected(false);
 
             this.interval = 2000;
-
-            SimulationManager.initSim(this.file.getAbsolutePath(), null, this.interval, this.multiplier);
+            
+            int cutOff = file.getAbsolutePath().lastIndexOf("/");
+            if (cutOff == -1)
+                cutOff = file.getAbsolutePath().lastIndexOf("\\");
+            String probFilePath = file.getAbsolutePath().substring(0, cutOff + 1) + "simprobability.txt";
+            SimulationManager.initSim(this.file.getAbsolutePath(), probFilePath, this.interval, this.multiplier);
             Image busImage = new Image("busImg.png");
             Image stopImage = new Image("stopImg.png");
             sortedRoute = new ArrayList<>(SimulationManager.getRoutes().values());
