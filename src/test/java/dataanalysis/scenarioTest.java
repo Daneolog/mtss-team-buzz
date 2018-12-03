@@ -7,7 +7,7 @@ public class scenarioTest {
 
     @Test
     public void tests2Test() {
-        SimulationManager.initSim("scenarios/test2.txt", 1000, 5);
+        SimulationManager.initSim("scenarios/test2.txt", null, 1000, 5);
         SimulationManager.takeSnapshot();
         SimulationManager.tick();
         System.out.println(SimulationManager.getStops().size() + " stops");
