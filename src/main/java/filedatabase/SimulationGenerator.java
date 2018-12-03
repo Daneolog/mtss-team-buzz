@@ -157,7 +157,7 @@ public class SimulationGenerator {
     }
 
     private void createProbDistFile(String filePath) throws IOException {
-        int cutOff = filePath.lastIndexOf("\\");
+        int cutOff = Math.max(filePath.lastIndexOf("\\"), filePath.lastIndexOf("/"));
         String probFilePath = filePath.substring(0, cutOff + 1) + "simprobability.txt";
         File file = new File(probFilePath);
         if (file.exists()) {
