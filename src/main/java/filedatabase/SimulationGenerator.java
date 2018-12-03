@@ -120,25 +120,21 @@ public class SimulationGenerator {
                 }
 
             }
-            //            resultList.get(1).close();
-            resultList.get(1).beforeFirst();
 
-            while (resultList.get(1).next()) {
-                int stop_id = resultList.get(1).getInt(1);
+            for (int stopId : stopMinPassengersOn.keySet()) {
                 probDistFile.add(String.format("%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
-                        stop_id,
-                        stopMaxPassengersOn.getOrDefault(stop_id, 0),
-                        stopMinPassengersOn.getOrDefault(stop_id, 0),
-                        stopMaxPassengersOff.getOrDefault(stop_id, 0),
-                        stopMinPassengersOff.getOrDefault(stop_id, 0),
-                        stopMaxPassengersOn.getOrDefault(stop_id, 0),
-                        stopMinPassengersOn.getOrDefault(stop_id, 0),
-                        stopMaxPassengersOff.getOrDefault(stop_id, 0),
-                        stopMinPassengersOff.getOrDefault(stop_id, 0)
+                        stopId,
+                        stopMaxPassengersOn.getOrDefault(stopId, 0),
+                        stopMinPassengersOn.getOrDefault(stopId, 0),
+                        stopMaxPassengersOff.getOrDefault(stopId, 0),
+                        stopMinPassengersOff.getOrDefault(stopId, 0),
+                        stopMaxPassengersOn.getOrDefault(stopId, 0),
+                        stopMinPassengersOn.getOrDefault(stopId, 0),
+                        stopMaxPassengersOff.getOrDefault(stopId, 0),
+                        stopMinPassengersOff.getOrDefault(stopId, 0)
                 ));
             }
             resultList.get(1).close();
-            System.out.println(probDistFile);
 
             for (String command : addStopCommands) {
                 simulationFile.add(command);
